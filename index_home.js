@@ -61,6 +61,29 @@ app.post('/play', function(req, res){
     res.render("game", {player: {name: player_name, id: player_id }, game_id: game_id, players: players, role: role, roles:roles});
 });
 
+app.get('/play', function(req, res){
+    var player_id = 1;
+    var player_name = 'Luke';
+    var game_id = 1;
+    game_logic.start_game(game_id);
+    game_logic.add_new_player_to_game(player_id, player_name, game_id);
+
+    //add 4 dummy players cus fuck it
+    game_logic.add_new_player_to_game(2, 'Merlin', game_id);
+    game_logic.add_new_player_to_game(3, "berlin", game_id);
+    game_logic.add_new_player_to_game(4, 'GErlin', game_id);
+    game_logic.add_new_player_to_game(5, 'Werlion', game_id);
+    console.log(player_id + ' and ' + player_name + ' and ' + game_id);
+    var game = game_logic.game(game_id);
+    game.start();
+    game.add_to_buffer(player_id); //so it doesn't say you disconnected
+    var players = game_logic.get_public_players_from_game(game_id);
+    console.log(game.assigned_roles);
+    var role = game.assigned_roles[player_id];
+    var roles = game.assigned_roles;
+    res.render("game", {player: {name: player_name, id: player_id }, game_id: game_id, players: players, role: role, roles:roles});
+});
+
 //changee to post later
 app.get('/join', function(req, res){
     var query = require('url').parse(req.url,true).query;
@@ -162,6 +185,84 @@ io.of('/avalon').on('connection', function(socket){
         var game = game_logic.game(game_id);
         game.start();
     });
+
+    socket.on('selected_player', function(data){
+        var game_id = data['game_id'];
+        var player_id = data['player_id'];
+        var game = game_logic.game(game_id);
+        console.log(data);
+        console.log("SELECTED");
+        if(game.get_leader() == player_id){
+            var selected_id = data['selected_id'];
+            console.log('leader selected ' + selected_id);
+            game.player_selected(selected_id);
+            socket.broadcast.to(game_id).emit('selected_player', selected_id);
+        }
+    });
+
+    socket.on('deselected_player', function(data){
+        var game_id = data['game_id'];
+        var player_id = data['player_id'];
+        var game = game_logic.game(game_id);
+        if(game.get_leader() == player_id){
+            var selected_id = data['selected_id'];
+            console.log('leader deselected ' + selected_id);
+            game.player_deselected(selected_id);
+            socket.broadcast.to(game_id).emit('deselected_player', selected_id);
+        }
+    });
+
+    socket.on('game_started', function(data){
+        var game_id = data['game_id'];
+        var player_id = data['player']['id'];
+        socket.join(game_player_room(game_id, player_id));
+        socket.join(game_id);
+        var game = game_logic.game(game_id);
+        console.log('leader is ' + game.get_leader());
+        socket.emit('new_leader', game.get_leader());
+        var game_data = game.get_current_round();
+        io.of('/avalon').to(leader_room(game_id)).emit('you_are_leader', game_data);
+    });
+
+    socket.on('team_proposed', function(data){
+        var game_id = data['game_id'];
+        var player_id = data['player_id'];
+        var game = game_logic.game(game_id);
+        if(game.get_leader() == player_id && game.is_propose_state()){
+            game.team_proposed();
+            var game_players = game.get_player_ids();
+            var selected_players = data['selected_players'];
+            var public_players = game.get_public_players();
+            var selected_player_names = [];
+            console.log('selected players are ');
+            console.log(selected_players);
+            for(var i = 0; i < public_players.length; i++){
+                if(selected_players.indexOf(public_players[i]['id']) > -1){
+                    selected_player_names.push(public_players[i]['name']);
+                }
+            }
+            for(var i = 0 ; i < game_players.length; i++){
+                if(selected_players.indexOf(game_players[i]) > -1){
+                    var is_spy = game.is_spy(game_players[i]);
+                    console.log(is_spy);
+                    io.of('/avalon').to(game_player_room(game_id, game_players[i])).emit('you_are_on_team', {is_spy: is_spy, selected_player_names: selected_player_names});
+                } else{
+                    io.of('/avalon').to(game_player_room(game_id, game_players[i])).emit('team_proposed', {selected_player_names: selected_player_names});
+                }
+            }
+        }
+    });
+
+    function leader_room(game_id){
+        var game = game_logic.game(game_id);
+        var leader_id = game.get_leader();
+        return game_player_room(game_id, leader_id);
+    }
+    function game_player_room(game_id, player_id){
+        return 'avalon_game' + game_id + '_player_' + player_id;
+    }
+
+
 });
 
 console.log("Listening on port " + port);

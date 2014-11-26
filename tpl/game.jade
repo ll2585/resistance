@@ -13,7 +13,7 @@ html
 		link(rel='stylesheet', href='/css/lib/bootstrap.css')
 		link(rel='stylesheet', href='/css/lib/bootstrap-responsive.css')
 		link(rel='stylesheet', href='/css/main.css')
-		link(rel='stylesheet', href='/css/roles.css')
+		link(rel='stylesheet', href='/css/game.css')
 		link(rel='stylesheet', href='/css/chat.css')
 	body
 		div#nav
@@ -29,23 +29,29 @@ html
 				div.row-fluid
 					div.col-xs-9
 						= role
+						div#game_messages
+							|game messages will be down here
 					div.col-xs-2.pull-down.scoreboard
 						table.table.table-bordered.table-hover.table-condensed.scoreboard-table
 							caption SCOREBOARD
 							thead
 							tr
+								th
 								th Player
 								th Status
+								th
 							tbody.players
 								- console.log('players are ')
 								- console.log(players)
 								- var player_size = players.length
 								- for (var i = 0; i < player_size; i++)
 									tr(id= 'player_id_' +  players[i]['id'])
+										td(id= 'leader_player_id_' +  players[i]['id'])
 										td
 											= players[i]['name']
 										td(id= players[i]['id']+'_status')
 											= roles[players[i]['id']]
+										td(id= 'mission_player_id_' +  players[i]['id'])
 
 
 		div.controls

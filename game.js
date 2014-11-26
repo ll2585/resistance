@@ -7,25 +7,35 @@ var mission_2 = {5: 3, 6: 3, 7: 3, 8: 4, 9: 4, 10: 4};
 var mission_3 = {5: 2, 6: 4, 7: 3, 8: 4, 9: 4, 10: 4};
 var mission_4 = {5: 3, 6: 3, 7: 4, 8: 5, 9: 5, 10: 5};
 var mission_5 = {5: 3, 6: 4, 7: 4, 8: 5, 9: 5, 10: 5};
-
+var missions = {1: mission_1, 2: mission_2, 3: mission_3, 4: mission_4, 5: mission_5 };
+var vanilla_red = "Vanilla Red";
+var assassin = "Assassin";
+var vanilla_blue = "Vanilla Blue";
+var team_propose_state = 1;
+var mission_state = 2;
+function is_red(role){
+  return (red_roles.indexOf(role) > -1 || role == vanilla_red || role == assassin);
+}
 function Game() {
   this.players = [];
   this.players_id = {};
   this.settings = {Merlin: false, Percival: false, Good_Lancelot: false, Mordred: false, Oberon: false, Morgana: false, Bad_Lancelot: false, Lady_of_the_Lake: false, Excalibur: false};
   this.player_buffer = [];
   this.started = false;
-  this.player_count = -1;
+  this.player_count;
   this.two_fails = false;
-  this.current_mission = -1;
-  this.current_vote = -1;
+  this.current_mission;
+  this.current_vote;
   this.leader;
   this.proposed_team = [];
   this.votes = [];
   this.red_roles = [];
   this.blue_roles = [];
   this.assigned_roles = {};
-
-
+  this.player_order = [];
+  this.blue_points;
+  this.red_points;
+  this.state;
 }
 
 
@@ -102,10 +112,10 @@ Game.prototype.start = function() {
       }
     }
     if(reds.length < num_reds && this.settings['Merlin']){
-      reds.push('Assassin');
+      reds.push(assassin);
     }
     while(reds.length < num_reds){
-      reds.push('Vanilla Red');
+      reds.push(vanilla_red);
     }
     this.red_roles = reds;
 
@@ -117,7 +127,7 @@ Game.prototype.start = function() {
       }
     }
     while(blues.length < num_blues){
-      blues.push('Vanilla Blue');
+      blues.push(vanilla_blue);
     }
     this.blue_roles = blues;
 
@@ -131,10 +141,32 @@ Game.prototype.start = function() {
     for(player_id in this.players_id){
       this.assigned_roles[player_id] = all_roles.pop();
     }
+
+    //change player order maybe
+    for(player_id in this.players_id){
+      this.player_order.push(player_id);
+    }
+    //leader is first player
+    this.leader = this.player_order[0];
+    this.current_mission = 1;
+    this.blue_points = 0;
+    this.red_points = 0;
+    this.current_vote = 1;
+    this.state = team_propose_state;
     this.started = true;
+  }else{
+    console.log('game started already brah');
   }
 };
 
+Game.prototype.is_spy = function(player_id) {
+  return is_red(this.assigned_roles[player_id]);
+};
+
+
+Game.prototype.is_leader = function(player_id) {
+  return this.leader == player_id;
+};
 
 //+ Jonas Raoni Soares Silva
 //@ http://jsfromhell.com/array/shuffle [v1.0]
@@ -142,7 +174,55 @@ function shuffle(o){ //v1.0
   for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
   return o;
 };
+Game.prototype.get_leader = function() {
+  return this.leader;
+};
 
+Game.prototype.player_deselected = function(player_id) {
+  var index = this.proposed_team.indexOf(player_id);
+  if (index > -1) {
+    this.proposed_team.splice(index, 1);
+  }
+};
+
+Game.prototype.player_selected = function(player_id) {
+  this.proposed_team.push(player_id);
+};
+
+Game.prototype.get_player_ids = function() {
+  var players = [];
+  for(var id in this.players_id){
+    players.push(parseInt(id)); //ids are ints maybe i have to change this later
+
+  }
+  return players;
+};
+
+Game.prototype.team_proposed = function() {
+  this.state = mission_state;
+};
+
+Game.prototype.is_mission_state = function() {
+  return this.state == mission_state;
+};
+
+Game.prototype.is_propose_state = function() {
+  return this.state == team_propose_state;
+};
+
+Game.prototype.get_current_round = function() {
+  var data = {};
+  data['round'] = this.current_mission;
+  data['vote'] = this.current_vote;
+  data['leader'] = this.leader;
+  data['proposed_team'] = this.proposed_team;
+  data['blue_points'] = this.blue_points;
+  data['red_points'] = this.red_points;
+  data['num_players'] = this.player_count;
+  data['team_size'] = missions[this.current_mission][this.player_count];
+  data['players'] = this.get_public_players();
+  return data;
+};
 Game.prototype.need_two_fails = function() {
   return this.current_mission == 4 && this.player_count >= 7;
 };
