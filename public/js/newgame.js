@@ -92,9 +92,11 @@ function disableStartButton(){
 }
 function ready_to_start (){
     console.log(player_ids);
+    /**
     if(player_ids.length < 5 || player_ids.length > 10){
         return false;
     }
+     **/
     for(var i = 0; i < player_ids.length; i++){
         var ready_elem = $("#" + player_ids[i] + "_status");
         var ready_html = ready_elem.html();
@@ -212,6 +214,16 @@ $(document).ready(function() {
         toggle_ready(player_id);
     });
 
+    socket.on("game_started", function(game_id){
+        var redirect_form = $('<form action="/play" method="post">' +
+        '<input type="hidden" name="game_id" value="' + game_id + '" />' +
+        '<input type="hidden" name="player_id" value="' + player_id + '" />' +
+        '<input type="hidden" name="player_name" value="' + player_name + '" />' +
+        '</form>');
+        $('body').append(redirect_form);
+        redirect_form.submit();
+    });
+
     socket.emit("new_game_started", {game_id: game_id, roles: roles});
     //tells the server we joined to connect to rooms
     socket.emit("joined", {game_id: get_game_id(), player: {id: player_id, name: player_name}});
@@ -223,4 +235,17 @@ $(document).ready(function() {
         toggle_ready(player_id);
         socket.emit("toggle_ready", {game_id: game_id, player_id: player_id});
     });
+
+    var start_button = $('#start');
+    start_button.click(function(){
+
+        //error checking that you didnt select more reds than there are reds like you didn't select 3 reds but there's only 2 reds in the game
+        socket.emit("start_game", game_id);
+    });
+
+    if(ready_to_start()){
+        enableStartButton();
+    } else{
+        disableStartButton();
+    }
 });
