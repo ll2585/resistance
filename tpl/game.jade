@@ -1,0 +1,60 @@
+doctype html
+html
+	head
+		title= "Real time web chat"
+		script(src='/socket.io/socket.io.js')
+		script(src='http://code.jquery.com/jquery-1.10.1.min.js')
+		script(src='/chat.js')
+		script(src='/js/game.js')
+		if(game == 'dice')
+			script(src='/dice.js')
+		else
+			script(src='/cards.js')
+		link(rel='stylesheet', href='/css/lib/bootstrap.css')
+		link(rel='stylesheet', href='/css/lib/bootstrap-responsive.css')
+		link(rel='stylesheet', href='/css/main.css')
+		link(rel='stylesheet', href='/css/roles.css')
+		link(rel='stylesheet', href='/css/chat.css')
+	body
+		div#nav
+			b
+				div.playerID(id=player.id)
+					|#{player.name}
+			|THE CURRENT GAME ID IS
+			div#game_id #{game_id}
+			|THE CURRENT GAME IS
+			div#gameid #{game}
+		div#body
+			div.container
+				div.row-fluid
+					div.col-xs-9
+						= role
+					div.col-xs-2.pull-down.scoreboard
+						table.table.table-bordered.table-hover.table-condensed.scoreboard-table
+							caption SCOREBOARD
+							thead
+							tr
+								th Player
+								th Status
+							tbody.players
+								- console.log('players are ')
+								- console.log(players)
+								- var player_size = players.length
+								- for (var i = 0; i < player_size; i++)
+									tr(id= 'player_id_' +  players[i]['id'])
+										td
+											= players[i]['name']
+										td(id= players[i]['id']+'_status')
+											= roles[players[i]['id']]
+
+
+		div.controls
+			| Name:
+			div#name(style = 'display: inline')
+				|#{player.name}
+			br
+			input#ready(type='button', value='ready')
+			input#start(type='button', value='start' disabled)
+			p#opponents
+			p#cards
+			p#pack
