@@ -1,0 +1,73 @@
+doctype html
+html
+	head
+		title= "Real time web chat"
+		script(src='/socket.io/socket.io.js')
+		script(src='http://code.jquery.com/jquery-1.10.1.min.js')
+		script(src='/chat.js')
+		script(src='/js/joingame.js')
+		if(game == 'dice')
+			script(src='/dice.js')
+		else
+			script(src='/cards.js')
+		link(rel='stylesheet', href='/css/lib/bootstrap.css')
+		link(rel='stylesheet', href='/css/lib/bootstrap-responsive.css')
+		link(rel='stylesheet', href='/css/main.css')
+		link(rel='stylesheet', href='/css/roles.css')
+		link(rel='stylesheet', href='/css/chat.css')
+	body
+		div#nav
+			b
+				div.playerID(id=player.id)
+					|#{player.name}
+			|THE CURRENT GAME ID IS
+			div#game_id #{game_id}
+			|THE CURRENT GAME IS
+			div#gameid #{game}
+		div#body
+
+			div.container
+				div.row-fluid
+					div.col-xs-9
+						table
+							tr
+								- var good_guys = {Merlin: 'images/merlin.png', Percival: 'images/percival.png', Good_Lancelot: 'images/goodlancelot.png'}
+								- for (var guy in good_guys)
+									td
+										img(value= guy, src = good_guys[guy], width='133', height='200', class = game_settings[guy] ? undefined : 'not_selected_role', id = guy)
+							tr
+								- var bad_guys = {Mordred: 'images/mordred.png', Oberon: 'images/oberon.png', Morgana: 'images/morgana.png', Bad_Lancelot: 'images/evillancelot.png'}
+								- for (var guy in bad_guys)
+									td
+										img(value= guy, src = bad_guys[guy], width='133', height='200', class = game_settings[guy] ? undefined : 'not_selected_role', id = guy)
+							tr
+								- var items = {Lady_of_the_Lake: 'images/ladyofthelake.png', Excalibur: 'images/excalibur.png'}
+								- for (var item in items)
+									td
+										img(value= item, src = items[item], width='133', height='200', class = game_settings[item] ? undefined : 'not_selected_role', id = item)
+					div.col-xs-3.pull-down.scoreboard
+						table.table.table-bordered.table-hover.table-condensed.scoreboard-table
+							caption SCOREBOARD
+							thead
+							tr
+								th Player
+								th Status
+							tbody.players
+								- var player_size = players.length
+								- for (var i = 0; i < player_size; i++)
+									tr(id= 'player_id_' +  players[i]['id'])
+										td
+											= players[i]['name']
+										td(id= players[i]['id']+'_status')
+											= players[i]['status']
+
+
+		div.controls
+			| Name:
+			div#name(style = 'display: inline')
+				|#{player.name}
+			br
+			input#ready(type='button', value='ready')
+			p#opponents
+			p#cards
+			p#pack

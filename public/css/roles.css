@@ -1,0 +1,9 @@
+.not_selected_role {
+  opacity: 0.4;
+  filter: alpha(opacity=40); /* msie */
+}
+
+.role{
+  height: 200px;
+  width: 133px;
+}
