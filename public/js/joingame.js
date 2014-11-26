@@ -58,6 +58,16 @@ $(document).ready(function() {
         toggle_ready(player_id);
     });
 
+    socket.on("game_started", function(game_id){
+        var redirect_form = $('<form action="/play" method="post">' +
+        '<input type="hidden" name="game_id" value="' + game_id + '" />' +
+        '<input type="hidden" name="player_name" value="' + player_name + '" />' +
+        '<input type="hidden" name="player_id" value="' + player_id + '" />' +
+        '</form>');
+        $('body').append(redirect_form);
+        redirect_form.submit();
+    });
+
     var ready_button = $('#ready');
 
     ready_button.click(function(){

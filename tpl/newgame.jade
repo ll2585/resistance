@@ -52,6 +52,8 @@ html
 								th Player
 								th Status
 							tbody.players
+								- console.log('players are ')
+								- console.log(players)
 								- var player_size = players.length
 								- for (var i = 0; i < player_size; i++)
 									tr(id= 'player_id_' +  players[i]['id'])

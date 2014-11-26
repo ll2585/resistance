@@ -3,7 +3,7 @@ function Room(name, type){
     this.tables = {};
     this.name = name;
     this.gameType = type;
-};
+}
 
 Room.prototype.addPlayer = function(player) {
     this.players.push(player);
