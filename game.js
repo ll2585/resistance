@@ -58,6 +58,9 @@ Game.prototype.add_player = function(player) {
 Game.prototype.get_players = function() {
   return this.players;
 };
+Game.prototype.get_player_from_id = function(player_id) {
+  return this.players_id[player_id];
+};
 Game.prototype.get_public_players = function() {
   var players = [];
   for(var i = 0; i <this.players.length; i++){

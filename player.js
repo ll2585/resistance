@@ -4,6 +4,7 @@ function Player(id, name){
     //this.status = 'Not Ready';
     this.status = 'Ready!';
     this.role = 'None';
+    this.attributes = {};
 }
 
 Player.prototype.set_name = function(name) {
@@ -12,6 +13,22 @@ Player.prototype.set_name = function(name) {
 
 Player.prototype.get_name = function() {
     return this.name;
+};
+
+Player.prototype.set_attributes = function(attribute, val) {
+    this.attributes[attribute] = val;
+};
+
+Player.prototype.clear_attributes = function(attribute) {
+    delete this.attributes[attribute];
+};
+
+Player.prototype.get_attribute = function(attribute) {
+    if(attribute in this.attributes){
+        return this.attributes[attribute];
+    }else{
+        return null;
+    }
 };
 
 Player.prototype.toggle_ready = function() {

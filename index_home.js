@@ -34,7 +34,7 @@ app.get('/create', function(req, res){
     var player_name = query['player_name'];
     var game_id = 1;
     game_logic.start_game(game_id);
-    game_logic.add_new_player_to_game(player_id, player_name, game_id);
+    game_logic.add_new_player_to_game(game_id, {id: player_id, name: player_name});
 
     //add 4 dummy players cus fuck it
 
@@ -65,17 +65,17 @@ app.post('/play', function(req, res){
 });
 
 app.get('/play', function(req, res){
-    var player_id = 1;
+    var player_id = 'luke_id';
     var player_name = 'Luke';
     var game_id = 1;
     game_logic.start_game(game_id);
-    game_logic.add_new_player_to_game(player_id, player_name, game_id);
+    game_logic.add_new_player_to_game(game_id, {id: player_id, name: player_name});
 
     //add 4 dummy players cus fuck it
-    game_logic.add_new_player_to_game('mer2', 'Merlin', game_id);
-    game_logic.add_new_player_to_game('ber2', "berlin", game_id);
-    game_logic.add_new_player_to_game('ger2', 'GErlin', game_id);
-    game_logic.add_new_player_to_game('wer2', 'Werlion', game_id);
+    var bots_to_add = 4;
+    for(var i = 0; i < bots_to_add; i++){
+        game_logic.add_new_player_to_game( game_id, {player: game_logic.random_bot()});
+    }
     console.log(player_id + ' and ' + player_name + ' and ' + game_id);
     var game = game_logic.game(game_id);
     game.start();
@@ -106,7 +106,7 @@ app.get('/join', function(req, res){
         game.add_to_buffer(player_id);
     }else{
         console.log('ok join game');
-        game_logic.add_new_player_to_game(player_id, player_name, game_id);
+        game_logic.add_new_player_to_game(game_id, {id: player_id, name: player_name});
     }
     var players = game_logic.get_public_players_from_game(game_id);
     console.log('LOL');
@@ -374,10 +374,14 @@ io.of('/avalon').on('connection', function(socket){
             console.log('player ' + player_id + ' voted ' + vote);
 
             //make everyone vote yes for testing
-            if(player_id == 'luke'){
+            if(player_id == 'luke_id'){
                 var bots = every_bot(game_id);
                 for(var i = 0; i < bots.length; i++){
-                    game.player_votes(bots[i], "Approve");
+                    var bot = game.get_player_from_id(bots[i]);
+                    if(game_logic.player_is_random(bot)){
+                        game.player_votes(bots[i], game_logic.random_vote());
+                    }
+
                 }
             }
 
@@ -531,7 +535,7 @@ io.of('/avalon').on('connection', function(socket){
         var game = game_logic.game(game_id);
         var player_ids = game.get_player_ids();
         var bot_ids = [];
-        var luke = 1;
+        var luke = 'luke_id';
         for(var i = 0; i < player_ids.length; i++){
             if(player_ids[i] != luke){
                 bot_ids.push(player_ids[i]);

@@ -27,9 +27,35 @@ exports.start_game = function(id){
     active_games[id] = game;
 };
 
-exports.add_new_player_to_game = function(id, name, game_id){
-    var player = new Player(id, name);
-    active_games[game_id].add_player(player);
+exports.add_new_player_to_game = function(game_id, options){
+    if('id' in options && 'name' in options) {
+        var id = options['id'];
+        var name = options['name'];
+        var player = new Player(id, name);
+        active_games[game_id].add_player(player);
+    }else if('player' in options){
+        var player = options['player'];
+        active_games[game_id].add_player(player);
+    }
+};
+
+exports.player_is_random = function(player){
+    return player.get_attribute('random');
+};
+exports.random_vote = function(player){
+    return (Math.floor(Math.random() * 2) == 0) ? 'Approve' : 'Reject';
+};
+exports.random_mission = function(player){
+    return (Math.floor(Math.random() * 2) == 0) ? 'Success' : 'Fail';
+};
+exports.random_bot = function(){
+    var names_array = ['Merlin', 'Berlin', 'Gerlin', 'Herlin', 'Zerlin', 'Lerlin', 'Perlin', 'Serlin', 'Cerlin', 'Derlin', 'Erlin', 'Aerlin', 'Ferlin', 'Ierlin'];
+    var name = names_array[Math.floor(Math.random()*names_array.length)];
+    var id = Math.floor(Math.random() * (1 - 1000 + 1)) + 1;
+    var player_id = name + '_' + id.toString();
+    var player = new Player(player_id, name);
+    player.set_attributes('random', true);
+    return player;
 };
 
 exports.get_players_from_game = function(game_id){
