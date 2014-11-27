@@ -13,7 +13,7 @@ html
 		link(rel='stylesheet', href='/css/lib/bootstrap.css')
 		link(rel='stylesheet', href='/css/lib/bootstrap-responsive.css')
 		link(rel='stylesheet', href='/css/main.css')
-		link(rel='stylesheet', href='/css/roles.css')
+		link(rel='stylesheet', href='/css/game.css')
 		link(rel='stylesheet', href='/css/chat.css')
 	body
 		div#nav
@@ -26,26 +26,60 @@ html
 			div#gameid #{game}
 		div#body
 			div.container
+				div.row
+					div.col-xs-6
+						table.table.table-bordered.table-condensed
+							caption GAME SUMMARY
+							thead
+							tr
+								th(colspan=5) Mission Results
+							tbody.game_round
+								tr(id= 'mission_results_row')
+								- console.log(game.mission_player_count)
+									- for (var i = 1; i < 6; i++)
+										td(id='mission_' + i, class = 'mission_cell')
+											|Quest #{i}
+											br
+											= game.mission_player_count[i]
+						table.table.table-bordered.table-condensed
+							thead
+							tr
+								th(colspan=5) Vote Track
+							tbody.game_round
+								tr(id= 'vote_track_row')
+									- for (var i = 1; i < 6; i++)
+										td(id='vote_' + i, class = 'vote_cell')
+											= i
+									td(id='game_summary')
+										|#{game.num_players} Players
+										br
+										|#{game.evil_players} Minions of Mordred
 				div.row-fluid
 					div.col-xs-9
 						= role
+						div#game_messages
+							|game messages will be down here
 					div.col-xs-2.pull-down.scoreboard
 						table.table.table-bordered.table-hover.table-condensed.scoreboard-table
 							caption SCOREBOARD
 							thead
 							tr
+								th
 								th Player
 								th Status
+								th
 							tbody.players
 								- console.log('players are ')
 								- console.log(players)
 								- var player_size = players.length
 								- for (var i = 0; i < player_size; i++)
 									tr(id= 'player_id_' +  players[i]['id'])
+										td.leader_col(id= 'leader_player_id_' +  players[i]['id'])
 										td
 											= players[i]['name']
 										td(id= players[i]['id']+'_status')
 											= roles[players[i]['id']]
+										td.mission_col(id= 'mission_player_id_' +  players[i]['id'])
 
 
 		div.controls

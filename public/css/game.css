@@ -1,0 +1,57 @@
+.leader{
+  background-color: yellow;
+}
+
+.not_selected {
+  opacity: 0.4;
+  filter: alpha(opacity=40); /* msie */
+}
+
+.mission_cell,.vote_cell,#game_summary {
+  text-align: center;
+}
+
+.selected{
+  font-style: italic;
+}
+
+.vote_selected{
+  outline: 5px solid green;
+}
+
+.submit_mission_selected{
+  outline: 5px solid purple;
+}
+
+.approved_vote{
+  background-color: lightgreen;
+}
+
+.rejected_vote{
+  background-color: lightsalmon;
+}
+
+.current_vote_1{
+  background-color: #01A46D;
+}
+.current_vote_2{
+  background-color: #377FC7;
+}
+.current_vote_3{
+  background-color: #F5D800;
+}
+.current_vote_4{
+  background-color: #FF9B2B;
+}
+.current_vote_5{
+  background-color: #EC3E40;
+}
+.current_mission{
+  background-color: lightgray;
+}
+.mission_success{
+  background-color: limegreen;
+}
+.mission_failed{
+  background-color: red;
+}

@@ -5,7 +5,7 @@ var Player = require("./player");
 
 var room = new Room("Test Room");
 var table = new Table(1);
-
+var game_constants = Game.get_constants();
 var active_games = {};
 
 Object.size = function(obj) {
@@ -42,4 +42,20 @@ exports.game = function(game_id){
 
 exports.get_public_players_from_game = function(game_id){
     return active_games[game_id].get_public_players();
+};
+
+exports.get_evil_players = function(num_players){
+    return game_constants['red_count'][num_players];
+};
+
+exports.needs_two_fails = function(num_players){
+    return num_players>= 7;
+};
+
+exports.get_mission_player_count = function(num_players){
+    var missions = {};
+    for(var mission in game_constants['missions']){
+        missions[mission] = game_constants['missions'][mission][num_players];
+    }
+    return missions;
 };
