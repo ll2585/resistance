@@ -1,6 +1,6 @@
 var socket = io('/avalon');
-var leader_icon_html = '<img src = "images/leader.png" height = "20" width = "20"></img>';
-var selected_icon_html = '<img src = "images/selected.png" height = "20" width = "20"></img>';
+var leader_icon_html = '<img src = "images/leader.png" height = "20" width = "20">';
+var selected_icon_html = '<img src = "images/selected.png" height = "20" width = "20">';
 function get_game_id (){
     var game_id_elem = $('#game_id');
     return game_id_elem.html();
@@ -32,6 +32,7 @@ function clear_old_leaders(){
 
 function reset_selected_players(){
     $(".mission_col").empty();
+    $("#propose").remove();
 }
 
 function propose_team_prompt (team_size, players){
@@ -176,6 +177,12 @@ function show_waiting_for_team_message(leader, proposed_team){
     $("#game_messages").append(proposal_html);
 }
 
+function show_waiting_for_players_to_check_roles_message(){
+    clear_messages();
+    var proposal_html = 'Waiting for the everyone to check their roles...';
+    $("#game_messages").append(proposal_html);
+}
+
 function show_proposed_team(leader, proposed_team){
     clear_messages();
     console.log("PROPOSED TEAM SHOWN");
@@ -281,6 +288,8 @@ function show_vote_result(proposal_approved, vote_results, players, proposed_tea
         var player_id = players[i]['id'];
         var player_name = players[i]['name'];
         var in_team = proposed_team.indexOf(player_id) > -1;
+        console.log(player_id + ' is in team? ' + in_team);
+        console.log(proposed_team);
         var player_voted_yes = vote_results[player_name] == "Approve";
         var voting_class;
         if(player_voted_yes){
@@ -353,6 +362,25 @@ function show_mission_result(leader, team_members, mission_success, mission_resu
     team_html += '</ul>';
     $('#game_messages').append(html + team_html);
 }
+
+function done_with_role_info(){
+    socket.emit("done_with_role_info", {game_id: get_game_id(), player_id: get_player_id()});
+}
+function show_role_info(role, info){
+    clear_messages();
+    console.log("SHGOWING ROLE");
+    show_countdown(7, done_with_role_info);
+    var html = 'You are <b> ' + role + '</b><br>' + info['html'];
+    $('#game_messages').append(html);
+}
+function show_show_role_button(){
+    clear_messages();
+    var button = '<div id = "role"><button type="button" id = "role_button">Show My Role!</button></div>';
+    $("#game_messages").append(button);
+    $('#role').click(function(){
+        socket.emit("ready_for_role", {game_id: get_game_id(), player_id: get_player_id()});
+    });
+}
 $(document).ready(function() {
     var player_id = $('.playerID').attr('id');
     var player_name = $('.playerID').html();
@@ -364,6 +392,21 @@ $(document).ready(function() {
         console.log(leader_id);
         make_leader(leader_id);
     });
+
+    socket.on("show_player_roles", function(data){
+        var my_role = data['role'];
+        var info = data['role_information'];
+        show_role_info(my_role, info);
+    });
+
+    socket.on("are_you_ready_for_role", function(){
+        show_show_role_button();
+    });
+
+    socket.on("waiting_for_everyone", function(){
+        show_waiting_for_players_to_check_roles_message();
+    });
+
 
     socket.on("game_round_vote_count", function(data){
         var mission = data['mission'];
@@ -381,6 +424,10 @@ $(document).ready(function() {
         var leader = data['leader'];
         var proposed_team = data['selected_player_names'];
         show_waiting_for_team_message(leader, proposed_team);
+    });
+
+    socket.on("selected_player", function(player_id) {
+        $('#mission_player_id_' + player_id).append(selected_icon_html);
     });
 
     socket.on("deselected_player", function(player_id){

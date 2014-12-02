@@ -28,20 +28,38 @@ exports.start_game = function(id){
 };
 
 exports.add_new_player_to_game = function(game_id, options){
+    var game = active_games[game_id];
+    var player;
     if('id' in options && 'name' in options) {
         var id = options['id'];
         var name = options['name'];
-        var player = new Player(id, name);
-        active_games[game_id].add_player(player);
+        player = new Player(id, name);
+
     }else if('player' in options){
-        var player = options['player'];
-        active_games[game_id].add_player(player);
+        player = options['player'];
+
     }
+
+    game.add_player(player);
 };
 
 exports.player_is_random = function(player){
     return player.get_attribute('random');
 };
+
+exports.select_random_players = function(game){
+    var game_players = game.get_player_ids();
+    var team_size = game.get_current_round()['team_size'];
+    var random_players = [];
+    while(random_players.length < team_size){
+        var player_id = game_players[Math.floor(Math.random()*game_players.length)];
+        if(random_players.indexOf(player_id) == -1){
+            random_players.push(player_id);
+        }
+    }
+    return random_players;
+};
+
 exports.random_vote = function(player){
     return (Math.floor(Math.random() * 2) == 0) ? 'Approve' : 'Reject';
 };

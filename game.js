@@ -1,6 +1,11 @@
 var constants = {
-  blue_roles : ['Merlin', 'Percival', 'Good_Lancelot'],
-  red_roles : ['Mordred', 'Oberon', 'Morgana', 'Bad_Lancelot'],
+  merlin: 'Merlin',
+  percival: 'Percival',
+  good_lancelot: 'Good_Lancelot',
+  mordred: 'Mordred',
+  oberon: 'Oberon',
+  morgana: 'Morgana',
+  bad_lancelot: 'Bad_Lancelot',
   red_count : {5: 2, 6: 2, 7: 3, 8: 3, 9: 3, 10: 4},
   blue_count : {5: 3, 6: 4, 7: 4, 8: 5, 9: 6, 10: 6},
   mission_1 : {5: 2, 6: 2, 7: 2, 8: 3, 9: 3, 10: 3},
@@ -19,7 +24,8 @@ var constants = {
   mission_state : 2
 }
 constants['missions'] = {1: constants['mission_1'], 2: constants['mission_2'], 3: constants['mission_3'], 4: constants['mission_4'], 5: constants['mission_5']};
-
+constants['blue_roles'] = [constants['merlin'], constants['percival'], constants['good_lancelot']];
+constants['red_roles'] =  [constants['mordred'], constants['oberon'], constants['morgana'], constants['bad_lancelot']];
 function is_red(role){
   return (constants['red_roles'].indexOf(role) > -1 || role == constants['vanilla_red'] || role == constants['assassin']);
 }
@@ -45,6 +51,7 @@ function Game() {
   this.blue_points;
   this.red_points;
   this.state;
+  this.players_ready_to_start = [];
 }
 
 
@@ -58,6 +65,21 @@ Game.prototype.add_player = function(player) {
 Game.prototype.get_players = function() {
   return this.players;
 };
+
+Game.prototype.has_roles = function() {
+  for(var i = 0; i < constants['blue_roles'].length; i++){
+    if(this.settings[constants['blue_roles'][i]]){
+      return true;
+    }
+  }
+  for(var i = 0; i < constants['red_roles'].length; i++){
+    if(this.settings[constants['red_roles'][i]]){
+      return true;
+    }
+  }
+  return false;
+};
+
 Game.prototype.get_player_from_id = function(player_id) {
   return this.players_id[player_id];
 };
@@ -123,6 +145,16 @@ Game.prototype.pass_leadership = function() {
   this.proposed_team = [];
 };
 
+Game.prototype.player_name_exists = function(player_name) {
+  for(var i = 0; i < this.players.length; i++){
+    var name = this.players[i]['name'];
+    if (name == player_name){
+      console.log("the plaer name " + player_name + " is " + name);
+      return true;
+    }
+  }
+  return false;;
+};
 Game.prototype.vote_failed = function() {
 
   this.current_vote += 1;
@@ -131,6 +163,7 @@ Game.prototype.vote_failed = function() {
 };
 Game.prototype.start = function() {
   if(!this.started){
+    this.players_ready_to_start = [];
     var all_roles = [];
     this.player_count = this.players.length;
     var num_reds = constants['red_count'][this.player_count];
@@ -152,6 +185,7 @@ Game.prototype.start = function() {
 
     var blues = [];
     for(var i = 0; i < constants['blue_roles'].length; i++){
+      console.log(constants['blue_roles']);
       if(this.settings[constants['blue_roles'][i]]){
         blues.push(constants['blue_roles'][i]);
       }
@@ -173,8 +207,8 @@ Game.prototype.start = function() {
     }
 
     //change player order maybe
-    for(player_id in this.players_id){
-      this.player_order.push(player_id);
+    for(var i = 0; i < this.players.length; i++){
+      this.player_order.push(this.players[i]['id']);
     }
     //leader is first player
     this.leader = this.player_order[0];
@@ -188,7 +222,94 @@ Game.prototype.start = function() {
     console.log('game started already brah');
   }
 };
+Game.prototype.get_player_role = function(player_id) {
+  return this.assigned_roles[player_id];
+};
+Game.prototype.get_role_information = function(role) {
+  var result = ''
 
+  if(role == constants['vanilla_blue']){
+    result = 'Have Fun!';
+  }else if(role == constants['merlin']){
+    result = 'The REDS are: <b><ul>'
+    var mordred_exists = false;
+    for(var player_id in this.players_id){
+      if(this.is_spy(player_id) && !(this.assigned_roles[player_id] == constants['mordred'])){
+        result += '<li>' + this.players_id[player_id]['name'] + '</li>';
+      }
+      if(this.assigned_roles[player_id] == constants['mordred']){
+        mordred_exists = true;
+      }
+    }
+    result += '</b></ul>';//ok i made this html :x
+    if(mordred_exists){
+      result += '<br><b>WARNING: MORDRED EXISTS</b>';
+    }
+
+
+  }else if(role == constants['percival']){
+    result = 'Merlin is';
+    var merlin_name = '';
+    var morgana_name = '';
+    var morgana_exists = false;
+    for(var player_id in this.players_id){
+      if(this.assigned_roles[player_id] == constants['merlin']){
+        merlin_name = this.players_id[player_id]['name'];
+      }
+      if(this.assigned_roles[player_id] == constants['morgana']){
+        morgana_exists = true;
+        morgana_name = this.players_id[player_id]['name'];
+      }
+    }
+    var possible_merlins = [merlin_name];
+    if(morgana_exists){
+      result += ' between the following two people (the other is <b>MORGANA</b>)';
+      possible_merlins.push(morgana_name);
+      possible_merlins = shuffle(possible_merlins);
+    }
+
+      result += ':<b><ul>';
+    for(var i = 0; i < possible_merlins.length; i++){
+      result += '<li>' + possible_merlins[i] + '</li>';
+    }
+    result += '</b></ul>';
+  }else if(role == constants['oberon']){
+    result = 'Have Fun!';
+  }else if(role == constants['bad_lancelot']){
+    result = 'Have Fun!';
+  }else if(is_red(role)){
+    result = 'The REDS are: <b><ul>'
+    var bad_lancelot_exists = false;
+    var oberon_exists = false;
+    for(var player_id in this.players_id){
+      if(this.is_spy(player_id) && !(this.assigned_roles[player_id] == constants['oberon']) && !(this.assigned_roles[player_id] == constants['bad_lancelot'])){
+        result += '<li>' + this.players_id[player_id]['name'] + '</li>';
+      }
+      if(this.assigned_roles[player_id] == constants['oberon']){
+        oberon_exists = true;
+      }
+      if(this.assigned_roles[player_id] == constants['bad_lancelot']){
+        result += '<li>LANCELOT: ' + this.players_id[player_id]['name'] + '</li>';
+      }
+    }
+    result += '</b></ul>';//ok i made this html :x
+    if(oberon_exists || bad_lancelot_exists){
+      result += '<br><b>WARNING: ';
+      if(oberon_exists){
+        result += 'OBERON ';
+        if(bad_lancelot_exists){
+          result += 'AND ';
+        }
+      }
+      if(bad_lancelot_exists){
+        result += 'LANCELOT ';
+      }
+      result += 'EXIST </b>';
+    }
+  }
+  var data = {html: result, data: {}};
+  return data;
+};
 Game.prototype.next_mission = function() {
   if(this.started && this.is_mission_state()){
     this.current_mission += 1;
@@ -254,6 +375,11 @@ Game.prototype.mission_passed = function() {
   this.blue_points += 1;
   this.all_mission_results[this.current_mission] = 1;
 };
+
+Game.prototype.has_merlin = function() {
+  return this.settings[constants['merlin']];
+};
+
 Game.prototype.mission_failed = function() {
   this.red_points += 1;
   this.all_mission_results[this.current_mission] = 0;
@@ -267,6 +393,8 @@ Game.prototype.get_mission_cards_shuffled = function() {
   return submitted_mission_cards;
 };
 Game.prototype.all_players_voted = function() {
+  console.log("num players: " + this.player_count);
+  console.log(this.votes);
   var players_voted = Object.keys(this.votes).length;
   return players_voted == this.player_count;
 };
@@ -315,6 +443,20 @@ Game.prototype.missions_over = function() {
 Game.prototype.get_leader_name = function() {
   return this.players_id[this.leader]['name'];
 };
+Game.prototype.end_game = function() {
+  return this.started = false;
+};
+
+Game.prototype.make_player_ready_to_start = function(player_id) {
+  if(this.players_ready_to_start.indexOf(player_id) == -1){
+    this.players_ready_to_start.push(player_id);
+  }
+
+};
+
+Game.prototype.is_ready_to_start = function() {
+  return this.players_ready_to_start.length == this.get_number_of_players();
+};
 
 Game.prototype.get_next_player_name = function() {
   var next_leader = this.player_order[0];
@@ -330,9 +472,13 @@ Game.prototype.player_deselected = function(player_id) {
   if (index > -1) {
     this.proposed_team.splice(index, 1);
   }
+  console.log('sunelected ' + player_id);
+  console.log(this.proposed_team);
 };
 
 Game.prototype.player_selected = function(player_id) {
+  console.log('selected ' + player_id);
+  console.log(this.proposed_team);
   this.proposed_team.push(player_id);
 };
 
