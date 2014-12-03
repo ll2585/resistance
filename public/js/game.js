@@ -479,6 +479,7 @@ function show_assassination_panel (players, is_assassin){
 
 function player_selected_to_be_assassinated(player_id){
     console.log('THIS GUY IS CHOSEN TO DIE');
+    console.log(player_id);
     $('#player_id_' + player_id + '_to_assassinate').addClass("selected");
     $('#player_id_' + player_id + '_to_assassinate').children('td:nth-child(1)').append(assassination_icon_html);
 }

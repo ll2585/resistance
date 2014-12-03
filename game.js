@@ -52,6 +52,8 @@ function Game() {
   this.red_points;
   this.state;
   this.players_ready_to_start = [];
+  this.players_finished_with_mission_results = [];
+  this.players_finished_with_voting_results = [];
 }
 
 
@@ -164,6 +166,8 @@ Game.prototype.vote_failed = function() {
 Game.prototype.start = function() {
   if(!this.started){
     this.players_ready_to_start = [];
+    this.players_finished_with_mission_results = [];
+    this.players_finished_with_voting_results = [];
     var all_roles = [];
     this.player_count = this.players.length;
     var num_reds = constants['red_count'][this.player_count];
@@ -412,7 +416,12 @@ Game.prototype.all_players_voted = function() {
   var players_voted = Object.keys(this.votes).length;
   return players_voted == this.player_count;
 };
-
+Game.prototype.all_human_players_voted = function() {
+  console.log("num players: " + this.player_count);
+  console.log(this.votes);
+  var players_voted = Object.keys(this.votes).length;
+  return players_voted == this.get_number_of_human_players();
+};
 Game.prototype.all_players_submitted = function() {
   //check it two ways, i guess. both should be the same.
   var players_submitted = Object.keys(this.mission_result).length;
@@ -431,6 +440,27 @@ Game.prototype.all_players_submitted = function() {
   return (players_submitted == this.proposed_team.length && result);
 };
 
+Game.prototype.all_human_players_submitted = function() {
+  console.log('wtf humans');
+  //check it two ways, i guess. both should be the same.
+  var players_submitted = Object.keys(this.mission_result).length;
+  var human_players_on_mission = 0;
+
+  var result = true;
+  for(var i = 0; i < this.proposed_team.length; i++){
+    if(!(this.proposed_team[i] in this.mission_result) && this.players_id[this.proposed_team[i]].get_attribute('bot') == null){
+      result = false;
+      console.log('oops on thsi fucker');
+      console.log(this.proposed_team[i]);
+    }
+    if(this.players_id[this.proposed_team[i]].get_attribute('bot') == null){
+      human_players_on_mission += 1;
+    }
+  }
+  console.log('dumbass humans on this team: ' + human_players_on_mission);
+  console.log('idiots that submitted ' + players_submitted);
+  return (players_submitted == human_players_on_mission && result);
+};
 Game.prototype.get_votes = function() {
   var votes = {};
   for(var i = 0; i < this.players.length; i++){
@@ -465,11 +495,38 @@ Game.prototype.make_player_ready_to_start = function(player_id) {
   if(this.players_ready_to_start.indexOf(player_id) == -1){
     this.players_ready_to_start.push(player_id);
   }
-
 };
 
 Game.prototype.is_ready_to_start = function() {
   return this.players_ready_to_start.length == this.get_number_of_players();
+};
+
+Game.prototype.make_player_finished_with_mission_results = function(player_id) {
+  if(this.players_finished_with_mission_results.indexOf(player_id) == -1){
+    this.players_finished_with_mission_results.push(player_id);
+  }
+};
+Game.prototype.make_player_done_with_voting_results = function(player_id) {
+  if(this.players_finished_with_voting_results.indexOf(player_id) == -1){
+    this.players_finished_with_voting_results.push(player_id);
+  }
+};
+Game.prototype.is_all_done_with_mission_results = function() {
+  return this.players_finished_with_mission_results.length == this.get_number_of_players();
+};
+Game.prototype.everyone_done_with_voting_results = function() {
+  //or bots because bots dont care
+  console.log('players finished  with voting: ' + this.players_finished_with_voting_results);
+  return this.players_finished_with_voting_results.length == this.get_number_of_players() || this.players_finished_with_voting_results.length == this.get_number_of_human_players();
+};
+Game.prototype.reset_players_done_with_voting_results = function() {
+  this.players_finished_with_voting_results = [];
+};
+Game.prototype.clear_players_done_with_mission_results = function() {
+  this.players_finished_with_mission_results = [];
+};
+Game.prototype.all_human_players_done_with_mission_results = function() {
+  return this.players_finished_with_mission_results.length == this.get_number_of_human_players();
 };
 
 Game.prototype.get_next_player_name = function() {
@@ -517,6 +574,17 @@ Game.prototype.get_player_ids = function() {
   }
   return players;
 };
+Game.prototype.get_non_human_player_ids = function() {
+  var players = [];
+  for(var id in this.players_id){
+    if(this.players_id[id].get_attribute('bot') !== null){
+      players.push(id); //ids are ints maybe i have to change this later
+    }
+
+
+  }
+  return players;
+};
 
 Game.prototype.on_proposal_state = function() {
   this.state = constants['team_propose_state'];
@@ -560,6 +628,31 @@ Game.prototype.player_is_on_mission = function(player_id) {
   return this.proposed_team.indexOf(player_id) > -1;; //ids are ints maybe i have to change this later)
 };
 
+Game.prototype.get_number_of_human_players = function() {
+  var human_players = 0;
+  for(var i = 0; i < this.players.length; i++){
+    if(this.players[i].get_attribute('bot') == null){
+      human_players += 1;
+    }
+  }
+  return human_players;
+};
+
+Game.prototype.all_human_players_ready_to_start = function() {
+  return this.players_ready_to_start.length == this.get_number_of_human_players();
+};
+Game.prototype.leader_is_bot = function() {
+  var leader_player = this.players_id[this.leader];
+  return leader_player.get_attribute('bot') !== null;
+};
+Game.prototype.no_humans_on_team = function() {
+  for(var i = 0; i < this.proposed_team.length; i++){
+    if(this.players_id[this.proposed_team[i]].get_attribute('bot') == null){
+      return false;
+    }
+  }
+  return true;
+};
 module.exports = exports = Game;
 
 exports.get_constants = function() {

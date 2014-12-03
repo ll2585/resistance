@@ -75,6 +75,7 @@ exports.random_bot = function(){
     var player_id = name + '_' + id.toString();
     var player = new Player(player_id, name);
     player.set_attributes('random', true);
+    player.set_attributes('bot', true);
     return player;
 };
 
