@@ -32,15 +32,16 @@ app.get('/create', function(req, res){
     var query = require('url').parse(req.url,true).query;
     var player_id = query['player_id'];
     var player_name = query['player_name'];
-    var game_id = 1;
+    var game_id = 'game_1';
     game_logic.start_game(game_id);
+    console.log("STARTING GAME " + game_id);
     game_logic.add_new_player_to_game(game_id, {id: player_id, name: player_name});
 
     //add 4 dummy players cus fuck it
 
 
     var players = game_logic.get_public_players_from_game(game_id);
-    res.render("newgame", {player: {name: player_name, id: player_id }, game_id: 1, players: players});
+    res.render("newgame", {player: {name: player_name, id: player_id }, game_id: game_id, players: players});
 });
 
 //changee to post later
@@ -67,17 +68,31 @@ app.post('/play', function(req, res){
 app.get('/play', function(req, res){
     var player_id = 'luke_id';
     var player_name = 'Luke';
-    var game_id = 1;
+    var game_id = 'game_1_bots';
     game_logic.start_game(game_id);
     game_logic.add_new_player_to_game(game_id, {id: player_id, name: player_name});
 
-    //add 4 dummy players cus fuck it
-    var bots_to_add = 4;
+    //add 6 dummy players cus fuck it
+    var bots_to_add = 6;
+    var game = game_logic.game(game_id);
     for(var i = 0; i < bots_to_add; i++){
-        game_logic.add_new_player_to_game( game_id, {player: game_logic.random_bot()});
+        var bot = game_logic.random_bot();
+        var bot_name = bot.get_name();
+        console.log("THE BOT IS " + bot_name);
+        console.log(game.player_name_exists(bot_name));
+        while(game.player_name_exists(bot_name)){
+            bot = game_logic.random_bot();
+            bot_name = bot.get_name();
+            console.log(bot_name);
+        }
+        game_logic.add_new_player_to_game( game_id, {player: bot});
     }
     console.log(player_id + ' and ' + player_name + ' and ' + game_id);
     var game = game_logic.game(game_id);
+    game.add_role('Merlin'); //add merlin
+    game.add_role('Morgana'); //add merlin
+    game.add_role('Mordred'); //add merlin
+    game.add_role('Percival'); //add merlin
     game.start();
     game.add_to_buffer(player_id); //so it doesn't say you disconnected
     var players = game_logic.get_public_players_from_game(game_id);
@@ -98,7 +113,7 @@ app.get('/join', function(req, res){
     var query = require('url').parse(req.url,true).query;
     var player_id = query['player_id'];
     var player_name = query['player_name'];
-    var game_id = 1;
+    var game_id = 'game_1';
     var game = game_logic.game(game_id);
 
     if(game.in_game(player_id)){
@@ -110,12 +125,9 @@ app.get('/join', function(req, res){
     }
     var players = game_logic.get_public_players_from_game(game_id);
     console.log('LOL');
-    res.render("joingame", {player: {name: player_name, id: player_id }, game_id: 1, players: players, game_settings: game.get_settings()});
+    res.render("joingame", {player: {name: player_name, id: player_id }, game_id: game_id, players: players, game_settings: game.get_settings()});
 });
 
-var avalon_players_done_with_voting_results = {}; //fuck this shitty work around around the timing issue when some ppl finish the timeout function (countdown)
-//and then emit a signal that causes the others to display somethinge lse, but then they finish the timeout after
-var avalon_players_done_with_mission_results = {}; //same bullshit
 io.of('/avalon').on('connection', function(socket){
     var player_id;
     var socket_rooms = [];
@@ -133,7 +145,7 @@ io.of('/avalon').on('connection', function(socket){
         }else{
             game.remove_from_buffer(player_id);
         }
-});
+    });
 
     socket.on('joined_lobby', function(){
         socket.join('lobby');
@@ -163,6 +175,8 @@ io.of('/avalon').on('connection', function(socket){
     });
 
     socket.on('new_game_started', function (data) {
+        console.log('datar');
+        console.log('game id is ' + data['game_id']);
         var game_id = data['game_id'];
         data['players'] = game_logic.get_players_from_game(game_id);
         io.of('/avalon').to('lobby').emit('new_game_started_lobby', data);
@@ -209,6 +223,7 @@ io.of('/avalon').on('connection', function(socket){
             var selected_id = data['selected_id'];
             console.log('leader selected ' + selected_id);
             game.player_selected(selected_id);
+            console.log('game id is ' + game_id);
             socket.broadcast.to(game_id).emit('selected_player', selected_id);
         }
     });
@@ -231,13 +246,64 @@ io.of('/avalon').on('connection', function(socket){
         socket.join(game_player_room(game_id, player_id));
         console.log('player ' + player_id + " joined room " + game_player_room(game_id, player_id));
         socket.join(game_id);
+        console.log('teh gameid is ' + game_id);
         var game = game_logic.game(game_id);
         console.log('leader is ' + game.get_leader());
         socket.emit('new_leader', game.get_leader()); //NOT io.emit because people are getting rerouted and the rerouting fires this event
         //so if it were io.emit, it would fire multiple times for the first guy to load (his fires, and everyone who loads after him fires)
         var game_data = game.get_current_round();
-        socket.emit('game_round_vote_count', {mission: game_data['round'], vote: game_data['vote']});
-        io.of('/avalon').to(leader_room(game_id)).emit('you_are_leader', game_data);
+        if(game.has_roles()){
+            var player_role = game.get_player_role(player_id);
+            var role_information = game.get_role_information(player_role);
+            console.log("THE ROLE IS ");
+            console.log(player_role);
+            console.log("THE INFO IS ");
+            console.log(role_information);
+            socket.emit('are_you_ready_for_role');
+        }else {
+            socket.emit('game_round_vote_count', {mission: game_data['round'], vote: game_data['vote']});
+            io.of('/avalon').to(leader_room(game_id)).emit('you_are_leader', game_data);
+        }
+    });
+
+    socket.on('ready_for_role', function(data){
+        var game_id = data['game_id'];
+        var player_id = data['player_id'];
+        var game = game_logic.game(game_id);
+        var player_role = game.get_player_role(player_id);
+        var role_information = game.get_role_information(player_role);
+        console.log("THE ROLE IS ");
+        console.log(player_role);
+        console.log("THE INFO IS ");
+        console.log(role_information);
+        socket.emit('show_player_roles', {role: player_role, role_information: role_information});
+    });
+
+    socket.on('done_with_role_info', function(data){
+        var game_id = data['game_id'];
+        var player_id = data['player_id'];
+        var game = game_logic.game(game_id);
+        game.make_player_ready_to_start(player_id);
+
+        //for bots ofc
+        if(player_id == 'luke_id'){
+            var bots = every_bot(game_id);
+            for(var i = 0; i < bots.length; i++){
+                game.make_player_ready_to_start(bots[i]);
+            }
+        }
+
+        if(game.is_ready_to_start()){
+            console.log('teh gameid is ' + game_id);
+            console.log('leader is ' + game.get_leader());
+            io.of('/avalon').to(game_id).emit('new_leader', game.get_leader()); //this here is io.emit since it fires only once
+            var game_data = game.get_current_round();
+            io.of('/avalon').to(game_id).emit('game_round_vote_count', {mission: game_data['round'], vote: game_data['vote']});
+            io.of('/avalon').to(leader_room(game_id)).emit('you_are_leader', game_data);
+        } else{
+            socket.emit('waiting_for_everyone');
+        }
+
     });
 
     socket.on('team_proposed', function(data){
@@ -253,7 +319,8 @@ io.of('/avalon').on('connection', function(socket){
             console.log('selected players are ');
             console.log(selected_players);
             if(game.current_vote == 5){ //CHANGE THIS TO 5
-                vote_passed(game_id, true);
+                game.on_mission();
+                vote_passed(game_id, player_id, socket, true);
             }else {
                 io.of('/avalon').to(game_id).emit('team_proposed', {
                     leader: leader,
@@ -262,55 +329,25 @@ io.of('/avalon').on('connection', function(socket){
             }
         }
     });
-    /**
-    socket.on('vote_passed', function(data){
-        var game_id = data['game_id'];
-        var player_id = data['player_id'];
-        var game = game_logic.game(game_id);
-        if(game.get_leader() == player_id && game.is_propose_state()){
-            game.team_proposed();
-            var game_players = game.get_player_ids();
-            var selected_players = data['selected_players'];
-            var public_players = game.get_public_players();
-            var selected_player_names = [];
-            console.log('selected players are ');
-            console.log(selected_players);
-            for(var i = 0; i < public_players.length; i++){
-                if(selected_players.indexOf(public_players[i]['id']) > -1){
-                    selected_player_names.push(public_players[i]['name']);
-                }
-            }
-            for(var i = 0 ; i < game_players.length; i++){
-                if(selected_players.indexOf(game_players[i]) > -1){
-                    var is_spy = game.is_spy(game_players[i]);
-                    console.log(is_spy);
-                    io.of('/avalon').to(game_player_room(game_id, game_players[i])).emit('you_are_on_team', {is_spy: is_spy, selected_player_names: selected_player_names});
-                } else{
-                    io.of('/avalon').to(game_player_room(game_id, game_players[i])).emit('team_proposed', {selected_player_names: selected_player_names});
-                }
-            }
-        }
-    });
-    **/
-    function vote_passed(game_id, auto_go){
+
+    function vote_passed(game_id, player_id, socket, auto_go){
         console.log("VOTE PAS")
         var game = game_logic.game(game_id);
         console.log("VOTE PSD????");
-        if(game.is_propose_state()) {
-            if(auto_go || avalon_players_done_with_voting_results[game_id].length == game.get_number_of_players()) {
-                console.log("ON MISSION STATE FINALLY");
-                game.on_mission(); //lock it when everyoine is done
-                avalon_players_done_with_voting_results[game_id] = [];
-                console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!! VOTE PASSED");
-                var selected_players_ids = game.get_selected_players_ids();
-                var selected_player_names = game.get_selected_players_names();
-                var game_players = game.get_player_ids();
-                var leader = game.get_leader_name();
-                console.log('selected players are ');
-                console.log(selected_players_ids);
+        if(game.is_mission_state()) {//should be in mission state already
+            console.log("ON MISSION STATE FINALLY");
+            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!! VOTE PASSED");
+            var selected_players_ids = game.get_selected_players_ids();
+            var selected_player_names = game.get_selected_players_names();
+            var leader = game.get_leader_name();
+            var game_players = game.get_player_ids();
+            console.log('selected players are ');
+            console.log(selected_players_ids);
+
+            if (auto_go){
                 for (var i = 0; i < game_players.length; i++) {
                     if (game.player_is_on_mission(game_players[i])) {
-                        console.log('im on! ' + game_players[i]);
+                        console.log('im on! autog ' + game_players[i]);
                         var is_spy = game.is_spy(game_players[i]);
                         console.log(is_spy);
                         io.of('/avalon').to(game_player_room(game_id, game_players[i])).emit('you_are_on_team', {
@@ -319,9 +356,35 @@ io.of('/avalon').on('connection', function(socket){
                             leader: leader
                         });
                     } else {
-                        console.log('apparently im not on ' + game_players[i]);
+                        console.log('apparently im not on but autogo ' + game_players[i]);
                         //waiting on voting?
                         io.of('/avalon').to(game_player_room(game_id, game_players[i])).emit('waiting_for_team', {leader: leader, selected_player_names: selected_player_names});
+
+
+                        if(game_players[i] == 'luke_id') {
+                            console.log("BOTS GO");
+                            bots_vote(game, game_id);
+                        }
+                    }
+                }
+            } else {
+                if (game.player_is_on_mission(player_id)) {
+                    console.log('im on! ' + player_id);
+                    var is_spy = game.is_spy(player_id);
+                    console.log(is_spy);
+                    socket.emit('you_are_on_team', {
+                        is_spy: is_spy,
+                        selected_player_names: selected_player_names,
+                        leader: leader
+                    });
+                } else {
+                    console.log('apparently im not on ' + player_id);
+                    //waiting on voting?
+                    socket.emit('waiting_for_team', {leader: leader, selected_player_names: selected_player_names});
+
+                    if(player_id == 'luke_id') {
+                        console.log("BOTS GO");
+                        bots_vote(game, game_id);
                     }
                 }
             }
@@ -330,24 +393,31 @@ io.of('/avalon').on('connection', function(socket){
 
 
 
-    function vote_failed(game_id){
+    function vote_failed(game_id, player_id, socket){
+        //fires for each socket
         var game = game_logic.game(game_id);
-        if(game.is_propose_state()) {
-            if (avalon_players_done_with_voting_results[game_id].length == game.get_number_of_players()) {
-                console.log("MISSION FAILED SO RESET THESE BITCHES");
-                avalon_players_done_with_voting_results[game_id] = [];
 
-                game.vote_failed(); //automatically passes leadership
-                console.log('new leader is ' + game.get_leader());
-                io.of('/avalon').to(game_id).emit('new_leader', game.get_leader()); //NOT io.emit because people are getting rerouted and the rerouting fires this event
-                //so if it were io.emit, it would fire multiple times for the first guy to load (his fires, and everyone who loads after him fires)
-                var game_data = game.get_current_round();
-                io.of('/avalon').to(game_id).emit('game_round_vote_count', {
-                    mission: game_data['round'],
-                    vote: game_data['vote']
-                });
-                io.of('/avalon').to(leader_room(game_id)).emit('you_are_leader', game_data);
+        if(game.is_propose_state()) {
+            game.vote_failed(); //automatically passes leadership
+            console.log("MISSION FAILED SO RESET THESE BITCHES");
+            console.log('new leader is ' + game.get_leader());
+            socket.emit('new_leader', game.get_leader()); //NOT io.emit because people are getting rerouted and the rerouting fires this event
+            //so if it were io.emit, it would fire multiple times for the first guy to load (his fires, and everyone who loads after him fires)
+            var game_data = game.get_current_round();
+            socket.emit('game_round_vote_count', {
+                mission: game_data['round'],
+                vote: game_data['vote']
+            });
+            if(socket.rooms.indexOf(leader_room(game_id)) >= 0){
+                socket.emit('you_are_leader', game_data);
             }
+
+            if(player_id == 'luke_id') {
+                if (is_bot(game.get_leader())) {
+                    random_bot_leader(game, game_id);
+                }
+            }
+
         }
     }
 
@@ -390,9 +460,19 @@ io.of('/avalon').on('connection', function(socket){
                 var vote_result = game.get_votes();
                 console.log("EVERYONE VOTED");
                 console.log(vote_result);
+                //game AUTOMATICALLY PROCEEDS to mission state if vote passed
+                //cus this only fires ONCE
+                var next_player_name;
+                var proposal_approved = game.proposal_approved();
+                if(proposal_approved){
+                    game.on_mission(); //lock it when everyoine is done
+                    var next_player_name = game.get_leader_name(); //because i made the game already do it this is the current leader lolz
+                }else{
+                    var next_player_name = game.get_next_player_name(); //because if it didn't get approved, the leadership didn't pass
+                }
                 var players = game.get_public_players();
                 var proposed_team = game.get_selected_players_ids();
-                var next_player_name = game.get_next_player_name();
+                console.log('proposed_team was ' + proposed_team);
                 io.of('/avalon').to(game_id).emit('vote_result', {proposal_approved: proposal_approved, vote_results: vote_result, players: players, proposed_team: proposed_team, next_player_name: next_player_name});
             }
         }
@@ -415,13 +495,14 @@ io.of('/avalon').on('connection', function(socket){
             console.log('player ' + player_id + ' submitted ' + submission);
 
             //make spies always fail for testing
-            if(player_id == 1){
+            if(player_id == 'luke_id'){
                 var bots = every_bot(game_id);
                 for(var i = 0; i < bots.length; i++){
                     var bot_id = bots[i];
                     if(game.player_is_on_mission(bot_id)){
                         if(game.is_spy(bot_id)){
-                            game.player_submits_mission(bot_id, "Fail");
+                            //game.player_submits_mission(bot_id, "Fail");
+                            game.player_submits_mission(bot_id, "Success");
                         }else{
                             game.player_submits_mission(bot_id, "Success");
                         }
@@ -446,6 +527,7 @@ io.of('/avalon').on('connection', function(socket){
                 var game_data = game.get_current_round();
                 var mission_round = game_data['round'];
                 io.of('/avalon').to(game_id).emit('mission_result', {mission_round: mission_round, mission_success: mission_success, mission_result: mission_result, players: players, team_members: team_members, leader: leader, next_player_name: next_player_name});
+                game.next_mission();
             }
         }
     });
@@ -453,84 +535,221 @@ io.of('/avalon').on('connection', function(socket){
 
     socket.on('done_with_voting_results', function(data){
         var game_id = data['game_id'];
-        if(!(game_id in avalon_players_done_with_voting_results)){
-            console.log("RESET THIS WORKAROUND");
-            avalon_players_done_with_voting_results[game_id] = [];
-        }
         var player_id = data['player_id'];
         console.log(player_id + ' is DONE WITH THIS SHIT');
-        avalon_players_done_with_voting_results[game_id].push(player_id);
-        console.log("DUMBASSES WHO ARE DONE ");
-        console.log(avalon_players_done_with_voting_results);
         var game = game_logic.game(game_id);
-        if(game.all_players_voted() && game.is_propose_state()){
-            var proposal_approved = game.proposal_approved();
-            if(proposal_approved){
-                vote_passed(game_id, false);
-            }else{
-                vote_failed(game_id);
+        var proposal_approved = game.proposal_approved();
+        if(proposal_approved && game.is_mission_state()){ //cus it auto passed to mission state
+            vote_passed(game_id, player_id, socket, false);
+        }else if(game.is_propose_state()){ //cus it stayed in propose state
+            vote_failed(game_id, player_id, socket);
+        }
+    });
+
+    socket.on('assassinate', function(data){
+        var game_id = data['game_id'];
+        var player_id = data['player_id'];
+        var selected_player = data['selected_player'];
+        console.log(player_id + ' ASSASSINATES');
+        var game = game_logic.game(game_id);
+
+        if(game.missions_over()){ //server side validation that you can only assassinate if game is over, there is merlin and you are assassin
+            var blue_wins = game.did_blue_win(); //true if blue wins
+            var players = game.get_public_players();
+            console.log('next1');
+            if(game.has_merlin() && blue_wins){
+                console.log('next2');
+                if(game.player_is(player_id, game_logic.get_constants()['assassin'])){
+                    console.log('next3');
+                    var selected_player_is_merlin = game.player_is(selected_player, game_logic.get_constants()['merlin']);
+                    var selected_player_role = game.get_player_role(selected_player);
+                    //fires to each socket
+                    io.of('/avalon').to(game_id).emit('assassination_result', {success: selected_player_is_merlin, selected_player: selected_player, role: selected_player_role});
+                    var game_players = game.get_player_ids();
+                    for (var i = 0; i < game_players.length; i++) { //tells not selected players to reveal roles
+                        if (game_players[i] != selected_player) {
+                            io.of('/avalon').to(game_player_room(game_id, game_players[i])).emit('show_reveal_role_to_all_button');
+                        }
+                    }
+                }
             }
+        }
+    });
+
+    socket.on('selected_player_to_assassinate', function(data){
+        var game_id = data['game_id'];
+        var player_id = data['player_id'];
+        var selected_player = data['selected_player'];
+        console.log(player_id + ' ASSASSINATES');
+        var game = game_logic.game(game_id);
+
+        if(game.missions_over()){ //server side validation that you can only assassinate if game is over, there is merlin and you are assassin
+            var blue_wins = game.did_blue_win(); //true if blue wins
+            var players = game.get_public_players();
+            console.log('next1');
+            if(game.has_merlin() && blue_wins){
+                console.log('next2');
+                if(game.player_is(player_id, game_logic.get_constants()['assassin'])){
+                    console.log('selected a nooblet ' + selected_player);
+                    socket.broadcast.to(game_id).emit('selected_player_to_assassinate', selected_player);
+                } else if(player_id == 'luke_id'){
+
+                }
+            }
+        }
+    });
+
+    socket.on('deselected_player_to_assassinate', function(data){
+        var game_id = data['game_id'];
+        var player_id = data['player_id'];
+        var selected_player = data['selected_player'];
+        console.log(player_id + ' ASSASSINATES');
+        var game = game_logic.game(game_id);
+
+        if(game.missions_over()){ //server side validation that you can only assassinate if game is over, there is merlin and you are assassin
+            var blue_wins = game.did_blue_win(); //true if blue wins
+            var players = game.get_public_players();
+            console.log('next1');
+            if(game.has_merlin() && blue_wins){
+                console.log('next2');
+                if(game.player_is(player_id, game_logic.get_constants()['assassin'])){
+                    socket.broadcast.to(game_id).emit('deselected_player_to_assassinate', selected_player);
+                }
+            }
+        }
+    });
+
+    socket.on('reveal_my_role_to_all', function(data){
+        var game_id = data['game_id'];
+        var player_id = data['player_id'];
+        console.log(player_id + ' shows role');
+        var game = game_logic.game(game_id);
+
+        if(game.missions_over()) { //i guess you can make this fire many times ??
+            var role = game.get_player_role(player_id);
+            //fires to each socket
+            io.of('/avalon').to(game_id).emit('player_reveals_role', {
+                player_id: player_id,
+                role: role
+            });
         }
     });
 
     //in progress
     socket.on('done_with_mission_results', function(data){
+        //fires for each socket
         var game_id = data['game_id'];
         var game = game_logic.game(game_id);
-        if(!(game_id in avalon_players_done_with_mission_results)){
-            console.log("RESET THIS WORKAROUND");
-            avalon_players_done_with_mission_results[game_id] = [];
-        }
-        avalon_players_done_with_mission_results[game_id].push(player_id);
-        if(game.all_players_submitted() && game.is_mission_state() && avalon_players_done_with_mission_results[game_id].length == game.get_number_of_players()){
+        var player_id = data['player_id'];
+        if(game.is_propose_state()){ //cus we already progressed
             console.log("MISSION DONE LOOKING SO RESET THESE BITCHES");
-            avalon_players_done_with_mission_results[game_id] = [];
             if(game.missions_over()){
                 //todo
+                game.end_game();
+                var blue_wins = game.did_blue_win(); //true if blue wins
+                var players = game.get_public_players();
+                if(game.has_merlin() && blue_wins){
+                    if(game.player_is(player_id, game_logic.get_constants()['assassin'])){
+                        socket.emit('game_over_avalon_assassin', {game_id: game_id, player_id: player_id, players: players});
+                    }else{
+                        socket.emit('game_over_avalon', {game_id: game_id, player_id: player_id, players: players});
+                    }
+
+                }else{
+                    socket.emit('game_over', {result: blue_wins});
+                    io.of('/avalon').to(game_id).emit('show_reveal_role_to_all_button');
+                }
+
+
+                console.log("GAME OVER");
             }else{
-                game.next_mission();
-                io.of('/avalon').to(game_id).emit('new_leader', game.get_leader()); //because of that bullshit workaround, can just fire to all since it only fires once
+                socket.emit('new_leader', game.get_leader());
                 var game_data = game.get_current_round();
-                io.of('/avalon').to(game_id).emit('game_round_vote_count', {mission: game_data['round'], vote: game_data['vote']});
-                io.of('/avalon').to(leader_room(game_id)).emit('you_are_leader', game_data);
+                socket.emit('game_round_vote_count', {mission: game_data['round'], vote: game_data['vote']});
+                if(socket.rooms.indexOf(leader_room(game_id)) >= 0){
+                    socket.emit('you_are_leader', game_data);
+                }
+
+                //for bots
+                if(player_id == 'luke_id') {
+                    if (is_bot(game.get_leader())) {
+                        random_bot_leader(game, game_id);
+                    }
+                }
             }
         }
     });
-    /**delete if you see you don't need it
-    socket.on('voted', function(data){
-        var game_id = data['game_id'];
-        var game = game_logic.game(game_id);
-        if(game.all_players_voted() && game.is_propose_state()){
-            var proposal_approved = game.proposal_approved();
-            var players = game.get_public_players();
-            if(proposal_approved){
-                game.on_mission();
-                var selected_players_ids = game.get_selected_players_ids();
-                var public_players = game.get_public_players();
-                var selected_player_names = [];
-                var game_players = game.get_player_ids();
-                console.log('selected players are ');
-                console.log(selected_players_ids);
-                for(var i = 0; i < public_players.length; i++){
-                    if(selected_players_ids.indexOf(public_players[i]['id']) > -1){
-                        selected_player_names.push(public_players[i]['name']);
-                    }
+    function bots_vote(game, game_id){
+        var proposed_team = game.get_selected_players_ids();
+        for(var i = 0; i < proposed_team.length; i++){
+            var player_id = proposed_team[i];
+            console.log("BOT SUBMITTED");
+            console.log(game.player_is_on_mission(player_id));
+            console.log("THAT WAS IF HE WAS ON MISSION AND THIS IS IF HE DIDNT SUBMIT");
+            console.log(!game.player_submitted(player_id));
+            if(game.player_is_on_mission(player_id) && !game.player_submitted(player_id)){
+                //var submission = "Fail";  //bots fail
+                var submission = "Success";  //bots fail
+                if(!game.is_spy(player_id)){
+                    submission = "Success"; //no fucking around, makes you pass if you're not a spy
                 }
-                for(var i = 0 ; i < game_players.length; i++){
-                    if(selected_players_ids.indexOf(game_players[i]) > -1){
-                        var is_spy = game.is_spy(game_players[i]);
-                        console.log(is_spy);
-                        io.of('/avalon').to(game_player_room(game_id, game_players[i])).emit('you_are_on_team', {is_spy: is_spy, selected_player_names: selected_player_names});
-                    } else{
-                        io.of('/avalon').to(game_player_room(game_id, game_players[i])).emit('proposal_passed', {selected_player_names: selected_player_names});
+                game.player_submits_mission(player_id, submission);
+                console.log('player ' + player_id + ' submitted ' + submission);
+
+                if(game.all_players_submitted() && game.is_mission_state()){ //the bracket will only fire once - on the last guy to vote
+                    var mission_success = game.is_mission_success();
+                    var mission_result = game.get_mission_cards_shuffled();
+                    if(mission_success){
+                        mission_passed(game_id);
+                    }else{
+                        mission_failed(game_id);
                     }
+                    console.log("EVERYONE SUBMITTED");
+                    console.log(mission_result);
+                    console.log(game.mission_result);
+                    var players = game.get_public_players();
+                    var team_members = game.get_selected_players_names();
+                    var next_player_name = game.get_next_player_name();
+                    var leader = game.get_leader_name();
+                    var game_data = game.get_current_round();
+                    var mission_round = game_data['round'];
+                    io.of('/avalon').to(game_id).emit('mission_result', {mission_round: mission_round, mission_success: mission_success, mission_result: mission_result, players: players, team_members: team_members, leader: leader, next_player_name: next_player_name});
+                    game.next_mission();
                 }
-            }else{
-                io.of('/avalon').to(game_id).emit('proposal_failed', {vote_result: proposal_approved});
             }
         }
-    });
-    **/
+
+    }
+    function random_bot_leader(game, game_id){
+        var bot_leader = game.get_player_from_id(game.get_leader());
+        if(game_logic.player_is_random(bot_leader)){
+            var randomly_selected_players = game_logic.select_random_players(game);
+            for(var i = 0; i < randomly_selected_players.length; i++){
+                var selected_id = randomly_selected_players[i];
+                game.player_selected(selected_id);
+                io.of('/avalon').to(game_id).emit('selected_player', selected_id);
+            }
+        }
+
+        var selected_players = randomly_selected_players;
+        var selected_player_names = game.get_selected_players_names();
+        var leader = game.get_leader_name();
+        console.log('selected players are ');
+        console.log(selected_players);
+        if(game.current_vote == 5){ //CHANGE THIS TO 5
+            game.on_mission();
+            vote_passed(game_id, player_id, socket, true);
+        }else {
+            io.of('/avalon').to(game_id).emit('team_proposed', {
+                leader: leader,
+                selected_player_names: selected_player_names
+            });
+        }
+    }
+    function is_bot(player_id){
+        var luke = 'luke_id';
+        return player_id != luke;
+    }
     function every_bot(game_id){
         var game = game_logic.game(game_id);
         var player_ids = game.get_player_ids();
