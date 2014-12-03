@@ -81,7 +81,7 @@ app.post('/play', function(req, res){
 app.get('/play', function(req, res){
     var player_id = 'luke_id';
     var player_name = 'Luke';
-    var game_id = 'game_1_bots';
+    var game_id = game_logic.random_game_id() + '_bots';
     game_logic.start_game(game_id);
     game_logic.add_new_player_to_game(game_id, {id: player_id, name: player_name});
 

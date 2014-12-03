@@ -151,7 +151,16 @@ exports.random_bot = function(){
 exports.get_players_from_game = function(game_id){
     return active_games[game_id].get_players();
 };
-
+exports.random_game_id = function(){
+    var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+    var string_length = 12;
+    var random_string = '';
+    for (var i = 0; i<string_length; i++) {
+        var rnum = Math.floor(Math.random() * chars.length);
+        random_string += chars.substring(rnum,rnum+1);
+    }
+    return random_string;
+};
 exports.game = function(game_id){
     return active_games[game_id];
 };
