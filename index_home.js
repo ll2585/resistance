@@ -38,7 +38,7 @@ app.get('/create', function(req, res){
     game_logic.add_new_player_to_game(game_id, {id: player_id, name: player_name});
 
     //add 4 dummy players cus fuck it
-    var bots_to_add = 6;
+    var bots_to_add = 3;
     var game = game_logic.game(game_id);
     for(var i = 0; i < bots_to_add; i++){
         var bot = game_logic.random_bot();
@@ -599,7 +599,7 @@ io.of('/avalon').on('connection', function(socket){
     socket.on('selected_player_to_assassinate', function(data){
         var game_id = data['game_id'];
         var player_id = data['player_id'];
-        var selected_player = data['selected_player'];
+        var selected_player = data['selected_id'];
         console.log(player_id + ' ASSASSINATES');
         var game = game_logic.game(game_id);
 
@@ -622,7 +622,7 @@ io.of('/avalon').on('connection', function(socket){
     socket.on('deselected_player_to_assassinate', function(data){
         var game_id = data['game_id'];
         var player_id = data['player_id'];
-        var selected_player = data['selected_player'];
+        var selected_player = data['selected_id'];
         console.log(player_id + ' ASSASSINATES');
         var game = game_logic.game(game_id);
 
