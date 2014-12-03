@@ -565,7 +565,9 @@ Game.prototype.get_selected_players_names = function() {
 Game.prototype.get_selected_players_ids = function() {
   return this.proposed_team;
 };
-
+Game.prototype.get_players = function() {
+  return this.players;
+};
 Game.prototype.get_player_ids = function() {
   var players = [];
   for(var id in this.players_id){
@@ -643,6 +645,10 @@ Game.prototype.all_human_players_ready_to_start = function() {
 };
 Game.prototype.leader_is_bot = function() {
   var leader_player = this.players_id[this.leader];
+  return leader_player.get_attribute('bot') !== null;
+};
+Game.prototype.player_id_is_bot = function(player_id) {
+  var leader_player = this.players_id[player_id];
   return leader_player.get_attribute('bot') !== null;
 };
 Game.prototype.no_humans_on_team = function() {

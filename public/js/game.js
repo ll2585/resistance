@@ -14,6 +14,10 @@ function get_player_id (){
     return $('.playerID').attr('id');
 }
 
+function get_player_name(){
+    return $('.playerID').html();
+}
+
 function make_leader (leader_id){
     clear_old_leaders();
     reset_selected_players();
@@ -333,6 +337,7 @@ function set_mission_result(mission, status){
     }else{
         $('#mission_' + mission).addClass('mission_failed');
     }
+    $('#mission_' + mission).removeClass('current_mission');
 
 }
 function update_mission_and_vote_counters(mission, vote){
@@ -489,6 +494,24 @@ function player_deselected_to_be_assassinated(player_id){
     $('#assassination_icon').remove();
 }
 
+function show_end_game_player_panel (players, did_blue_win){
+    var html = "";
+    var player_table_html = '<table class="table table-bordered table-hover table-condensed scoreboard-table"><thead></thead><tr><th>Player</th><th>Role</th></tr><tbody class="end_game_players_list">';
+    var players = players;
+    console.log(players);
+    var selected_player = null;
+    for(var i = 0; i < players.length; i++){
+        player_table_html += '<tr id="end_game_player_id' + players[i]['id'] + '"><td>' + players[i]['name'] + '</td><td id = "player_id_' + players[i]['id'] + '_role"></td></tr>';
+    }
+    player_table_html += '</tbody></table>';
+    $('#game_messages').html(html + player_table_html);
+    if(did_blue_win){
+        blue_wins();
+    }else{
+        red_wins();
+    }
+}
+
 function show_reveal_role_to_all_button(){
     var button = '<div id = "reveal_role"><button type="button" id = "reveal_role_button">Show my role!</button></div>';
     console.log('wat');
@@ -519,14 +542,33 @@ function red_wins(){
     var winning_team = "RED";
     $('#game_messages').append(winning_team + " WINS!");
     $(body).css("background-color","#FF6961");
+    show_restart_button();
 }
 
 function blue_wins(){
     var winning_team = "BLUE";
     $('#game_messages').append(winning_team + " WINS!");
     $(body).css("background-color","#B3DDEB");
+    show_restart_button();
 }
-
+function show_restart_button(){
+    var button = '<div id = "restart_game"><button type="button" id = "restart_game_button">Restart Game with Same Roles and Players</button></div>';
+    console.log('restartdd');
+    $('#game_messages').append(button);
+    $('#restart_game').click(function(){
+        console.log('restart game!');
+        $("#restart_game").remove();
+        $(body).css("background-color","transparent");
+        for(var i = 1; i < 6; i++){
+            $('#mission_' + i).removeClass('mission_failed');
+            $('#mission_' + i).removeClass('mission_success');
+            $('#mission_' + i).removeClass('current_mission');
+        }
+        clear_vote_track();
+        socket.emit("start_game", get_game_id());
+        socket.emit("game_started", {game_id: get_game_id(), player: {id: get_player_id(), name: get_player_name()}});
+    });
+}
 $(document).ready(function() {
     var player_id = $('.playerID').attr('id');
     var player_name = $('.playerID').html();
@@ -655,5 +697,12 @@ $(document).ready(function() {
         var players = data['players'];
         console.log("BLUE WINS TIME TO ASSASSINATE BUT WE NOT ASSASSIN");
         show_assassination_panel(players, false);
+    });
+
+    socket.on("game_over", function(data){
+        var players = data['players'];
+        var result = data['result'];
+        console.log("BLUE WINS TIME TO ASSASSINATE BUT WE NOT ASSASSIN");
+        show_end_game_player_panel(players, result);
     });
 });

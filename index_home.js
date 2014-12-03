@@ -668,9 +668,9 @@ io.of('/avalon').on('connection', function(socket){
             if (game.missions_over()) {
                 //todo
                 game.end_game();
-                var blue_wins = game.did_blue_win(); //true if blue wins
+                var did_blue_win = game.did_blue_win(); //true if blue wins
                 var players = game.get_public_players();
-                if (game.has_merlin() && blue_wins) {
+                if (game.has_merlin() && did_blue_win) {
                     if (game.player_is(player_id, game_logic.get_constants()['assassin'])) {
                         socket.emit('game_over_avalon_assassin', {
                             game_id: game_id,
@@ -679,11 +679,37 @@ io.of('/avalon').on('connection', function(socket){
                         });
                     } else {
                         socket.emit('game_over_avalon', {game_id: game_id, player_id: player_id, players: players});
+                        game_logic.make_player_waiting_for(game_id, player_id, 'assassination');
+                        if(game_logic.assassin_is_bot(game_id) && game_logic.bot_assassin_has_not_assassinated_yet(game_id) && game_logic.all_players_waiting_for(game_id, 'assassination')){ //so this fires only once
+                            var random_assassin_target_player_id = game_logic.get_random_player_id(game_id);
+                            while(game_logic.player_is_evil_by_id(game_id, random_assassin_target_player_id)){
+                                random_assassin_target_player_id = game_logic.get_random_player_id(game_id);
+                            }
+                            var selected_player = random_assassin_target_player_id;
+                            console.log(selected_player + ' ASSASSINATED BY BOT');
+                            io.of('/avalon').to(game_id).emit('selected_player_to_assassinate', selected_player);
+                            game_logic.set_bot_assassin_to_assassinate(game_id);
+                            var assassination_delay = 500;
+                            setTimeout( function(){
+                                console.log('now we show assassination result');
+                                var selected_player_is_merlin = game.player_is(selected_player, game_logic.get_constants()['merlin']);
+                                var selected_player_role = game.get_player_role(selected_player);
+                                //fires to each socket
+                                io.of('/avalon').to(game_id).emit('assassination_result', {success: selected_player_is_merlin, selected_player: selected_player, role: selected_player_role});
+                                var game_players = game.get_player_ids();
+                                for (var i = 0; i < game_players.length; i++) { //tells not selected players to reveal roles
+                                    if (game_players[i] != selected_player) {
+                                        io.of('/avalon').to(game_player_room(game_id, game_players[i])).emit('show_reveal_role_to_all_button');
+                                    }
+                                }
+                                game_logic.clear_bot_assassin_flag(game_id);
+                            }, assassination_delay );
+                        }
                     }
 
                 } else {
-                    socket.emit('game_over', {result: blue_wins});
-                    io.of('/avalon').to(game_id).emit('show_reveal_role_to_all_button');
+                    socket.emit('game_over', {result: did_blue_win, players: players});
+                    socket.emit('show_reveal_role_to_all_button');
                 }
 
 
