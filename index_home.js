@@ -520,8 +520,8 @@ io.of('/avalon').on('connection', function(socket){
                     var bot_id = bots[i];
                     if(game.player_is_on_mission(bot_id)){
                         if(game.is_spy(bot_id)){
-                            //game.player_submits_mission(bot_id, "Fail");
-                            game.player_submits_mission(bot_id, "Success");
+                            game.player_submits_mission(bot_id, "Fail");
+                            //game.player_submits_mission(bot_id, "Success");
                         }else{
                             game.player_submits_mission(bot_id, "Success");
                         }
@@ -745,8 +745,8 @@ io.of('/avalon').on('connection', function(socket){
             console.log("THAT WAS IF HE WAS ON MISSION AND THIS IS IF HE DIDNT SUBMIT");
             console.log(!game.player_submitted(player_id));
             if(game.player_is_on_mission(player_id) && !game.player_submitted(player_id)){
-                //var submission = "Fail";  //bots fail
-                var submission = "Success";  //bots fail
+                var submission = "Fail";  //bots fail
+                //var submission = "Success";  //bots fail
                 if(!game.is_spy(player_id)){
                     submission = "Success"; //no fucking around, makes you pass if you're not a spy
                 }

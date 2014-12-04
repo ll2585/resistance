@@ -130,12 +130,12 @@ exports.select_random_players = function(game){
 };
 
 exports.random_vote = function(player){
-    return 'Approve';
-    //return (Math.floor(Math.random() * 2) == 0) ? 'Approve' : 'Reject';
+    //return 'Approve';
+    return (Math.floor(Math.random() * 2) == 0) ? 'Approve' : 'Reject';
 };
 exports.random_mission = function(player){
-    return 'Success';
-    //return (Math.floor(Math.random() * 2) == 0) ? 'Success' : 'Fail';
+    //return 'Success';
+    return (Math.floor(Math.random() * 2) == 0) ? 'Success' : 'Fail';
 };
 exports.random_bot = function(){
     var names_array = ['Merlin', 'Berlin', 'Gerlin', 'Herlin', 'Zerlin', 'Lerlin', 'Perlin', 'Serlin', 'Cerlin', 'Derlin', 'Erlin', 'Aerlin', 'Ferlin', 'Ierlin'];
