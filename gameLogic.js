@@ -177,6 +177,22 @@ exports.game = function(game_id){
 
 /* ASSASSINATION MECHANICS FOR BOTS
  */
+exports.get_player_id_from_role = function(game_id, role){
+    var game = exports.game(game_id);
+    var game_player_ids = game.get_player_ids();
+    for(var i = 0; i < game_player_ids.length; i++){
+        var player_id = game_player_ids[i];
+        if(game.get_player_role(player_id) == game_constants[role]){
+            return player_id;
+        }
+    }
+    return null;
+};
+exports.player_id_is_role = function(game_id, player_id, role){
+    var game = exports.game(game_id);
+    var game_player_ids = game.get_player_ids();
+    return game.get_player_role(player_id) == game_constants[role];
+};
 exports.get_random_player_id = function(game_id){
     var game = exports.game(game_id);
     var game_player_ids = game.get_player_ids();

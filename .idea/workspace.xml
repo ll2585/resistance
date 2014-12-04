@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e6830e7b-df63-4f12-8004-46dbe64b8c61" name="Default" comment="">
+    <list default="true" id="e6830e7b-df63-4f12-8004-46dbe64b8c61" name="Default" comment="Deploy">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/game.js" afterPath="$PROJECT_DIR$/game.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameLogic.js" afterPath="$PROJECT_DIR$/gameLogic.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index_home.js" afterPath="$PROJECT_DIR$/index_home.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
@@ -43,8 +44,8 @@
       <file leaf-file-name="index_home.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index_home.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.2090909" vertical-offset="4985" max-vertical-offset="14314">
-              <caret line="300" column="0" selection-start-line="300" selection-start-column="0" selection-end-line="300" selection-end-column="0" />
+            <state vertical-scroll-proportion="-1.0039293" vertical-offset="11833" max-vertical-offset="14076">
+              <caret line="666" column="95" selection-start-line="666" selection-start-column="95" selection-end-line="666" selection-end-column="95" />
               <folding />
             </state>
           </provider>
@@ -53,8 +54,8 @@
       <file leaf-file-name="gameLogic.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gameLogic.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.4035087" vertical-offset="1664" max-vertical-offset="4114">
-              <caret line="116" column="33" selection-start-line="116" selection-start-column="8" selection-end-line="116" selection-end-column="33" />
+            <state vertical-scroll-proportion="-3.3508773" vertical-offset="1577" max-vertical-offset="4386">
+              <caret line="104" column="41" selection-start-line="104" selection-start-column="41" selection-end-line="104" selection-end-column="41" />
               <folding />
             </state>
           </provider>
@@ -63,8 +64,8 @@
       <file leaf-file-name="game.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/js/game.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.6842105" vertical-offset="6664" max-vertical-offset="12478">
-              <caret line="401" column="13" selection-start-line="401" selection-start-column="13" selection-end-line="401" selection-end-column="13" />
+            <state vertical-scroll-proportion="-2.9824562" vertical-offset="5763" max-vertical-offset="12478">
+              <caret line="349" column="27" selection-start-line="349" selection-start-column="17" selection-end-line="349" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -123,8 +124,8 @@
       <file leaf-file-name="game.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/game.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.2807016" vertical-offset="7990" max-vertical-offset="11492">
-              <caret line="481" column="59" selection-start-line="481" selection-start-column="53" selection-end-line="481" selection-end-column="59" />
+            <state vertical-scroll-proportion="-3.0526316" vertical-offset="10145" max-vertical-offset="10693">
+              <caret line="607" column="31" selection-start-line="607" selection-start-column="15" selection-end-line="607" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -136,7 +137,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="removing_stupid_workaround" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
   </component>
@@ -155,13 +156,13 @@
         <option value="$PROJECT_DIR$/public/css/game_table.css" />
         <option value="$PROJECT_DIR$/public/js/path.min.js" />
         <option value="$PROJECT_DIR$/public/js/draw_table.js" />
-        <option value="$PROJECT_DIR$/game.js" />
         <option value="$PROJECT_DIR$/public/css/game.css" />
-        <option value="$PROJECT_DIR$/public/js/game.js" />
         <option value="$PROJECT_DIR$/tpl/game.jade" />
         <option value="$PROJECT_DIR$/tpl/gamelobby.jade" />
         <option value="$PROJECT_DIR$/tpl/joingame.jade" />
         <option value="$PROJECT_DIR$/tpl/newgame.jade" />
+        <option value="$PROJECT_DIR$/public/js/game.js" />
+        <option value="$PROJECT_DIR$/game.js" />
         <option value="$PROJECT_DIR$/gameLogic.js" />
         <option value="$PROJECT_DIR$/index_home.js" />
       </list>
@@ -316,7 +317,7 @@
       <recent name="C:\Users\luke.li\Google Drive\resistance\resistance\public\css" />
     </key>
   </component>
-  <component name="RunManager" selected="Heroku Deployment.Heroku Deployment">
+  <component name="RunManager" selected="Node.js.index_home.js">
     <configuration default="false" name="index.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" path-to-node="C:/Program Files/nodejs/node" path-to-js-file="index.js" working-dir="$PROJECT_DIR$">
       <RunnerSettings RunnerId="Basic" />
       <ConfigurationWrapper RunnerId="Basic" />
@@ -624,7 +625,7 @@
       <workItem from="1417583111333" duration="1729000" />
       <workItem from="1417584913846" duration="6984000" />
       <workItem from="1417619956456" duration="11137000" />
-      <workItem from="1417706337259" duration="10661000" />
+      <workItem from="1417706337259" duration="17517000" />
     </task>
     <task id="LOCAL-00001" summary="nearly functional">
       <created>1417082170682</created>
@@ -728,11 +729,17 @@
       <option name="project" value="LOCAL" />
       <updated>1417718097648</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="clear players waiting for assassination">
+      <created>1417719783666</created>
+      <option name="number" value="00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1417719783666</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="85096000" />
+    <option name="totallyTimeSpent" value="91952000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -766,13 +773,13 @@
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32985657" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3284974" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3284974" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36853004" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.37098446" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21428572" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21428572" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -843,7 +850,8 @@
     <MESSAGE value="random bots" />
     <MESSAGE value="Deploy" />
     <MESSAGE value="https" />
-    <option name="LAST_COMMIT_MESSAGE" value="https" />
+    <MESSAGE value="clear players waiting for assassination" />
+    <option name="LAST_COMMIT_MESSAGE" value="clear players waiting for assassination" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1139,7 +1147,7 @@
         <state vertical-scroll-proportion="-1.1929824" vertical-offset="0" max-vertical-offset="170">
           <caret line="4" column="5132" selection-start-line="4" selection-start-column="5128" selection-end-line="4" selection-end-column="5132" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!doc" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1172,14 +1180,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1105">
           <caret line="7" column="1" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.2807016" vertical-offset="7990" max-vertical-offset="11492">
-          <caret line="481" column="59" selection-start-line="481" selection-start-column="53" selection-end-line="481" selection-end-column="59" />
           <folding />
         </state>
       </provider>
@@ -1229,24 +1229,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/game.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.6842105" vertical-offset="6664" max-vertical-offset="12478">
-          <caret line="401" column="13" selection-start-line="401" selection-start-column="13" selection-end-line="401" selection-end-column="13" />
+        <state vertical-scroll-proportion="-2.9824562" vertical-offset="5763" max-vertical-offset="12478">
+          <caret line="349" column="27" selection-start-line="349" selection-start-column="17" selection-end-line="349" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.0526316" vertical-offset="10145" max-vertical-offset="10693">
+          <caret line="607" column="31" selection-start-line="607" selection-start-column="15" selection-end-line="607" selection-end-column="31" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gameLogic.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.4035087" vertical-offset="1664" max-vertical-offset="4114">
-          <caret line="116" column="33" selection-start-line="116" selection-start-column="8" selection-end-line="116" selection-end-column="33" />
+        <state vertical-scroll-proportion="-3.3508773" vertical-offset="1577" max-vertical-offset="4386">
+          <caret line="104" column="41" selection-start-line="104" selection-start-column="41" selection-end-line="104" selection-end-column="41" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index_home.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2090909" vertical-offset="4985" max-vertical-offset="14314">
-          <caret line="300" column="0" selection-start-line="300" selection-start-column="0" selection-end-line="300" selection-end-column="0" />
+        <state vertical-scroll-proportion="-1.0039293" vertical-offset="11833" max-vertical-offset="14076">
+          <caret line="666" column="95" selection-start-line="666" selection-start-column="95" selection-end-line="666" selection-end-column="95" />
           <folding />
         </state>
       </provider>

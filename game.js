@@ -51,9 +51,6 @@ function Game() {
   this.blue_points;
   this.red_points;
   this.state;
-  this.players_ready_to_start = [];
-  this.players_finished_with_mission_results = [];
-  this.players_finished_with_voting_results = [];
 }
 
 
@@ -165,9 +162,6 @@ Game.prototype.vote_failed = function() {
 };
 Game.prototype.start = function() {
   if(!this.started){
-    this.players_ready_to_start = [];
-    this.players_finished_with_mission_results = [];
-    this.players_finished_with_voting_results = [];
     var all_roles = [];
     this.player_count = this.players.length;
     var num_reds = constants['red_count'][this.player_count];
@@ -496,44 +490,6 @@ Game.prototype.end_game = function() {
   return this.started = false;
 };
 
-Game.prototype.make_player_ready_to_start = function(player_id) {
-  if(this.players_ready_to_start.indexOf(player_id) == -1){
-    this.players_ready_to_start.push(player_id);
-  }
-};
-
-Game.prototype.is_ready_to_start = function() {
-  return this.players_ready_to_start.length == this.get_number_of_players();
-};
-
-Game.prototype.make_player_finished_with_mission_results = function(player_id) {
-  if(this.players_finished_with_mission_results.indexOf(player_id) == -1){
-    this.players_finished_with_mission_results.push(player_id);
-  }
-};
-Game.prototype.make_player_done_with_voting_results = function(player_id) {
-  if(this.players_finished_with_voting_results.indexOf(player_id) == -1){
-    this.players_finished_with_voting_results.push(player_id);
-  }
-};
-Game.prototype.is_all_done_with_mission_results = function() {
-  return this.players_finished_with_mission_results.length == this.get_number_of_players();
-};
-Game.prototype.everyone_done_with_voting_results = function() {
-  //or bots because bots dont care
-  console.log('players finished  with voting: ' + this.players_finished_with_voting_results);
-  return this.players_finished_with_voting_results.length == this.get_number_of_players() || this.players_finished_with_voting_results.length == this.get_number_of_human_players();
-};
-Game.prototype.reset_players_done_with_voting_results = function() {
-  this.players_finished_with_voting_results = [];
-};
-Game.prototype.clear_players_done_with_mission_results = function() {
-  this.players_finished_with_mission_results = [];
-};
-Game.prototype.all_human_players_done_with_mission_results = function() {
-  return this.players_finished_with_mission_results.length == this.get_number_of_human_players();
-};
-
 Game.prototype.get_next_player_name = function() {
   var next_leader = this.player_order[0];
   for(var i = 0; i < this.player_order.length -1; i++){ //-1 because if it's the last guy, the leader is the first guy which is already set
@@ -645,9 +601,6 @@ Game.prototype.get_number_of_human_players = function() {
   return human_players;
 };
 
-Game.prototype.all_human_players_ready_to_start = function() {
-  return this.players_ready_to_start.length == this.get_number_of_human_players();
-};
 Game.prototype.leader_is_bot = function() {
   var leader_player = this.players_id[this.leader];
   return leader_player.get_attribute('bot') !== null;
