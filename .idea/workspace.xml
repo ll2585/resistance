@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e6830e7b-df63-4f12-8004-46dbe64b8c61" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tpl/game.jade" afterPath="$PROJECT_DIR$/tpl/game.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameLogic.js" afterPath="$PROJECT_DIR$/gameLogic.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index_home.js" afterPath="$PROJECT_DIR$/index_home.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tpl/gamelobby.jade" afterPath="$PROJECT_DIR$/tpl/gamelobby.jade" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tpl/joingame.jade" afterPath="$PROJECT_DIR$/tpl/joingame.jade" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tpl/newgame.jade" afterPath="$PROJECT_DIR$/tpl/newgame.jade" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="resistance.iws" />
@@ -31,21 +31,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="index_home.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/index_home.js">
+      <file leaf-file-name="newgame.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/js/newgame.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3018182" vertical-offset="12533" max-vertical-offset="14280">
-              <caret line="747" column="42" selection-start-line="747" selection-start-column="42" selection-end-line="747" selection-end-column="42" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2865" max-vertical-offset="4352">
+              <caret line="242" column="31" selection-start-line="242" selection-start-column="21" selection-end-line="242" selection-end-column="31" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/package.json">
+      <file leaf-file-name="index_home.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/index_home.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.115385" vertical-offset="0" max-vertical-offset="391">
-              <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+            <state vertical-scroll-proportion="-2.9122808" vertical-offset="12533" max-vertical-offset="14280">
+              <caret line="747" column="42" selection-start-line="747" selection-start-column="42" selection-end-line="747" selection-end-column="42" />
               <folding />
             </state>
           </provider>
@@ -71,21 +71,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="roles.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/css/roles.css">
+      <file leaf-file-name="game.jade" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tpl/game.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="238">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1768">
+              <caret line="68" column="57" selection-start-line="68" selection-start-column="57" selection-end-line="68" selection-end-column="57" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="game.jade" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tpl/game.jade">
+      <file leaf-file-name="gamelobby.jade" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tpl/gamelobby.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1084" max-vertical-offset="1768">
-              <caret line="68" column="57" selection-start-line="68" selection-start-column="57" selection-end-line="68" selection-end-column="57" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1029" max-vertical-offset="1649">
+              <caret line="89" column="16" selection-start-line="89" selection-start-column="16" selection-end-line="89" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -94,8 +94,18 @@
       <file leaf-file-name="joingame.jade" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tpl/joingame.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="510" max-vertical-offset="1360">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="740" max-vertical-offset="1360">
+              <caret line="5" column="20" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="newgame.jade" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/tpl/newgame.jade">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.13709678" vertical-offset="0" max-vertical-offset="1360">
+              <caret line="5" column="20" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -106,16 +116,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1105">
               <caret line="7" column="1" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="draw_table.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/js/draw_table.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.6491227" vertical-offset="104" max-vertical-offset="1496">
-              <caret line="15" column="17" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -147,8 +147,6 @@
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/room.js" />
         <option value="$PROJECT_DIR$/table.js" />
-        <option value="$PROJECT_DIR$/tpl/gamelobby.jade" />
-        <option value="$PROJECT_DIR$/tpl/newgame.jade" />
         <option value="$PROJECT_DIR$/index.js" />
         <option value="$PROJECT_DIR$/public/js/gamelobby.js" />
         <option value="$PROJECT_DIR$/public/js/newgame.js" />
@@ -164,6 +162,9 @@
         <option value="$PROJECT_DIR$/tpl/game.jade" />
         <option value="$PROJECT_DIR$/gameLogic.js" />
         <option value="$PROJECT_DIR$/index_home.js" />
+        <option value="$PROJECT_DIR$/tpl/gamelobby.jade" />
+        <option value="$PROJECT_DIR$/tpl/joingame.jade" />
+        <option value="$PROJECT_DIR$/tpl/newgame.jade" />
       </list>
     </option>
   </component>
@@ -624,7 +625,7 @@
       <workItem from="1417583111333" duration="1729000" />
       <workItem from="1417584913846" duration="6984000" />
       <workItem from="1417619956456" duration="11137000" />
-      <workItem from="1417706337259" duration="9492000" />
+      <workItem from="1417706337259" duration="9663000" />
     </task>
     <task id="LOCAL-00001" summary="nearly functional">
       <created>1417082170682</created>
@@ -710,11 +711,23 @@
       <option name="project" value="LOCAL" />
       <updated>1417717728537</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="random bots">
+      <created>1417717923094</created>
+      <option name="number" value="00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1417717923094</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Deploy">
+      <created>1417717943157</created>
+      <option name="number" value="00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1417717943157</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="83927000" />
+    <option name="totallyTimeSpent" value="84098000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -738,7 +751,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1096" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -822,6 +835,7 @@
     <MESSAGE value="bots can assassinate" />
     <MESSAGE value="heroku and random game ids" />
     <MESSAGE value="circle table and flashing relevant players" />
+    <MESSAGE value="random bots" />
     <MESSAGE value="Deploy" />
     <option name="LAST_COMMIT_MESSAGE" value="Deploy" />
   </component>
@@ -1076,16 +1090,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tpl/gamelobby.jade">
-      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="136" max-vertical-offset="1649">
-          <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/js/gamelobby.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="204">
@@ -1097,13 +1101,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="374" max-vertical-offset="1122">
           <caret line="22" column="51" selection-start-line="22" selection-start-column="45" selection-end-line="22" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tpl/newgame.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="510" max-vertical-offset="1360">
-          <caret line="46" column="31" selection-start-line="46" selection-start-column="31" selection-end-line="46" selection-end-column="31" />
         </state>
       </provider>
     </entry>
@@ -1119,14 +1116,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="1122">
           <caret line="25" column="30" selection-start-line="25" selection-start-column="17" selection-end-line="25" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/newgame.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3773" max-vertical-offset="4352">
-          <caret line="242" column="31" selection-start-line="242" selection-start-column="21" selection-end-line="242" selection-end-column="31" />
           <folding />
         </state>
       </provider>
@@ -1157,14 +1146,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tpl/joingame.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1360">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-11.115385" vertical-offset="0" max-vertical-offset="391">
@@ -1185,14 +1166,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1105">
           <caret line="7" column="1" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tpl/game.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1084" max-vertical-offset="1768">
-          <caret line="68" column="57" selection-start-line="68" selection-start-column="57" selection-end-line="68" selection-end-column="57" />
           <folding />
         </state>
       </provider>
@@ -1223,8 +1196,51 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index_home.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3018182" vertical-offset="12533" max-vertical-offset="14280">
+        <state vertical-scroll-proportion="-2.9122808" vertical-offset="12533" max-vertical-offset="14280">
           <caret line="747" column="42" selection-start-line="747" selection-start-column="42" selection-end-line="747" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/newgame.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="3773" max-vertical-offset="4352">
+          <caret line="242" column="31" selection-start-line="242" selection-start-column="21" selection-end-line="242" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tpl/game.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1084" max-vertical-offset="1768">
+          <caret line="68" column="57" selection-start-line="68" selection-start-column="57" selection-end-line="68" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tpl/gamelobby.jade">
+      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1029" max-vertical-offset="1649">
+          <caret line="89" column="16" selection-start-line="89" selection-start-column="16" selection-end-line="89" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tpl/joingame.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="740" max-vertical-offset="1360">
+          <caret line="5" column="20" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tpl/newgame.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.13709678" vertical-offset="0" max-vertical-offset="1360">
+          <caret line="5" column="20" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
           <folding />
         </state>
       </provider>
