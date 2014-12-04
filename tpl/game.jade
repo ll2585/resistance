@@ -6,6 +6,7 @@ html
 		script(src='//code.jquery.com/jquery-1.10.1.min.js')
 		script(src='/chat.js')
 		script(src='/js/game.js')
+		script(src='/js/path.min.js')
 		if(game == 'dice')
 			script(src='/dice.js')
 		else
@@ -15,6 +16,7 @@ html
 		link(rel='stylesheet', href='/css/main.css')
 		link(rel='stylesheet', href='/css/game.css')
 		link(rel='stylesheet', href='/css/chat.css')
+		link(rel='stylesheet', href='/css/game_table.css')
 	body
 		div#nav
 			b
@@ -59,26 +61,31 @@ html
 						div#game_messages
 							|game messages will be down here
 					div.col-xs-2.pull-down.scoreboard
-						table.table.table-bordered.table-hover.table-condensed.scoreboard-table
-							caption SCOREBOARD
-							thead
-							tr
-								th
-								th Player
-								th Status
-								th
-							tbody.players
-								- console.log('players are ')
-								- console.log(players)
+						div#unrotated.wrapper
+							canvas#game_canvas
+							ul.player_labels.items
 								- var player_size = players.length
+								// we want the current player to be on the bottom always
+								// so the following lists the players starting with the current player
+								// first it finds the current player and then iterates the players
 								- for (var i = 0; i < player_size; i++)
-									tr(id= 'player_id_' +  players[i]['id'])
-										td.leader_col(id= 'leader_player_id_' +  players[i]['id'])
-										td
-											= players[i]['name']
-										td(id= players[i]['id']+'_status')
-											= roles[players[i]['id']]
-										td.mission_col(id= 'mission_player_id_' +  players[i]['id'])
+									if players[i]['id'] == player.id
+										- var j = i
+										- var players_added = 0
+										while (players_added < player_size)
+
+											if j == player_size
+												-j = 0
+											=players[j]['id']
+											li(id= 'player_id_' +  players[j]['id'])
+												span.leader_col(id= 'leader_player_id_' +  players[j]['id'])
+												span
+													= players[j]['name']
+												span.mission_col(id= 'mission_player_id_' +  players[j]['id'])
+											-j = j + 1
+											-players_added = players_added + 1
+										- break
+
 
 
 		div.controls
@@ -91,3 +98,4 @@ html
 			p#opponents
 			p#cards
 			p#pack
+		script(src='/js/draw_table.js')

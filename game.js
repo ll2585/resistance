@@ -230,8 +230,8 @@ Game.prototype.get_player_role = function(player_id) {
   return this.assigned_roles[player_id];
 };
 Game.prototype.get_role_information = function(role) {
-  var result = ''
-
+  var result = '';
+  var relevant_players = [];
   if(role == constants['vanilla_blue']){
     result = 'Have Fun!';
   }else if(role == constants['merlin']){
@@ -240,6 +240,7 @@ Game.prototype.get_role_information = function(role) {
     for(var player_id in this.players_id){
       if(this.is_spy(player_id) && !(this.assigned_roles[player_id] == constants['mordred'])){
         result += '<li>' + this.players_id[player_id]['name'] + '</li>';
+        relevant_players.push(this.players_id[player_id]);
       }
       if(this.assigned_roles[player_id] == constants['mordred']){
         mordred_exists = true;
@@ -259,10 +260,12 @@ Game.prototype.get_role_information = function(role) {
     for(var player_id in this.players_id){
       if(this.assigned_roles[player_id] == constants['merlin']){
         merlin_name = this.players_id[player_id]['name'];
+        relevant_players.push(this.players_id[player_id]);
       }
       if(this.assigned_roles[player_id] == constants['morgana']){
         morgana_exists = true;
         morgana_name = this.players_id[player_id]['name'];
+        relevant_players.push(this.players_id[player_id]);
       }
     }
     var possible_merlins = [merlin_name];
@@ -288,12 +291,14 @@ Game.prototype.get_role_information = function(role) {
     for(var player_id in this.players_id){
       if(this.is_spy(player_id) && !(this.assigned_roles[player_id] == constants['oberon']) && !(this.assigned_roles[player_id] == constants['bad_lancelot'])){
         result += '<li>' + this.players_id[player_id]['name'] + '</li>';
+        relevant_players.push(this.players_id[player_id]);
       }
       if(this.assigned_roles[player_id] == constants['oberon']){
         oberon_exists = true;
       }
       if(this.assigned_roles[player_id] == constants['bad_lancelot']){
         result += '<li>LANCELOT: ' + this.players_id[player_id]['name'] + '</li>';
+        relevant_players.push(this.players_id[player_id]);
       }
     }
     result += '</b></ul>';//ok i made this html :x
@@ -311,7 +316,7 @@ Game.prototype.get_role_information = function(role) {
       result += 'EXIST </b>';
     }
   }
-  var data = {html: result, data: {}};
+  var data = {html: result, relevant_players: relevant_players};
   return data;
 };
 

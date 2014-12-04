@@ -1,0 +1,22 @@
+.wrapper {
+  margin: 10px;
+}
+
+.corners {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background-color: green;
+}
+
+.items {
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+}
+
+.items > li {
+  position: absolute;
+  border: 1px solid red;
+  padding: 3px;
+}

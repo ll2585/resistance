@@ -100,6 +100,7 @@ app.get('/play', function(req, res){
         }
         game_logic.add_new_player_to_game( game_id, {player: bot});
     }
+
     console.log(player_id + ' and ' + player_name + ' and ' + game_id);
 
     game.add_role('Merlin'); //add merlin

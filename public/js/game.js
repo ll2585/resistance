@@ -2,7 +2,7 @@ var socket = io('/avalon');
 var leader_icon_html = '<img src = "images/leader.png" height = "20" width = "20">';
 var selected_icon_html = '<img src = "images/selected.png" height = "20" width = "20">';
 var assassination_icon_html = '<span id = "assassination_icon"><img src = "images/dagger.png" height = "20" width = "20"></span>';
-var role_wait_time = 1;
+var role_wait_time = 2;
 var vote_wait_time = 1;
 var mission_wait_time = 1;
 function get_game_id (){
@@ -378,9 +378,29 @@ function done_with_role_info(){
 function show_role_info(role, info){
     clear_messages();
     console.log("SHGOWING ROLE");
+    var relevant_players = info['relevant_players'];
     show_countdown(role_wait_time, done_with_role_info);
     var html = 'You are <b> ' + role + '</b><br>' + info['html'];
     $('#game_messages').append(html);
+    if(relevant_players !== null){
+        flash_relevant_players(relevant_players);
+    }
+}
+function flash_relevant_players(relevant_players){
+    console.log("RELEVANT PS");
+    console.log(relevant_players);
+    for(var i = 0; i < relevant_players.length; i++){
+        var player_id = relevant_players[i]['id'];
+        var elem = $('#player_id_' + player_id);
+        elem.addClass('relevant_player');
+    }
+    setTimeout(function(){
+            for(var i = 0; i < relevant_players.length; i++){
+                var player_id = relevant_players[i]['id'];
+                var elem = $('#player_id_' + player_id);
+                elem.removeClass('relevant_player');
+            }
+    }, role_wait_time*1000);
 }
 function show_show_role_button(){
     clear_messages();
@@ -584,7 +604,8 @@ $(document).ready(function() {
     socket.on("show_player_roles", function(data){
         var my_role = data['role'];
         var info = data['role_information'];
-        show_role_info(my_role, info);
+        var relevant_players = data['relevant_players'];
+        show_role_info(my_role, info, relevant_players);
     });
 
     socket.on("are_you_ready_for_role", function(){
