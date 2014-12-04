@@ -113,6 +113,16 @@ exports.all_players_waiting_for = function(game_id, setting){
     var total_players_waiting_for = exports.game(game_id).get_number_of_human_players();
     return game_setting.length == total_players_waiting_for;
 };
+
+exports.clear_players_waiting_for = function(game_id, setting){
+    if(!(game_id in this.game_settings)){
+        this.game_settings[game_id] = {};
+    }
+    var game_setting_by_game_id = this.game_settings[game_id];
+    if(setting in game_setting_by_game_id){
+        delete game_setting_by_game_id[setting];
+    }
+};
 /* end special setting
  */
 

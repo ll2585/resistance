@@ -299,6 +299,7 @@ io.of('/avalon').on('connection', function(socket){
         var game = game_logic.game(game_id);
         game.make_player_ready_to_start(player_id);
 
+
         //for bots ofc
         if(player_id == 'luke_id' || game.all_human_players_ready_to_start()){
             var bots = every_bot(game_id);
@@ -703,6 +704,7 @@ io.of('/avalon').on('connection', function(socket){
                                         io.of('/avalon').to(game_player_room(game_id, game_players[i])).emit('show_reveal_role_to_all_button');
                                     }
                                 }
+                                game_logic.clear_players_waiting_for(game_id, 'assassination');
                                 game_logic.clear_bot_assassin_flag(game_id);
                             }, assassination_delay );
                         }

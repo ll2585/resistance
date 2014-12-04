@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e6830e7b-df63-4f12-8004-46dbe64b8c61" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tpl/gamelobby.jade" afterPath="$PROJECT_DIR$/tpl/gamelobby.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tpl/joingame.jade" afterPath="$PROJECT_DIR$/tpl/joingame.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tpl/newgame.jade" afterPath="$PROJECT_DIR$/tpl/newgame.jade" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameLogic.js" afterPath="$PROJECT_DIR$/gameLogic.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index_home.js" afterPath="$PROJECT_DIR$/index_home.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="resistance.iws" />
@@ -34,18 +33,18 @@
       <file leaf-file-name="newgame.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/js/newgame.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2865" max-vertical-offset="4352">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1896" max-vertical-offset="4352">
               <caret line="242" column="31" selection-start-line="242" selection-start-column="21" selection-end-line="242" selection-end-column="31" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index_home.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index_home.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index_home.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.9122808" vertical-offset="12533" max-vertical-offset="14280">
-              <caret line="747" column="42" selection-start-line="747" selection-start-column="42" selection-end-line="747" selection-end-column="42" />
+            <state vertical-scroll-proportion="0.2090909" vertical-offset="4985" max-vertical-offset="14314">
+              <caret line="300" column="0" selection-start-line="300" selection-start-column="0" selection-end-line="300" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -54,8 +53,8 @@
       <file leaf-file-name="gameLogic.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gameLogic.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.2807016" vertical-offset="2108" max-vertical-offset="3944">
-              <caret line="135" column="22" selection-start-line="135" selection-start-column="8" selection-end-line="135" selection-end-column="22" />
+            <state vertical-scroll-proportion="-5.4035087" vertical-offset="1664" max-vertical-offset="4114">
+              <caret line="116" column="33" selection-start-line="116" selection-start-column="8" selection-end-line="116" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -101,10 +100,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="newgame.jade" pinned="false" current-in-tab="true">
+      <file leaf-file-name="newgame.jade" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tpl/newgame.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.13709678" vertical-offset="0" max-vertical-offset="1360">
+            <state vertical-scroll-proportion="0.0" vertical-offset="770" max-vertical-offset="1360">
               <caret line="5" column="20" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
               <folding />
             </state>
@@ -160,11 +159,11 @@
         <option value="$PROJECT_DIR$/public/css/game.css" />
         <option value="$PROJECT_DIR$/public/js/game.js" />
         <option value="$PROJECT_DIR$/tpl/game.jade" />
-        <option value="$PROJECT_DIR$/gameLogic.js" />
-        <option value="$PROJECT_DIR$/index_home.js" />
         <option value="$PROJECT_DIR$/tpl/gamelobby.jade" />
         <option value="$PROJECT_DIR$/tpl/joingame.jade" />
         <option value="$PROJECT_DIR$/tpl/newgame.jade" />
+        <option value="$PROJECT_DIR$/gameLogic.js" />
+        <option value="$PROJECT_DIR$/index_home.js" />
       </list>
     </option>
   </component>
@@ -625,7 +624,7 @@
       <workItem from="1417583111333" duration="1729000" />
       <workItem from="1417584913846" duration="6984000" />
       <workItem from="1417619956456" duration="11137000" />
-      <workItem from="1417706337259" duration="9663000" />
+      <workItem from="1417706337259" duration="10661000" />
     </task>
     <task id="LOCAL-00001" summary="nearly functional">
       <created>1417082170682</created>
@@ -723,11 +722,17 @@
       <option name="project" value="LOCAL" />
       <updated>1417717943157</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="https">
+      <created>1417718097648</created>
+      <option name="number" value="00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1417718097648</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="84098000" />
+    <option name="totallyTimeSpent" value="85096000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -751,7 +756,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1096" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -837,7 +842,8 @@
     <MESSAGE value="circle table and flashing relevant players" />
     <MESSAGE value="random bots" />
     <MESSAGE value="Deploy" />
-    <option name="LAST_COMMIT_MESSAGE" value="Deploy" />
+    <MESSAGE value="https" />
+    <option name="LAST_COMMIT_MESSAGE" value="https" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1170,42 +1176,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/game.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.6842105" vertical-offset="6664" max-vertical-offset="12478">
-          <caret line="401" column="13" selection-start-line="401" selection-start-column="13" selection-end-line="401" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/game.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-3.2807016" vertical-offset="7990" max-vertical-offset="11492">
           <caret line="481" column="59" selection-start-line="481" selection-start-column="53" selection-end-line="481" selection-end-column="59" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameLogic.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.2807016" vertical-offset="2108" max-vertical-offset="3944">
-          <caret line="135" column="22" selection-start-line="135" selection-start-column="8" selection-end-line="135" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index_home.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.9122808" vertical-offset="12533" max-vertical-offset="14280">
-          <caret line="747" column="42" selection-start-line="747" selection-start-column="42" selection-end-line="747" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/newgame.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3773" max-vertical-offset="4352">
-          <caret line="242" column="31" selection-start-line="242" selection-start-column="21" selection-end-line="242" selection-end-column="31" />
           <folding />
         </state>
       </provider>
@@ -1239,8 +1213,40 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tpl/newgame.jade">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.13709678" vertical-offset="0" max-vertical-offset="1360">
+        <state vertical-scroll-proportion="0.0" vertical-offset="770" max-vertical-offset="1360">
           <caret line="5" column="20" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/newgame.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="3773" max-vertical-offset="4352">
+          <caret line="242" column="31" selection-start-line="242" selection-start-column="21" selection-end-line="242" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/game.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.6842105" vertical-offset="6664" max-vertical-offset="12478">
+          <caret line="401" column="13" selection-start-line="401" selection-start-column="13" selection-end-line="401" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameLogic.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.4035087" vertical-offset="1664" max-vertical-offset="4114">
+          <caret line="116" column="33" selection-start-line="116" selection-start-column="8" selection-end-line="116" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index_home.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2090909" vertical-offset="4985" max-vertical-offset="14314">
+          <caret line="300" column="0" selection-start-line="300" selection-start-column="0" selection-end-line="300" selection-end-column="0" />
           <folding />
         </state>
       </provider>
