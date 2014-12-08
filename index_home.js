@@ -13,14 +13,6 @@ var bodyParser = require('body-parser');
 app.set('views', __dirname + '/tpl');
 app.set('view engine', "jade");
 app.engine('jade', require('jade').__express);
-var os = require('os');
-
-var database_uri;
-var heroku_info = require("heroku_info");
-if(os.hostname().indexOf("local") > -1)
-    database_uri = "mongodb://localhost/test";
-else
-    database_uri = heroku_info.db();
 
 var mongoUri = process.env.MONGOLAB_URI ||
     process.env.MONGOHQ_URL ||
