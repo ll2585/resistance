@@ -3,8 +3,8 @@ var leader_icon_html = '<img src = "images/leader.png" height = "20" width = "20
 var selected_icon_html = '<img src = "images/selected.png" height = "20" width = "20">';
 var assassination_icon_html = '<span id = "assassination_icon"><img src = "images/dagger.png" height = "20" width = "20"></span>';
 var role_wait_time = 2;
-var vote_wait_time = 1;
-var mission_wait_time = 1;
+var vote_wait_time = 3;
+var mission_wait_time = 3;
 function get_game_id (){
     var game_id_elem = $('#game_id');
     return game_id_elem.html();
@@ -572,6 +572,7 @@ function blue_wins(){
     show_restart_button();
 }
 function show_restart_button(){
+    /* figure out this logic later basically only restart if everyone clicked restart, until then i cop out
     var button = '<div id = "restart_game"><button type="button" id = "restart_game_button">Restart Game with Same Roles and Players</button></div>';
     console.log('restartdd');
     $('#game_messages').append(button);
@@ -587,6 +588,12 @@ function show_restart_button(){
         clear_vote_track();
         socket.emit("start_game", get_game_id());
         socket.emit("game_started", {game_id: get_game_id(), player: {id: get_player_id(), name: get_player_name()}});
+    });
+    */
+    var button = '<div id = "to_lobby"><button type="button" id = "to_lobby_button">Back to Lobby</button></div>';
+    $('#game_messages').append(button);
+    $('#to_lobby').click(function(){
+        window.location.href = "../";
     });
 }
 $(document).ready(function() {

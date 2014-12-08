@@ -1,4 +1,8 @@
 var express = require("express");
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
+
 var app = express();
 var http = require('http');
 var port = process.env.PORT || 3000;
@@ -9,73 +13,124 @@ var bodyParser = require('body-parser');
 app.set('views', __dirname + '/tpl');
 app.set('view engine', "jade");
 app.engine('jade', require('jade').__express);
-
-//app.use(cookieParser);
-//app.use(express.session({
-//   store: sessionStore,
-//    cookie: {
-//        httpOnly: true
-//    },
-//    key: EXPRESS_SID_KEY
-//}));
+var mongoUri = process.env.MONGOLAB_URI ||
+    process.env.MONGOHQ_URL ||
+    'mongodb://localhost/test';
+app.use(cookieParser());
+app.use(session({
+    secret: 'secret',
+    store: new MongoStore({
+        db: 'express',
+        url: mongoUri,
+        collection: 'session'
+    }),
+    resave: false,
+    saveUninitialized: true
+    }
+));
+/*
+var mongoUri = process.env.MONGOLAB_URI ||
+    process.env.MONGOHQ_URL ||
+    'mongodb://localhost/test';
+var sessionStore = new MongoStore({
+    url: mongoUri
+});
+var EXPRESS_SID_KEY = 'express.sid';
+app.use(cookieParser);
+app.use(session({
+    secret: 'THIS IS A SECRET',
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: true,
+}));
+*/
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.get("/login", function(req, res){
+    res.render("main");
+});
+app.post('/red', function(req, res){
+    req.session.name = req.body.name;
+    req.session.isLogged = true;
+    res.redirect("/");
+});
 app.get('/', function(req, res){
     console.log(req.session);
-    res.render("gamelobby", {player: {name: "req.session.name", id: "req.session.id" }, games_started: game_logic.has_games()});
-});
-
-//changee to post later
-app.get('/create', function(req, res){
-    var query = require('url').parse(req.url,true).query;
-    var player_id = query['player_id'];
-    var player_name = query['player_name'];
-    var game_id = 'game_1';
-    game_logic.start_game(game_id);
-    console.log("STARTING GAME " + game_id);
-    game_logic.add_new_player_to_game(game_id, {id: player_id, name: player_name});
-
-    //add 4 dummy players cus fuck it
-    var bots_to_add = 3;
-    var game = game_logic.game(game_id);
-    for(var i = 0; i < bots_to_add; i++){
-        var bot = game_logic.random_bot();
-        var bot_name = bot.get_name();
-        console.log("THE BOT IS " + bot_name);
-        console.log(game.player_name_exists(bot_name));
-        while(game.player_name_exists(bot_name)){
-            bot = game_logic.random_bot();
-            bot_name = bot.get_name();
-            console.log(bot_name);
-        }
-        game_logic.add_new_player_to_game( game_id, {player: bot});
+    if (!req.session.name) {
+        res.redirect("/login");
+    }else {
+        res.render("gamelobby", {
+            player: {name: req.session.name, id: req.session.id},
+            games_started: game_logic.has_games()
+        });
     }
+});
+//changee to post later
+app.post('/create', function(req, res){
+    if (!req.session.name) {
+        res.redirect("/login");
+    }else {
+        var player_id = req.session.id;
+        var player_name = req.session.name;
+        var game_id = game_logic.random_game_id();
+        game_logic.start_game(game_id);
+        console.log("STARTING GAME " + game_id);
+        game_logic.add_new_player_to_game(game_id, {id: player_id, name: player_name});
 
-    var players = game_logic.get_public_players_from_game(game_id);
-    res.render("newgame", {player: {name: player_name, id: player_id }, game_id: game_id, players: players});
+        //add 4 dummy players cus fuck it
+        var bots_to_add = 3;
+        var game = game_logic.game(game_id);
+        for (var i = 0; i < bots_to_add; i++) {
+            var bot = game_logic.random_bot();
+            var bot_name = bot.get_name();
+            console.log("THE BOT IS " + bot_name);
+            console.log(game.player_name_exists(bot_name));
+            while (game.player_name_exists(bot_name)) {
+                bot = game_logic.random_bot();
+                bot_name = bot.get_name();
+                console.log(bot_name);
+            }
+            bot.toggle_ready();
+            game_logic.add_new_player_to_game(game_id, {player: bot});
+        }
+
+        var players = game_logic.get_public_players_from_game(game_id);
+        res.render("newgame", {player: {name: player_name, id: player_id}, game_id: game_id, players: players});
+    }
 });
 
 //changee to post later
 app.post('/play', function(req, res){
-    var player_id = req.body.player_id;
-    var player_name = req.body.player_name;
-    var game_id = req.body.game_id;
-    console.log(player_id + ' and ' + player_name + ' and ' + game_id);
-    var game = game_logic.game(game_id);
-    game.add_to_buffer(player_id); //so it doesn't say you disconnected
-    var players = game_logic.get_public_players_from_game(game_id);
-    console.log(game.assigned_roles);
-    var role = game.assigned_roles[player_id];
-    var roles = game.assigned_roles;
-    var num_players = game.get_number_of_players();
-    var mission_player_count = game_logic.get_mission_player_count(num_players);
-    var two_fails_needed = game_logic.needs_two_fails(num_players);
-    var evil_players = game_logic.get_evil_players(num_players);
-    res.render("game", {player: {name: player_name, id: player_id },
-        game_id: game_id, players: players, role: role, roles:roles,
-        game: {mission_player_count: mission_player_count, two_fails_needed: two_fails_needed, num_players: num_players, evil_players: evil_players}});
+    if (!req.session.name) {
+        res.redirect("/login");
+    }else {
+        var player_id = req.body.player_id;
+        var player_name = req.body.player_name;
+        var game_id = req.body.game_id;
+        console.log(player_id + ' and ' + player_name + ' and ' + game_id);
+        var game = game_logic.game(game_id);
+        game.add_to_buffer(player_id); //so it doesn't say you disconnected
+        var players = game_logic.get_public_players_from_game(game_id);
+        console.log(game.assigned_roles);
+        var role = game.assigned_roles[player_id];
+        var roles = game.assigned_roles;
+        var num_players = game.get_number_of_players();
+        var mission_player_count = game_logic.get_mission_player_count(num_players);
+        var two_fails_needed = game_logic.needs_two_fails(num_players);
+        var evil_players = game_logic.get_evil_players(num_players);
+        res.render("game", {
+            player: {name: player_name, id: player_id},
+            game_id: game_id, players: players, role: role, roles: roles,
+            game: {
+                mission_player_count: mission_player_count,
+                two_fails_needed: two_fails_needed,
+                num_players: num_players,
+                evil_players: evil_players
+            }
+        });
+    }
 });
 
 app.get('/play', function(req, res){
@@ -122,24 +177,31 @@ app.get('/play', function(req, res){
         game: {mission_player_count: mission_player_count, two_fails_needed: two_fails_needed, num_players: num_players, evil_players: evil_players}});
 });
 
-//changee to post later
-app.get('/join', function(req, res){
-    var query = require('url').parse(req.url,true).query;
-    var player_id = query['player_id'];
-    var player_name = query['player_name'];
-    var game_id = 'game_1';
-    var game = game_logic.game(game_id);
+app.post('/join', function(req, res){
+    if (!req.session.name) {
+        res.redirect("/login");
+    }else {
+        var player_id = req.session.id;
+        var player_name = req.session.name;
+        var game_id = req.body.game_id;
+        var game = game_logic.game(game_id);
 
-    if(game.in_game(player_id)){
-        console.log('TO BUFFER');
-        game.add_to_buffer(player_id);
-    }else{
-        console.log('ok join game');
-        game_logic.add_new_player_to_game(game_id, {id: player_id, name: player_name});
+        if (game.in_game(player_id)) {
+            console.log('TO BUFFER');
+            game.add_to_buffer(player_id);
+        } else {
+            console.log('ok join game');
+            game_logic.add_new_player_to_game(game_id, {id: player_id, name: player_name});
+        }
+        var players = game_logic.get_public_players_from_game(game_id);
+        console.log('LOL');
+        res.render("joingame", {
+            player: {name: player_name, id: player_id},
+            game_id: game_id,
+            players: players,
+            game_settings: game.get_settings()
+        });
     }
-    var players = game_logic.get_public_players_from_game(game_id);
-    console.log('LOL');
-    res.render("joingame", {player: {name: player_name, id: player_id }, game_id: game_id, players: players, game_settings: game.get_settings()});
 });
 
 io.of('/avalon').on('connection', function(socket){
@@ -368,12 +430,11 @@ io.of('/avalon').on('connection', function(socket){
                         leader: leader,
                         selected_player_names: selected_player_names
                     });
-
-                    if (game_players[i] == 'luke_id' || game.no_humans_on_team()) { //since it only fires once
-                        console.log("BOTS GO");
-                        bots_vote(game, game_id);
-                    }
                 }
+            }
+            if (game_players[i] == 'luke_id' || game.no_humans_on_team()) { //this fires once.
+                console.log("BOTS GO");
+                bots_vote(game, game_id);
             }
         }
     }

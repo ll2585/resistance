@@ -1,8 +1,8 @@
 function Player(id, name){
     this.id = id;
     this.name = name;
-    //this.status = 'Not Ready';
-    this.status = 'Ready!';
+    this.status = 'Not Ready';
+    //this.status = 'Ready!';
     this.role = 'None';
     this.attributes = {};
 }
