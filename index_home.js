@@ -16,7 +16,7 @@ app.engine('jade', require('jade').__express);
 
 var mongoUri = process.env.MONGOLAB_URI ||
     process.env.MONGOHQ_URL ||
-    database_uri;
+    'mongodb://localhost/test';
 app.use(cookieParser());
 app.use(session({
     secret: 'secret',
@@ -226,6 +226,14 @@ io.of('/avalon').on('connection', function(socket){
 
     socket.on('joined_lobby', function(){
         socket.join('lobby');
+        var open_games = game_logic.get_open_games();
+        for(var i = 0; i < open_games.length; i++){
+            var data = open_games[i];
+            var game_id = data['game_id'];
+            data['players'] = game_logic.get_players_from_game(game_id);
+            console.log(data);
+            socket.emit('new_game_started_lobby', data);
+        }
     });
 
     console.log('a user connected');
@@ -326,7 +334,7 @@ io.of('/avalon').on('connection', function(socket){
         console.log('teh gameid is ' + game_id);
         var game = game_logic.game(game_id);
         console.log('leader is ' + game.get_leader());
-        socket.emit('new_leader', game.get_leader()); //NOT io.emit because people are getting rerouted and the rerouting fires this event
+        socket.emit('new_leader', {leader_id: game.get_leader(), leader_name: game.get_leader_name()}); //NOT io.emit because people are getting rerouted and the rerouting fires this event
         //so if it were io.emit, it would fire multiple times for the first guy to load (his fires, and everyone who loads after him fires)
         var game_data = game.get_current_round();
         if(game.has_roles()){
@@ -366,7 +374,7 @@ io.of('/avalon').on('connection', function(socket){
         if(game_logic.all_players_waiting_for(game_id, 'start')){
             console.log('teh gameid is ' + game_id);
             console.log('leader is ' + game.get_leader());
-            io.of('/avalon').to(game_id).emit('new_leader', game.get_leader()); //this here is io.emit since it fires only once
+            io.of('/avalon').to(game_id).emit('new_leader', {leader_id: game.get_leader(), leader_name: game.get_leader_name()}); //this here is io.emit since it fires only once
             var game_data = game.get_current_round();
             io.of('/avalon').to(game_id).emit('game_round_vote_count', {mission: game_data['round'], vote: game_data['vote']});
             io.of('/avalon').to(leader_room(game_id)).emit('you_are_leader', game_data);
@@ -450,7 +458,7 @@ io.of('/avalon').on('connection', function(socket){
             game.vote_failed(); //automatically passes leadership
             console.log("MISSION FAILED SO RESET THESE BITCHES");
             console.log('new leader is ' + game.get_leader());
-            io.of('/avalon').to(game_id).emit('new_leader', game.get_leader()); //this only fires once
+            io.of('/avalon').to(game_id).emit('new_leader', {leader_id: game.get_leader(), leader_name: game.get_leader_name()}); //this only fires once
             var game_data = game.get_current_round();
             io.of('/avalon').to(game_id).emit('game_round_vote_count', {
                 mission: game_data['round'],
@@ -768,7 +776,7 @@ io.of('/avalon').on('connection', function(socket){
 
                     console.log("GAME OVER");
                 } else {
-                    io.of('/avalon').to(game_id).emit('new_leader', game.get_leader());
+                    io.of('/avalon').to(game_id).emit('new_leader', {leader_id: game.get_leader(), leader_name: game.get_leader_name()});
                     var game_data = game.get_current_round();
                     io.of('/avalon').to(game_id).emit('game_round_vote_count', {mission: game_data['round'], vote: game_data['vote']});
                     io.of('/avalon').to(leader_room(game_id)).emit('you_are_leader', game_data);

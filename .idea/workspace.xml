@@ -2,6 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e6830e7b-df63-4f12-8004-46dbe64b8c61" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/game.js" afterPath="$PROJECT_DIR$/game.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/game.js" afterPath="$PROJECT_DIR$/public/js/game.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gameLogic.js" afterPath="$PROJECT_DIR$/gameLogic.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index_home.js" afterPath="$PROJECT_DIR$/index_home.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/newgame.js" afterPath="$PROJECT_DIR$/public/js/newgame.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="resistance.iws" />
@@ -31,8 +36,8 @@
       <file leaf-file-name="index_home.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index_home.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.61614496" vertical-offset="153" max-vertical-offset="15266">
-              <caret line="31" column="22" selection-start-line="31" selection-start-column="22" selection-end-line="31" selection-end-column="22" />
+            <state vertical-scroll-proportion="0.63261294" vertical-offset="13057" max-vertical-offset="15266">
+              <caret line="787" column="41" selection-start-line="787" selection-start-column="41" selection-end-line="787" selection-end-column="41" />
               <folding />
             </state>
           </provider>
@@ -41,7 +46,7 @@
       <file leaf-file-name="heroku_info.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/heroku_info.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="34" max-vertical-offset="136">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="136">
               <caret line="2" column="2" selection-start-line="2" selection-start-column="2" selection-end-line="2" selection-end-column="2" />
               <folding />
             </state>
@@ -61,8 +66,8 @@
       <file leaf-file-name="gamelobby.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/js/gamelobby.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="459" max-vertical-offset="1428">
-              <caret line="49" column="13" selection-start-line="49" selection-start-column="13" selection-end-line="49" selection-end-column="13" />
+            <state vertical-scroll-proportion="-9.22807" vertical-offset="273" max-vertical-offset="1428">
+              <caret line="47" column="28" selection-start-line="47" selection-start-column="28" selection-end-line="47" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -71,8 +76,8 @@
       <file leaf-file-name="newgame.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/js/newgame.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1356" max-vertical-offset="4318">
-              <caret line="85" column="31" selection-start-line="85" selection-start-column="31" selection-end-line="85" selection-end-column="31" />
+            <state vertical-scroll-proportion="-6.859649" vertical-offset="1530" max-vertical-offset="4335">
+              <caret line="113" column="30" selection-start-line="113" selection-start-column="30" selection-end-line="113" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -81,8 +86,8 @@
       <file leaf-file-name="game.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/js/game.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="9804" max-vertical-offset="12597">
-              <caret line="604" column="0" selection-start-line="604" selection-start-column="0" selection-end-line="604" selection-end-column="0" />
+            <state vertical-scroll-proportion="-4.754386" vertical-offset="154" max-vertical-offset="12750">
+              <caret line="25" column="28" selection-start-line="25" selection-start-column="28" selection-end-line="25" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -93,7 +98,27 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="663" max-vertical-offset="1445">
               <caret line="57" column="40" selection-start-line="57" selection-start-column="37" selection-end-line="57" selection-end-column="40" />
-              <folding />
+              <folding>
+                <marker date="1418076258477" expanded="true" signature="33:553" placeholder="..." />
+                <marker date="1418076258477" expanded="true" signature="560:3012" placeholder="..." />
+                <marker date="1418076258477" expanded="true" signature="698:912" placeholder="..." />
+                <marker date="1418076258477" expanded="true" signature="1015:1747" placeholder="..." />
+                <marker date="1418076258477" expanded="true" signature="1047:1087" placeholder="..." />
+                <marker date="1418076258477" expanded="true" signature="1104:1144" placeholder="..." />
+                <marker date="1418076258477" expanded="true" signature="1161:1201" placeholder="..." />
+                <marker date="1418076258477" expanded="true" signature="1218:1747" placeholder="..." />
+                <marker date="1418076258477" expanded="true" signature="1245:1347" placeholder="..." />
+                <marker date="1418076258477" expanded="true" signature="1366:1747" placeholder="..." />
+                <marker date="1418076258477" expanded="true" signature="1401:1441" placeholder="..." />
+                <marker date="1418076258477" expanded="true" signature="1462:1496" placeholder="..." />
+                <marker date="1418076258477" expanded="true" signature="1517:1554" placeholder="..." />
+                <marker date="1418076258477" expanded="true" signature="1649:1686" placeholder="..." />
+                <marker date="1418076258477" expanded="true" signature="1707:1747" placeholder="..." />
+                <marker date="1418076258477" expanded="true" signature="1987:2647" placeholder="..." />
+                <marker date="1418076258477" expanded="true" signature="2099:2197" placeholder="..." />
+                <marker date="1418076258477" expanded="true" signature="2443:2573" placeholder="..." />
+                <marker date="1418076258477" expanded="true" signature="2716:2909" placeholder="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -111,8 +136,8 @@
       <file leaf-file-name="game.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/game.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="9469" max-vertical-offset="10693">
-              <caret line="494" column="135" selection-start-line="494" selection-start-column="130" selection-end-line="494" selection-end-column="135" />
+            <state vertical-scroll-proportion="-3.0526316" vertical-offset="8105" max-vertical-offset="10744">
+              <caret line="487" column="30" selection-start-line="487" selection-start-column="15" selection-end-line="487" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -121,8 +146,8 @@
       <file leaf-file-name="gameLogic.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gameLogic.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2461" max-vertical-offset="4386">
-              <caret line="173" column="0" selection-start-line="173" selection-start-column="0" selection-end-line="175" selection-end-column="2" />
+            <state vertical-scroll-proportion="-3.0526316" vertical-offset="574" max-vertical-offset="5015">
+              <caret line="44" column="86" selection-start-line="44" selection-start-column="86" selection-end-line="44" selection-end-column="86" />
               <folding />
             </state>
           </provider>
@@ -156,16 +181,16 @@
         <option value="$PROJECT_DIR$/tpl/gamelobby.jade" />
         <option value="$PROJECT_DIR$/tpl/joingame.jade" />
         <option value="$PROJECT_DIR$/tpl/newgame.jade" />
-        <option value="$PROJECT_DIR$/game.js" />
-        <option value="$PROJECT_DIR$/gameLogic.js" />
         <option value="$PROJECT_DIR$/tpl/game.jade" />
         <option value="$PROJECT_DIR$/tpl/main.jade" />
         <option value="$PROJECT_DIR$/player.js" />
-        <option value="$PROJECT_DIR$/public/js/game.js" />
-        <option value="$PROJECT_DIR$/public/js/newgame.js" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/index_home.js" />
         <option value="$PROJECT_DIR$/heroku_info.js" />
+        <option value="$PROJECT_DIR$/game.js" />
+        <option value="$PROJECT_DIR$/gameLogic.js" />
+        <option value="$PROJECT_DIR$/public/js/newgame.js" />
+        <option value="$PROJECT_DIR$/public/js/game.js" />
+        <option value="$PROJECT_DIR$/index_home.js" />
       </list>
     </option>
   </component>
@@ -443,7 +468,7 @@
       <recent name="C:\Users\luke.li\Google Drive\resistance\resistance\public\css" />
     </key>
   </component>
-  <component name="RunManager" selected="Heroku Deployment.Heroku Deployment">
+  <component name="RunManager" selected="Node.js.index_home.js">
     <configuration default="false" name="index.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" path-to-node="C:/Program Files/nodejs/node" path-to-js-file="index.js" working-dir="$PROJECT_DIR$">
       <RunnerSettings RunnerId="Basic" />
       <ConfigurationWrapper RunnerId="Basic" />
@@ -754,7 +779,7 @@
       <workItem from="1417706337259" duration="18738000" />
       <workItem from="1418070611234" duration="5006000" />
       <workItem from="1418075637467" duration="324000" />
-      <workItem from="1418076261449" duration="277000" />
+      <workItem from="1418076261449" duration="3451000" />
     </task>
     <task id="LOCAL-00001" summary="nearly functional">
       <created>1417082170682</created>
@@ -918,11 +943,17 @@
       <option name="project" value="LOCAL" />
       <updated>1418076534921</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Deploy">
+      <created>1418076909019</created>
+      <option name="number" value="00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1418076909019</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="98780000" />
+    <option name="totallyTimeSpent" value="101954000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -956,10 +987,10 @@
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32985657" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3284974" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3284974" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3284974" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37098446" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.37098446" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3284974" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21428572" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -1093,6 +1124,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="854" max-vertical-offset="1411">
           <caret line="47" column="4" selection-start-line="47" selection-start-column="4" selection-end-line="50" selection-end-column="7" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1346,6 +1378,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-4.4736843" vertical-offset="306" max-vertical-offset="1122">
           <caret line="33" column="29" selection-start-line="33" selection-start-column="17" selection-end-line="33" selection-end-column="29" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1353,21 +1386,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="956" max-vertical-offset="1411">
           <caret line="65" column="19" selection-start-line="65" selection-start-column="19" selection-end-line="65" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/gamelobby.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="459" max-vertical-offset="1428">
-          <caret line="49" column="13" selection-start-line="49" selection-start-column="13" selection-end-line="49" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/game.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="9804" max-vertical-offset="12597">
-          <caret line="604" column="0" selection-start-line="604" selection-start-column="0" selection-end-line="604" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1376,7 +1394,27 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="663" max-vertical-offset="1445">
           <caret line="57" column="40" selection-start-line="57" selection-start-column="37" selection-end-line="57" selection-end-column="40" />
-          <folding />
+          <folding>
+            <marker date="1418076258477" expanded="true" signature="33:553" placeholder="..." />
+            <marker date="1418076258477" expanded="true" signature="560:3012" placeholder="..." />
+            <marker date="1418076258477" expanded="true" signature="698:912" placeholder="..." />
+            <marker date="1418076258477" expanded="true" signature="1015:1747" placeholder="..." />
+            <marker date="1418076258477" expanded="true" signature="1047:1087" placeholder="..." />
+            <marker date="1418076258477" expanded="true" signature="1104:1144" placeholder="..." />
+            <marker date="1418076258477" expanded="true" signature="1161:1201" placeholder="..." />
+            <marker date="1418076258477" expanded="true" signature="1218:1747" placeholder="..." />
+            <marker date="1418076258477" expanded="true" signature="1245:1347" placeholder="..." />
+            <marker date="1418076258477" expanded="true" signature="1366:1747" placeholder="..." />
+            <marker date="1418076258477" expanded="true" signature="1401:1441" placeholder="..." />
+            <marker date="1418076258477" expanded="true" signature="1462:1496" placeholder="..." />
+            <marker date="1418076258477" expanded="true" signature="1517:1554" placeholder="..." />
+            <marker date="1418076258477" expanded="true" signature="1649:1686" placeholder="..." />
+            <marker date="1418076258477" expanded="true" signature="1707:1747" placeholder="..." />
+            <marker date="1418076258477" expanded="true" signature="1987:2647" placeholder="..." />
+            <marker date="1418076258477" expanded="true" signature="2099:2197" placeholder="..." />
+            <marker date="1418076258477" expanded="true" signature="2443:2573" placeholder="..." />
+            <marker date="1418076258477" expanded="true" signature="2716:2909" placeholder="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1384,14 +1422,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="838" max-vertical-offset="1360">
           <caret line="69" column="14" selection-start-line="69" selection-start-column="14" selection-end-line="69" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/newgame.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1356" max-vertical-offset="4318">
-          <caret line="85" column="31" selection-start-line="85" selection-start-column="31" selection-end-line="85" selection-end-column="31" />
           <folding />
         </state>
       </provider>
@@ -1404,18 +1434,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/game.js">
+    <entry file="file://$PROJECT_DIR$/gameLogic.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="8398" max-vertical-offset="10693">
-          <caret line="494" column="135" selection-start-line="494" selection-start-column="130" selection-end-line="494" selection-end-column="135" />
+        <state vertical-scroll-proportion="-3.0526316" vertical-offset="574" max-vertical-offset="5015">
+          <caret line="44" column="86" selection-start-line="44" selection-start-column="86" selection-end-line="44" selection-end-column="86" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gameLogic.js">
+    <entry file="file://$PROJECT_DIR$/public/js/gamelobby.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2461" max-vertical-offset="4386">
-          <caret line="173" column="0" selection-start-line="173" selection-start-column="0" selection-end-line="175" selection-end-column="2" />
+        <state vertical-scroll-proportion="-9.22807" vertical-offset="273" max-vertical-offset="1428">
+          <caret line="47" column="28" selection-start-line="47" selection-start-column="28" selection-end-line="47" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.0526316" vertical-offset="8105" max-vertical-offset="10744">
+          <caret line="487" column="30" selection-start-line="487" selection-start-column="15" selection-end-line="487" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/game.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.754386" vertical-offset="154" max-vertical-offset="12750">
+          <caret line="25" column="28" selection-start-line="25" selection-start-column="28" selection-end-line="25" selection-end-column="28" />
           <folding />
         </state>
       </provider>
@@ -1428,10 +1474,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/newgame.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.859649" vertical-offset="1530" max-vertical-offset="4335">
+          <caret line="113" column="30" selection-start-line="113" selection-start-column="30" selection-end-line="113" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/index_home.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.61614496" vertical-offset="153" max-vertical-offset="15266">
-          <caret line="31" column="22" selection-start-line="31" selection-start-column="22" selection-end-line="31" selection-end-column="22" />
+        <state vertical-scroll-proportion="0.63261294" vertical-offset="13057" max-vertical-offset="15266">
+          <caret line="787" column="41" selection-start-line="787" selection-start-column="41" selection-end-line="787" selection-end-column="41" />
           <folding />
         </state>
       </provider>

@@ -125,6 +125,8 @@ Game.prototype.in_buffer = function(player_id) {
   return this.player_buffer.indexOf(player_id) > -1;
 };
 
+
+
 Game.prototype.remove_from_buffer = function(player_id) {
   var index = this.player_buffer.indexOf(player_id);
   if (index > -1) {
@@ -487,7 +489,8 @@ Game.prototype.get_leader_name = function() {
   return this.players_id[this.leader]['name'];
 };
 Game.prototype.end_game = function() {
-  return this.started = false;
+  //SO THIS IS SUPPSOED TO RESTART THE GAME BUT WHATEVER LOL
+  //this.started = false;
 };
 
 Game.prototype.get_next_player_name = function() {

@@ -92,7 +92,8 @@ function disableStartButton(){
 }
 function ready_to_start (){
     console.log(player_ids);
-    if(player_ids.length < 5 || player_ids.length > 10){
+    var num_players = $('.players tr').length;
+    if(num_players < 5 || num_players > 10){
         return false;
     }
     for(var i = 0; i < player_ids.length; i++){

@@ -28,6 +28,43 @@ exports.start_game = function(id){
     active_games[id] = game;
 };
 
+//refactor this shit since i changed it when i made ethe lobby stuff and the game stuff (role vs setting etc.)
+exports.get_open_games = function(){
+    var result = [];
+    for(var id in active_games){
+        if (!active_games[id].started){
+            console.log("********************");
+            console.log(active_games[id].get_settings());
+            var good_roles = {Merlin: {}, Percival: {}, Good_Lancelot: {}};
+            var bad_roles = {Mordred: {}, Oberon: {}, Morgana: {}, Bad_Lancelot: {}};
+            var items = {Lady_of_the_Lake: {}, Excalibur: {}};
+            var good_guys_images = {Merlin: 'images/merlin.png', Percival: 'images/percival.png', Good_Lancelot: 'images/goodlancelot.png'};
+            var bad_guys_images = {Mordred: 'images/mordred.png', Oberon: 'images/oberon.png', Morgana: 'images/morgana.png', Bad_Lancelot: 'images/evillancelot.png'};
+            var item_images = {Lady_of_the_Lake: 'images/ladyofthelake.png', Excalibur: 'images/excalibur.png'};
+            var good_roles_on = {Merlin: {}, Percival: {}, Good_Lancelot: {}};
+            var bad_roles_on = {Mordred: {}, Oberon: {}, Morgana: {}, Bad_Lancelot: {}};
+            var items_on = {Lady_of_the_Lake: {}, Excalibur: {}};
+            for(var role in good_roles_on){
+                good_roles_on[role]['enabled'] = active_games[id].get_settings()[role];
+                good_roles_on[role]['image'] = good_guys_images[role];
+            }
+            for(var role in bad_roles_on){
+                bad_roles_on[role]['enabled'] = active_games[id].get_settings()[role];
+                bad_roles_on[role]['image'] = bad_guys_images[role];
+            }
+            for(var item in items_on){
+                items_on[item]['enabled'] = active_games[id].get_settings()[item];
+                items_on[item]['image'] = item_images[item];
+            }
+            var get_roles = {good_roles: good_roles_on, bad_roles: bad_roles_on, items: items_on};
+            console.log("********************");
+            console.log(get_roles);
+            result.push({game_id: id, roles: get_roles});
+        }
+    }
+    return result;
+};
+
 exports.add_new_player_to_game = function(game_id, options){
     var game = active_games[game_id];
     var player;

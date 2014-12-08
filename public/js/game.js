@@ -18,13 +18,20 @@ function get_player_name(){
     return $('.playerID').html();
 }
 
-function make_leader (leader_id){
+function make_leader (leader_id, leader_name){
     clear_old_leaders();
     reset_selected_players();
     var elem = $('#player_id_' + leader_id);
     var icon_elem = $('#leader_player_id_' + leader_id);
     elem.addClass('leader');
     icon_elem.append(leader_icon_html);
+    show_waiting_for_leader_message(leader_name);
+}
+
+function show_waiting_for_leader_message(leader_name){
+    clear_messages();
+    var proposal_html = 'Waiting for ' + leader_name + ' to make a team...';
+    $("#game_messages").append(proposal_html);
 }
 
 function clear_messages(){
@@ -603,9 +610,11 @@ $(document).ready(function() {
 
 
 
-    socket.on("new_leader", function(leader_id){
+    socket.on("new_leader", function(data){
+        var leader_id = data['leader_id'];
+        var leader_name = data['leader_name'];
         console.log(leader_id);
-        make_leader(leader_id);
+        make_leader(leader_id, leader_name);
     });
 
     socket.on("show_player_roles", function(data){
