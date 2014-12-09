@@ -70,6 +70,44 @@ app.get('/', function(req, res){
 });
 //changee to post later
 app.post('/create', function(req, res){
+    show_create_page(req, res);
+});
+app.post('/m/create', function(req, res){
+    show_create_page_mobile(req, res);
+});
+function show_create_page_mobile(req, res){
+    if (!req.session.name) {
+        res.redirect("/login");
+    }else {
+        var player_id = req.session.id;
+        var player_name = req.session.name;
+        var game_id = game_logic.random_game_id();
+        game_logic.start_game(game_id);
+        console.log("STARTING GAME " + game_id);
+        game_logic.add_new_player_to_game(game_id, {id: player_id, name: player_name});
+
+        //add 4 dummy players cus fuck it
+        var bots_to_add = 3;
+        var game = game_logic.game(game_id);
+        for (var i = 0; i < bots_to_add; i++) {
+            var bot = game_logic.random_bot();
+            var bot_name = bot.get_name();
+            console.log("THE BOT IS " + bot_name);
+            console.log(game.player_name_exists(bot_name));
+            while (game.player_name_exists(bot_name)) {
+                bot = game_logic.random_bot();
+                bot_name = bot.get_name();
+                console.log(bot_name);
+            }
+            bot.toggle_ready();
+            game_logic.add_new_player_to_game(game_id, {player: bot});
+        }
+
+        var players = game_logic.get_public_players_from_game(game_id);
+        res.render("newgame_mobile", {player: {name: player_name, id: player_id}, game_id: game_id, players: players});
+    }
+}
+function show_create_page(req, res){
     if (!req.session.name) {
         res.redirect("/login");
     }else {
@@ -100,7 +138,7 @@ app.post('/create', function(req, res){
         var players = game_logic.get_public_players_from_game(game_id);
         res.render("newgame", {player: {name: player_name, id: player_id}, game_id: game_id, players: players});
     }
-});
+}
 
 //changee to post later
 app.post('/play', function(req, res){

@@ -72,8 +72,10 @@ function toggle_ready (player_id){
     var ready_html = ready_elem.html();
     console.log(ready_html);
     if(ready_html == 'Not Ready'){
+        $('#ready').addClass('active');
         ready_elem.html('Ready!');
     }else{
+        $('#ready').removeClass('active');
         ready_elem.html('Not Ready');
     }
     if(ready_to_start()){
@@ -232,6 +234,7 @@ $(document).ready(function() {
     var ready_button = $('#ready');
     ready_button.click(function(){
         toggle_ready(player_id);
+
         socket.emit("toggle_ready", {game_id: game_id, player_id: player_id});
     });
 

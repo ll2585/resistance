@@ -13,12 +13,19 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+@media (max-width: 768px) {
+  .col-xs-6 {
+    margin-top:20px;
+  }
+}
 
 body {
   background: white;
-  margin: 10px;
+  padding-top: 10px;
 }
-
+.spacer {
+  margin-top: 10px; /* define margin as you see fit */
+}
 body,
 input {
   font-family: sans-serif;
@@ -36,11 +43,6 @@ td {
   padding: 0;
 }
 
-#body {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-}
 
 #input {
   margin-top: 0.5em;
@@ -50,7 +52,3 @@ td {
   padding-top: 0.25em;
 }
 
-#nav {
-  float: right;
-  z-index: 99;
-}
