@@ -50,7 +50,7 @@ $(document).ready(function() {
             }
             table_html += '</tr>';
         }
-        table_html += '<tr><td colspan = "5"><form action="/join" method="post"><input type="hidden" name="game_id" value="' + data['game_id'] + '"><button type="submit">Join</button></form></td></tr></table>';
+        table_html += '<tr><td colspan = "5"><form action="/m/join" method="post"><input type="hidden" name="game_id" value="' + data['game_id'] + '"><button type="submit">Join</button></form></td></tr></table>';
         $('#tables').append(table_html);
     }
 

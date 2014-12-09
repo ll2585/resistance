@@ -1,0 +1,60 @@
+html,body,.container
+{
+  height:100%;
+}
+.container
+{
+  display:table;
+  width: 100%;
+}
+.nav-bar{
+  height: 10%;
+  display: table-row;
+}
+.table{
+  height: 30%;
+  display: table-row;
+}
+.game_missions{
+  height: 20%;
+  display: table-row;
+}
+.vote{
+  height: 20%;
+  display: table-row;
+}
+.messages{
+  height: 20%;
+  display: table-row;
+}
+.col-md-3
+{
+  display: table-cell;
+  background: pink;
+}
+.row{
+  overflow: hidden;
+}
+
+[class*="col-"] {
+  float: none;
+  display: table-cell;
+  vertical-align: top;
+}
+.col-md-9
+{
+  display: table-cell;
+  background: yellow;
+}
+.col-xs-12{
+  display: table-cell;
+  background: green;
+}
+.col-xs-5{
+  display: table-cell;
+  background: indianred;
+}
+.col-xs-7{
+  display: table-cell;
+  background: beige;
+}

@@ -5,7 +5,7 @@ html
 		script(src='/socket.io/socket.io.js')
 		script(src='//code.jquery.com/jquery-1.10.1.min.js')
 		script(src='/chat.js')
-		script(src='/js/newgame.js')
+		script(src='/js/joingame.js')
 		script(src='/js/mobile.js')
 		link(rel='stylesheet', href='/css/lib/bootstrap.css')
 		link(rel='stylesheet', href='/css/lib/bootstrap-responsive.css')
@@ -15,7 +15,7 @@ html
 		meta(name="viewport" content="width=device-width, initial-scale=1")
 	body
 		div#body
-			div.container-fluid
+			div.container
 				div.row-fluid
 					div.col-md-8.col-xs-6
 						div.controls
@@ -23,8 +23,7 @@ html
 							div#name(style = 'display: inline')
 								|#{player.name}
 							br
-							input#ready(type='button', value='ready', class='btn btn-default btn-lg')
-							input#start(type='button', value='start', class='btn btn-default btn-lg' disabled)
+							input#ready(type='button', value='ready')
 					div.col-md-4.col-xs-6
 						div#nav
 							b
@@ -39,17 +38,17 @@ html
 								- var good_guys = {Merlin: '../images/merlin.png', Percival: '../images/percival.png', Good_Lancelot: '../images/goodlancelot.png'}
 								- for (var guy in good_guys)
 									td
-										input(type='image', value= guy, src = good_guys[guy], width='133', height='200', class = 'not_selected_role img-responsive', id = guy)
+										img(value= guy, src = good_guys[guy], width='133', height='200', class = game_settings[guy] ? undefined : 'not_selected_role', class = 'img-responsive', id = guy)
 							tr
 								- var bad_guys = {Mordred: '../images/mordred.png', Oberon: '../images/oberon.png', Morgana: '../images/morgana.png', Bad_Lancelot: '../images/evillancelot.png'}
 								- for (var guy in bad_guys)
 									td
-										input(type='image', value= guy, src = bad_guys[guy], width='133', height='200', class = 'not_selected_role img-responsive', id = guy)
+										img(value= guy, src = bad_guys[guy], width='133', height='200', class = game_settings[guy] ? undefined : 'not_selected_role', class = 'img-responsive', id = guy)
 							tr
 								- var items = {Lady_of_the_Lake: '../images/ladyofthelake.png', Excalibur: '../images/excalibur.png'}
 								- for (var item in items)
 									td
-										input(type='image', value= item, src = items[item], width='133', height='200', class = 'not_selected_role img-responsive', id = item)
+										img(value= item, src = items[item], width='133', height='200', class = game_settings[item] ? undefined : 'not_selected_role', class = 'img-responsive', id = item)
 					div.col-md-4.pull-down.scoreboard.col-xs-12
 						table.table.table-bordered.table-hover.table-condensed.scoreboard-table
 							caption SCOREBOARD
@@ -67,3 +66,5 @@ html
 											= players[i]['name']
 										td(id= players[i]['id']+'_status')
 											= players[i]['status']
+
+

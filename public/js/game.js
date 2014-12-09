@@ -5,6 +5,10 @@ var assassination_icon_html = '<span id = "assassination_icon"><img src = "image
 var role_wait_time = 2;
 var vote_wait_time = 3;
 var mission_wait_time = 3;
+var message_elem;
+function is_small_screen (){
+    return $(window).width() < 768;
+}
 function get_game_id (){
     var game_id_elem = $('#game_id');
     return game_id_elem.html();
@@ -37,8 +41,11 @@ function show_waiting_for_leader_message(leader_name){
 function clear_messages(){
     console.log("CLEARING FUCKING MESSAGES");
     $("#game_messages").empty();
+    $("#game_messages_modal").empty();
 }
-
+function clear_modal(){
+    $("#game_messages_modal").empty();
+}
 function clear_old_leaders(){
     $(".leader").removeClass('leader');
     $(".leader_col").empty();
@@ -51,7 +58,7 @@ function reset_selected_players(){
 }
 
 function propose_team_prompt (team_size, players){
-    var html = "propose a team of size " + team_size + " by clicking on their names <br />";
+    var html = "propose a team of size " + team_size + " by clicking on their names below <br />";
     var player_table_html = '<table class="table table-bordered table-hover table-condensed scoreboard-table"><caption>SCOREBOARD</caption><thead></thead><tr><th>Player</th><th>Selected?</th></tr><tbody class="players-to-select">';
     var players = players;
     var selected_players = [];
@@ -59,7 +66,14 @@ function propose_team_prompt (team_size, players){
         player_table_html += '<tr id="player_id_' + players[i]['id'] + '_to_select"><td>' + players[i]['name'] + '</td><td id="' + players[i]['id'] + '_selected_status">Not Selected</td></tr>';
     }
     player_table_html += '</tbody></table>';
-    $('#game_messages').html(html + player_table_html);
+
+    message_elem.html(html + player_table_html);
+    if(is_small_screen()){
+        $('#myModal').modal({
+            keyboard: false,
+            backdrop: "static"
+        });
+    }
 
     for(var i = 0; i < players.length; i++) {
         $('#player_id_' + players[i]['id'] + '_to_select').on("click", {
@@ -101,8 +115,11 @@ function propose_team_prompt (team_size, players){
 
     function show_propose_button(){
         var button = '<div id = "propose"><button type="button" id = "propose_button">Propose Team</button></div>';
-        $("#game_messages").append(button);
+        message_elem.append(button);
         $('#propose').click(function(){
+            if(is_small_screen()){
+                $('#myModal').modal('hide');
+            }
             socket.emit("team_proposed", {game_id: get_game_id(), player_id: get_player_id(), selected_players: selected_players});
         });
     }
@@ -117,18 +134,19 @@ function propose_team_prompt (team_size, players){
 
 }
 
+
 function show_mission_cards(is_spy, selected_player_names, leader){
     clear_messages();
     console.log("WHERE TEH FUCKING CARDS?");
     var proposed_team = selected_player_names;
-    var team_html = leader + " has proposed a team consisting of: <ul>";
+    var team_html = '<div class = "row"><div class = "col-xs-4">' + leader + " has proposed a team consisting of: <ul>";
     for(var i = 0; i < proposed_team.length; i++){
         team_html += '<li>' + proposed_team[i] + '</li>';
     }
     team_html += '</ul>';
 
-    team_html += '<div class = "row"><div class = "col-md-2"><img src = "images/success_mission.png", id = "success_mission", width = 75, height = 98, class = "not_selected"></div>' +
-    '<div class = "col-md-2"><img src = "images/fail_mission.png" id = "fail_mission", width = 75, height = 98, class = "not_selected"></div></div><br>';
+    team_html += '</div><div class = "col-xs-4"><img src = "images/success_mission.png", id = "success_mission", width = 75, height = 98, class = "not_selected"></div>' +
+    '<div class = "col-xs-4"><img src = "images/fail_mission.png" id = "fail_mission", width = 75, height = 98, class = "not_selected"></div></div><br>';
     $("#game_messages").append(team_html);
     console.log(team_html);
     $('#success_mission').click(function(){
@@ -201,13 +219,14 @@ function show_waiting_for_players_to_check_roles_message(){
 function show_proposed_team(leader, proposed_team){
     clear_messages();
     console.log("PROPOSED TEAM SHOWN");
-    var proposal_html = leader + " has proposed a team consisting of: <ul>";
+    var proposal_html = '<div class = "row"><div class = "col-xs-4">' + leader + ' has proposed a team consisting of: <ul>';
     for(var i = 0; i < proposed_team.length; i++){
         proposal_html += '<li>' + proposed_team[i] + '</li>';
     }
     proposal_html += '</ul>';
-    proposal_html += '<div class = "row"><div class = "col-md-2"><img src = "images/approve_team.png", id = "approve_team", width = 75, height = 98, class = "not_selected"></div>' +
-    '<div class = "col-md-2"><img src = "images/reject_team.png" id = "fail_team", width = 75, height = 98, class = "not_selected"></div></div><br>';
+    proposal_html += '</div><div class = "col-xs-4"><img src = "images/approve_team.png", id = "approve_team", width = 75, height = 98, class = "not_selected"></div>' +
+    '<div class = "col-xs-4"><img src = "images/reject_team.png" id = "fail_team", width = 75, height = 98, class = "not_selected"></div></div><br>';
+
     $("#game_messages").append(proposal_html);
     $('#approve_team').click(function(){
         if(!$('#approve_team').hasClass('vote_selected')){
@@ -239,7 +258,7 @@ function show_proposed_team(leader, proposed_team){
     });
 
     function show_vote_button(vote){
-        var button = '<div id = "vote", class = "row"><button type="button" id = "vote_button">Vote ' + vote + '</button></div>';
+        var button = '<div id = "vote", class = "row"><button type="button" id = "vote_button" class="btn btn-primary btn-lg">Vote ' + vote + '</button></div>';
         $("#game_messages").append(button);
         $('#vote_button').click(function(){
             socket.emit("voted", {game_id: get_game_id(), player_id: get_player_id(), vote: vote});
@@ -263,7 +282,7 @@ function show_countdown(seconds, callback){
 
     var seconds_remaining = seconds;
     var countdown_html = '<div id = "countdown">' + seconds_remaining + "</div>";
-    $('#game_messages').append(countdown_html);
+    $('#game_messages_modal').append(countdown_html);
     var countdown = setInterval(
         update_countdown, 1000);
     function update_countdown(){
@@ -278,6 +297,7 @@ function show_countdown(seconds, callback){
         function()
         {
             clear_messages();
+            $('#myModal').modal('hide');
             console.log("CLEARED FROM TIMEOUT");
             callback();
 
@@ -286,10 +306,15 @@ function show_countdown(seconds, callback){
 function done_with_voting_results(){
     socket.emit("done_with_voting_results", {game_id: get_game_id(), player_id: get_player_id()});
 }
-function show_vote_result(proposal_approved, vote_results, players, proposed_team, next_player_name){
-    clear_messages();
+function show_vote_result(proposal_approved, vote_results, players, proposed_team, next_player_name, reshow){
+    if(reshow){
+        clear_modal();
+    }else{
+        clear_messages();
+    }
     console.log("SHGOWING RESULT");
-    show_countdown(vote_wait_time, done_with_voting_results);
+
+
     var html = "THE PROPOSAL ";
     if(proposal_approved){
         html += "PASSED";
@@ -297,7 +322,9 @@ function show_vote_result(proposal_approved, vote_results, players, proposed_tea
         html += "FAILED. LEADERSHIP WILL PASS TO " + next_player_name;
     }
     html += "<br>";
-
+    if(reshow){
+        html += '<br>Click anywhere to close';
+    }
     var player_table_html = '<table class="table table-bordered table-hover table-condensed scoreboard-table"><caption>VOTING RESULTS</caption><thead></thead><tr><th>Player</th><th></th><th>VOTE</th></tr><tbody class="players-to-select">';
     for(var i = 0; i < players.length; i++){
         var player_id = players[i]['id'];
@@ -319,7 +346,18 @@ function show_vote_result(proposal_approved, vote_results, players, proposed_tea
         player_table_html += '</td><td>' + vote_results[player_name] + '</td></tr>';
     }
     player_table_html += '</tbody></table>';
-    $('#game_messages').append(html + player_table_html);
+    $('#game_messages_modal').append(html + player_table_html);
+    if(!reshow){
+        show_countdown(vote_wait_time, done_with_voting_results);
+    }
+    if(reshow){
+        enable_modal_close();
+    }
+    console.log(reshow);
+    $('#myModal').modal({
+        keyboard: reshow,
+        backdrop: reshow ? true : "static"
+    });
 }
 
 function done_with_mission_results(){
@@ -382,39 +420,97 @@ function show_mission_result(leader, team_members, mission_success, mission_resu
 function done_with_role_info(){
     socket.emit("done_with_role_info", {game_id: get_game_id(), player_id: get_player_id()});
 }
-function show_role_info(role, info){
-    clear_messages();
+function enable_modal_close(){
+    $('#myModal').data('bs.modal').options.keyboard = true;
+    $('#myModal').data('bs.modal').options.backdrop = true;
+    $('#myModal').click(function(){
+        $('#myModal').modal('hide');
+    });
+}
+function show_role_info(role, info, reshow){
+    if(reshow){
+        clear_modal();
+    }else{
+        clear_messages();
+    }
+
+    if(reshow){
+        enable_modal_close();
+    }
+    console.log(reshow);
+    $('#myModal').modal({
+        keyboard: reshow,
+        backdrop: reshow ? true : "static"
+    });
     console.log("SHGOWING ROLE");
     var relevant_players = info['relevant_players'];
-    show_countdown(role_wait_time, done_with_role_info);
+    if(!reshow){
+        show_countdown(role_wait_time, done_with_role_info);
+    }
     var html = 'You are <b> ' + role + '</b><br>' + info['html'];
-    $('#game_messages').append(html);
+    if(reshow){
+        html += '<br>Click anywhere to close';
+    }
+    $('#game_messages_modal').append(html);
     if(relevant_players !== null){
-        flash_relevant_players(relevant_players);
+        flash_relevant_players(relevant_players, reshow);
     }
 }
-function flash_relevant_players(relevant_players){
+function flash_relevant_players(relevant_players, reshow) {
     console.log("RELEVANT PS");
     console.log(relevant_players);
-    for(var i = 0; i < relevant_players.length; i++){
+    for (var i = 0; i < relevant_players.length; i++) {
         var player_id = relevant_players[i]['id'];
         var elem = $('#player_id_' + player_id);
         elem.addClass('relevant_player');
     }
-    setTimeout(function(){
-            for(var i = 0; i < relevant_players.length; i++){
+    if (reshow) {
+        $('#myModal').on('hidden.bs.modal', function (e) {
+            for (var i = 0; i < relevant_players.length; i++) {
                 var player_id = relevant_players[i]['id'];
                 var elem = $('#player_id_' + player_id);
                 elem.removeClass('relevant_player');
             }
-    }, role_wait_time*1000);
+        })
+    } else {
+        setTimeout(function () {
+            for (var i = 0; i < relevant_players.length; i++) {
+                var player_id = relevant_players[i]['id'];
+                var elem = $('#player_id_' + player_id);
+                elem.removeClass('relevant_player');
+            }
+        }, role_wait_time * 1000);
+    }
 }
-function show_show_role_button(){
+function show_show_last_vote_button(){
+    var button_text = "Show Last Vote";
+    var button = '<span id = "show_last_vote"><button type="button" id = "show_last_vote_button" class="btn btn-primary btn-lg"">' + button_text + '</button></span>';
+    $("#game_buttons").append(button);
+    $('#show_last_vote_button').click(function(){
+        socket.emit("show_last_vote", {game_id: get_game_id(), player_id: get_player_id()});
+    });
+}
+function show_reshow_role_button(){
+    $("#game_buttons").css("display", "block");
+    show_show_role_button(true);
+}
+function show_show_role_button(reshow){
     clear_messages();
-    var button = '<div id = "role"><button type="button" id = "role_button">Show My Role!</button></div>';
-    $("#game_messages").append(button);
-    $('#role').click(function(){
-        socket.emit("ready_for_role", {game_id: get_game_id(), player_id: get_player_id()});
+    var button_text = reshow ? "Reshow " : "Show ";
+    var backdrop = reshow ? true : "static";
+    var button = '<span id = "role"><button type="button" id = "role_button" class="btn btn-primary btn-lg"">' + button_text + 'My Role!</button></span>';
+    if(reshow){
+        $("#game_buttons").append(button);
+    }else{
+        $("#game_messages").append(button);
+    }
+    $('#role_button').click(function(){
+        if(reshow){
+            socket.emit("reshow_my_role", {game_id: get_game_id(), player_id: get_player_id()});
+        }else{
+            socket.emit("ready_for_role", {game_id: get_game_id(), player_id: get_player_id()});
+        }
+
     });
 }
 
@@ -604,6 +700,7 @@ function show_restart_button(){
     });
 }
 $(document).ready(function() {
+    message_elem = is_small_screen() ? $('#game_messages_modal') : $('#game_messages');
     var player_id = $('.playerID').attr('id');
     var player_name = $('.playerID').html();
     socket.emit("game_started", {game_id: get_game_id(), player: {id: player_id, name: player_name}});
@@ -621,11 +718,18 @@ $(document).ready(function() {
         var my_role = data['role'];
         var info = data['role_information'];
         var relevant_players = data['relevant_players'];
-        show_role_info(my_role, info, relevant_players);
+        show_role_info(my_role, info, false);
+    });
+
+    socket.on("reshow_player_roles", function(data){
+        var my_role = data['role'];
+        var info = data['role_information'];
+        var relevant_players = data['relevant_players'];
+        show_role_info(my_role, info, true);
     });
 
     socket.on("are_you_ready_for_role", function(){
-        show_show_role_button();
+        show_show_role_button(false);
     });
 
     socket.on("waiting_for_everyone", function(){
@@ -685,6 +789,10 @@ $(document).ready(function() {
         player_deselected_to_be_assassinated(player_id);
     });
 
+    socket.on("game_started", function(){
+       show_reshow_role_button();
+    });
+
     socket.on("you_are_on_team", function(data){
         var is_spy = data['is_spy'];
         var selected_player_names = data['selected_player_names'];
@@ -700,8 +808,21 @@ $(document).ready(function() {
         var players = data['players'];
         var proposed_team = data['proposed_team'];
         var next_player_name = data['next_player_name'];
+        if(data['mission_number'] == 1 && data['vote_number'] == 1){
+            show_show_last_vote_button();
+        }
         console.log(data);
-        show_vote_result(proposal_approved, vote_results, players, proposed_team, next_player_name);
+        show_vote_result(proposal_approved, vote_results, players, proposed_team, next_player_name, false);
+    });
+
+    socket.on("showing_last_vote", function(data){
+        var proposal_approved = data['proposal_approved'];
+        var vote_results = data['vote_results'];
+        var players = data['players'];
+        var proposed_team = data['proposed_team'];
+        var next_player_name = data['next_player_name'];
+        console.log(data);
+        show_vote_result(proposal_approved, vote_results, players, proposed_team, next_player_name, true);
     });
 
     socket.on("mission_result", function(data){

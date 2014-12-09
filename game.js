@@ -51,6 +51,7 @@ function Game() {
   this.blue_points;
   this.red_points;
   this.state;
+  this.historic_votes = {};
 }
 
 
@@ -356,6 +357,11 @@ Game.prototype.player_submitted = function(player_id) {
 
 Game.prototype.player_votes = function(player_id, vote) {
   this.votes[player_id] = vote;
+  var mission_vote_string = 'mission_' + this.current_mission + '_vote_' + this.current_vote;
+  if(!(mission_vote_string in this.historic_votes)){
+    this.historic_votes[mission_vote_string] = {};
+  }
+  this.historic_votes[mission_vote_string][player_id] = vote;
 };
 
 Game.prototype.player_submits_mission = function(player_id, submission) {
@@ -588,6 +594,24 @@ Game.prototype.get_current_round = function() {
 };
 Game.prototype.need_two_fails = function() {
   return this.current_mission == 4 && this.player_count >= 7;
+};
+Game.prototype.get_last_vote = function() {
+  var last_vote = this.current_vote - 1;
+  var last_mission = this.current_mission - 1;
+  var mission_vote_string = 'mission_' + last_mission + '_vote_' + last_vote;
+  if (last_vote == 0){
+    for(var i = 1; i < 6; i++){
+      var new_mission_string = 'mission_' + last_mission + '_vote_' + i;
+      if(!(new_mission_string in this.historic_votes)){
+        last_vote = i - 1;
+      }
+    }
+  }else{
+    last_mission = this.current_mission;
+  }
+
+  return this.historic_votes[mission_vote_string];
+
 };
 
 Game.prototype.player_is_on_mission = function(player_id) {

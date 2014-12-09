@@ -1,0 +1,128 @@
+doctype html
+html
+	head
+		title= "Real time web chat"
+		script(src='/socket.io/socket.io.js')
+		script(src='//code.jquery.com/jquery-1.10.1.min.js')
+		script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js')
+		script(src='/js/game.js')
+		script(src='/js/fake_css.js')
+		script(src='/js/path.min.js')
+		link(rel='stylesheet', href='/css/lib/bootstrap.css')
+		link(rel='stylesheet', href='/css/lib/bootstrap-responsive.css')
+		link(rel='stylesheet', href='/css/game.css')
+		link(rel='stylesheet', href='/css/chat.css')
+		meta(name="viewport" content="width=device-width, initial-scale=1")
+	body
+		div#body
+			div.container-fluid
+				//5%
+				div.row-fluid.row-bottom-margin#info_row
+					div.device-xs.visible-xs
+						|xs: <768 px width
+					div.device-sm.visible-sm
+						|sm 768 to 992 px
+					div.device-md.visible-md
+						|md 992 to 1200 px
+					div.device-xs.visible-lg
+						|lg >= 1200 px
+					div.col-xs-6
+						div#player_name_bar
+							|You are
+							b
+								div.playerID(id=player.id)
+									|#{player.name}
+					div.col-xs-6
+						div#game_id_bar
+							|THE CURRENT GAME ID IS
+							b
+								div#game_id #{game_id}
+				//50%
+				div.row-fluid.row-bottom-margin#table_scores
+					div.col-xs-12.col-sm-6
+						//
+							div#unrotated.wrapper
+								canvas#game_canvas
+								ul.player_labels.items
+									- var player_size = players.length
+									// we want the current player to be on the bottom always
+									// so the following lists the players starting with the current player
+									// first it finds the current player and then iterates the players
+									- for (var i = 0; i < player_size; i++)
+										if players[i]['id'] == player.id
+											- var j = i
+											- var players_added = 0
+											while (players_added < player_size)
+												if j == player_size
+													-j = 0
+												li(id= 'player_id_' +  players[j]['id'])
+													span.leader_col(id= 'leader_player_id_' +  players[j]['id'])
+													span
+														= players[j]['name']
+													span.mission_col(id= 'mission_player_id_' +  players[j]['id'])
+												-j = j + 1
+												-players_added = players_added + 1
+											- break
+						div#luke_circle
+							canvas#luke_table.center
+							div#player_list
+								- var player_size = players.length
+								// we want the current player to be on the bottom always
+								// so the following lists the players starting with the current player
+								// first it finds the current player and then iterates the players
+								- for (var i = 0; i < player_size; i++)
+									if players[i]['id'] == player.id
+										- var j = i
+										- var players_added = 0
+										while (players_added < player_size)
+											if j == player_size
+												-j = 0
+											div(id= 'player_id_' +  players[j]['id'], class = "player_class")
+												span.leader_col(id= 'leader_player_id_' +  players[j]['id'])
+												span.player_name(id= 'player_id_' +  players[j]['id'] + '_name')
+													= players[j]['name']
+												span.mission_col(id= 'mission_player_id_' +  players[j]['id'])
+											-j = j + 1
+											-players_added = players_added + 1
+										- break
+					div.col-xs-12.col-sm-6#game_summary
+						table.table.table-bordered.table-condensed
+							caption GAME SUMMARY
+							thead
+							tr
+								th(colspan=5) Mission Results
+							tbody.game_round
+								tr(id= 'mission_results_row')
+								- console.log(game.mission_player_count)
+									- for (var i = 1; i < 6; i++)
+										td(id='mission_' + i, class = 'mission_cell')
+											|Quest #{i}
+											br
+											= game.mission_player_count[i]
+						table.table.table-bordered.table-condensed
+							thead
+							tr
+								th(colspan=5) Vote Track
+							tbody.game_round
+								tr(id= 'vote_track_row')
+									- for (var i = 1; i < 6; i++)
+										td(id='vote_' + i, class = 'vote_cell')
+											= i
+									td(id='game_summary')
+										|#{game.num_players} Players
+										br
+										|#{game.evil_players} Minions of Mordred
+				//45%
+				div.row-fluid#player_actions
+					div.col-xs-12
+						div#game_buttons
+							button(type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal")
+								|Show Last Mission
+						div#game_messages
+							|game messages will be down here
+		div(class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
+			div(class="modal-dialog modal-vertical-centered")
+				div(class="modal-content" id="game_messages_modal")
+					div(class="modal-body")
+						|YOU ARE RED
+		script(src='/js/draw_table.js')

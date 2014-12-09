@@ -6,6 +6,33 @@
   opacity: 0.4;
   filter: alpha(opacity=40); /* msie */
 }
+#game_buttons{
+  display: none;
+}
+
+@media all and (max-width: 768px) {
+  .modal-vertical-centered {
+    padding-top: 80%;
+  }
+}
+@media all and (min-width: 768px) and (max-width: 992px) {
+  .modal-vertical-centered {
+    padding-top: 40%;
+  }
+}
+@media all and (min-width: 992px) and (max-width: 1200px) {
+  .modal-vertical-centered {
+    padding-top: 28%;
+  }
+}
+@media all and (min-width: 1200px) {
+  .modal-vertical-centered {
+    padding-top: 27%;
+  }
+}
+#player_name_bar,#game_id_bar{
+  background-color: lightgray;
+}
 
 .mission_cell,.vote_cell,#game_summary {
   text-align: center;
@@ -16,8 +43,14 @@
 }
 .relevant_player{
   background-color: indianred;
+  opacity: 1;
+  filter:alpha(opacity=100);
+  z-index:9900;
 }
+.modal-vertical-centered{
 
+  filter: alpha(opacity=10);
+}
 .vote_selected{
   outline: 5px solid green;
 }
@@ -57,4 +90,35 @@
 }
 .mission_failed{
   background-color: red;
+}
+#luke_circle{
+  position: relative;
+}
+.player_class{
+  position: absolute;
+}
+canvas {
+  display : block;
+  margin : auto;
+}
+
+#game_summary{
+  border: solid #000000;
+  background-color: lavenderblush;
+}
+
+#luke_circle{
+  border: solid #000000;
+  background-color: azure;
+}
+
+.row-bottom-margin {
+  margin-bottom:20px;
+  background-color: bisque;
+  border: solid black thin;
+}
+[class*="col-"] {
+  padding: 0px;
+  margin-right: 0px;
+
 }
