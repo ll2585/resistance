@@ -8,6 +8,7 @@ html
 		script(src='/js/game.js')
 		script(src='/js/fake_css.js')
 		script(src='/js/path.min.js')
+		script(src='/js/jquery.center.min.js')
 		link(rel='stylesheet', href='/css/lib/bootstrap.css')
 		link(rel='stylesheet', href='/css/lib/bootstrap-responsive.css')
 		link(rel='stylesheet', href='/css/game.css')
@@ -17,7 +18,8 @@ html
 		div#body
 			div.container-fluid
 				//5%
-				div.row-fluid.row-bottom-margin#info_row
+				div#realres
+				div.row-fluid.row-bottom-margin.extra_info#info_row
 					div.device-xs.visible-xs
 						|xs: <768 px width
 					div.device-sm.visible-sm
@@ -78,16 +80,20 @@ html
 											if j == player_size
 												-j = 0
 											div(id= 'player_id_' +  players[j]['id'], class = "player_class")
-												span.leader_col(id= 'leader_player_id_' +  players[j]['id'])
+												span.extra_info.leader_col(id= 'leader_player_id_' +  players[j]['id'])
 												span.player_name(id= 'player_id_' +  players[j]['id'] + '_name')
-													= players[j]['name']
-												span.mission_col(id= 'mission_player_id_' +  players[j]['id'])
+													if i == 0 && players_added == 0
+														b
+															= players[j]['name']
+													else
+														= players[j]['name']
+												span.extra_info.mission_col(id= 'mission_player_id_' +  players[j]['id'])
 											-j = j + 1
 											-players_added = players_added + 1
 										- break
 					div.col-xs-12.col-sm-6#game_summary
 						table.table.table-bordered.table-condensed
-							caption GAME SUMMARY
+							caption.extra_info GAME SUMMARY
 							thead
 							tr
 								th(colspan=5) Mission Results
@@ -116,8 +122,6 @@ html
 				div.row-fluid#player_actions
 					div.col-xs-12
 						div#game_buttons
-							button(type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal")
-								|Show Last Mission
 						div#game_messages
 							|game messages will be down here
 		div(class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")

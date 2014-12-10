@@ -8,6 +8,7 @@ var table = new Table(1);
 var game_constants = Game.get_constants();
 var active_games = {};
 var game_flags = {};
+var game_data = {};
 
 Object.size = function(obj) {
     var size = 0, key;
@@ -80,6 +81,37 @@ exports.add_new_player_to_game = function(game_id, options){
 
     game.add_player(player);
 };
+exports.set_last_mission = function(game_id, data){
+    if(!(game_id in game_data)){
+        game_data[game_id] = {};
+    }
+    if(!('last_mission' in game_data[game_id])){
+        game_data[game_id]['last_mission'] = {};
+    }
+    game_data[game_id]['last_mission'] = data;
+};
+
+exports.get_last_mission = function(game_id){
+    return game_data[game_id]['last_mission'];
+};
+exports.set_last_vote = function(game_id, data){
+    console.log('!!!!!!!!!!!!!!!!!!!!!!1');
+    console.log('set last vote');
+    if(!(game_id in game_data)){
+        game_data[game_id] = {};
+    }
+    if(!('last_vote' in game_data[game_id])){
+        game_data[game_id]['last_vote'] = {};
+    }
+    game_data[game_id]['last_vote'] = data;
+
+};
+
+exports.get_last_vote = function(game_id){
+    return game_data[game_id]['last_vote'];
+};
+
+
 
 exports.player_is_random = function(player){
     return player.get_attribute('random');

@@ -85,8 +85,11 @@ $(function(){
         var canvas = document.getElementById('luke_table');
         var context = canvas.getContext('2d');
         //centers the circle
-
         var radius = 100;
+        if($(window).width() < 470){
+            radius = 50;
+        }
+
         var padding_x = 25;
         var padding_y = 90;
         canvas.height = radius*2+padding_x;
