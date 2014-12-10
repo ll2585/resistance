@@ -227,7 +227,7 @@ function show_play_page_mobile_bots(req,res){
     game_logic.add_new_player_to_game(game_id, {id: player_id, name: player_name});
 
     //add 6 dummy players cus fuck it
-    var bots_to_add = 6;
+    var bots_to_add = 9;
     var game = game_logic.game(game_id);
     for(var i = 0; i < bots_to_add; i++){
         var bot = game_logic.random_bot();
@@ -659,16 +659,19 @@ io.of('/avalon').on('connection', function(socket){
                 var proposal_approved = game.proposal_approved();
                 if(proposal_approved){
                     //game.on_mission(); //lock it when everyoine is done
-                    var next_player_name = game.get_leader_name(); //because i made the game already do it this is the current leader lolz
+                    var next_player_name = game.get_next_player_name();
+                    var leader_name = game.get_leader_name(); //because i made the game already do it this is the current leader lolz
                                                                    //this is actually useless because it never gets read
                 }else{
+                    var leader_name = game.get_leader_name();
                     var next_player_name = game.get_next_player_name(); //because if it didn't get approved, the leadership didn't pass
                 }
                 var players = game.get_public_players();
                 var proposed_team = game.get_selected_players_ids();
                 console.log('proposed_team was ' + proposed_team);
-                socket.last_vote = {proposal_approved: proposal_approved, vote_results: vote_result, players: players, proposed_team: proposed_team, next_player_name: next_player_name, mission_number: mission_number, vote_number: vote_number};
-                io.of('/avalon').to(game_id).emit('vote_result', socket.last_vote);
+                var data = {proposal_approved: proposal_approved, vote_results: vote_result, players: players, proposed_team: proposed_team, next_player_name: next_player_name, mission_number: mission_number, vote_number: vote_number, leader_name: leader_name};
+                game_logic.set_last_vote(game_id, data);
+                io.of('/avalon').to(game_id).emit('vote_result', data);
             }
         }
     });
@@ -697,7 +700,7 @@ io.of('/avalon').on('connection', function(socket){
                     var bot_id = bots[i];
                     if(game.player_is_on_mission(bot_id)){
                         if(game.is_spy(bot_id)){
-                            game.player_submits_mission(bot_id, "Fail");
+                            game.player_submits_mission(bot_id, "Success");
                             //game.player_submits_mission(bot_id, "Success");
                         }else{
                             game.player_submits_mission(bot_id, "Success");
@@ -722,7 +725,9 @@ io.of('/avalon').on('connection', function(socket){
                 var leader = game.get_leader_name();
                 var game_data = game.get_current_round();
                 var mission_round = game_data['round'];
-                io.of('/avalon').to(game_id).emit('mission_result', {mission_round: mission_round, mission_success: mission_success, mission_result: mission_result, players: players, team_members: team_members, leader: leader, next_player_name: next_player_name});
+                var data = {mission_round: mission_round, mission_success: mission_success, mission_result: mission_result, players: players, team_members: team_members, leader: leader, next_player_name: next_player_name};
+                game_logic.set_last_mission(game_id, data);
+                io.of('/avalon').to(game_id).emit('mission_result', data);
                 game.next_mission();
             }
         }
@@ -825,8 +830,15 @@ io.of('/avalon').on('connection', function(socket){
         var game_id = data['game_id'];
         var player_id = data['player_id'];
         console.log(player_id + ' wants last vote');
-        var last_vote = socket.last_vote;
+        var last_vote = game_logic.get_last_vote(game_id);
         socket.emit('showing_last_vote', last_vote);
+    });
+    socket.on('show_last_mission', function(data){
+        var game_id = data['game_id'];
+        var player_id = data['player_id'];
+        console.log(player_id + ' wants last mission');
+        var last_mission = game_logic.get_last_mission(game_id);
+        socket.emit('showing_last_mission', last_mission);
     });
     socket.on('reveal_my_role_to_all', function(data){
         var game_id = data['game_id'];
@@ -945,7 +957,7 @@ io.of('/avalon').on('connection', function(socket){
             console.log("THAT WAS IF HE WAS ON MISSION AND THIS IS IF HE DIDNT SUBMIT");
             console.log(!game.player_submitted(player_id));
             if(game.player_is_on_mission(player_id) && !game.player_submitted(player_id)){
-                var submission = "Fail";  //bots fail
+                var submission = "Success";  //bots fail
                 //var submission = "Success";  //bots fail
                 if(!game.is_spy(player_id)){
                     submission = "Success"; //no fucking around, makes you pass if you're not a spy
@@ -970,7 +982,9 @@ io.of('/avalon').on('connection', function(socket){
                     var leader = game.get_leader_name();
                     var game_data = game.get_current_round();
                     var mission_round = game_data['round'];
-                    io.of('/avalon').to(game_id).emit('mission_result', {mission_round: mission_round, mission_success: mission_success, mission_result: mission_result, players: players, team_members: team_members, leader: leader, next_player_name: next_player_name});
+                    var data = {mission_round: mission_round, mission_success: mission_success, mission_result: mission_result, players: players, team_members: team_members, leader: leader, next_player_name: next_player_name};
+                    game_logic.set_last_mission(game_id, data);
+                    io.of('/avalon').to(game_id).emit('mission_result', data);
                     game.next_mission();
                 }
             }

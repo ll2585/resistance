@@ -9,8 +9,58 @@
 #game_buttons{
   display: none;
 }
+#game_messages, #game_buttons{
+  text-align:center;
+}
+@media all and (max-width: 470px) {
+  #game_messages, #game_summary, #game_messages_modal{
+    font-size: 8pt;
+  }
+  #approve_team{
+    width : 50px;
+    height : 65.33333333px;
+  }
+  #fail_team{
+    width : 50px;
+    height : 65.33333333px;
+  }
+  .extra_info{
+    display: none;
+  }
+  .table-condensed, #game_summary, th, tr, tbody, table, td{
+    padding: 0; !important;
+    margin: 0; !important;
+  }
+  .players-to-select{
+    font-size: 10pt;
+  }
+  .selected_icon{
+    height: 10px;
+    width: 10px;
+  }
+  .success_mission_img, .fail_mission_img{
+    width : 50px;
+    height : 65.33333333px;
+  }
 
-@media all and (max-width: 768px) {
+  .selected_for_team{
+    border: solid darkviolet;
+    font-style: italic;
+  }
+  .approved_vote_selected{
+    background-color: lawngreen !important;
+  }
+  .rejected_vote_selected{
+    background-color: orangered !important;
+  }
+
+}
+@media all and (max-width: 470px) {
+  .modal-vertical-centered {
+    padding-top: 50%;
+  }
+}
+@media all and (min-width: 470px) and (max-width: 768px) {
   .modal-vertical-centered {
     padding-top: 80%;
   }
