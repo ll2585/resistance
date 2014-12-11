@@ -92,7 +92,7 @@ html
 											-players_added = players_added + 1
 										- break
 					div.col-xs-12.col-sm-6#game_summary
-						table.table.table-bordered.table-condensed
+						table.table.table-bordered.table-condensed.game_table
 							caption.extra_info GAME SUMMARY
 							thead
 							tr
@@ -105,7 +105,7 @@ html
 											|Quest #{i}
 											br
 											= game.mission_player_count[i]
-						table.table.table-bordered.table-condensed
+						table.table.table-bordered.table-condensed.game_table
 							thead
 							tr
 								th(colspan=5) Vote Track

@@ -16,20 +16,21 @@
   #game_messages, #game_summary, #game_messages_modal{
     font-size: 8pt;
   }
-  #approve_team{
-    width : 50px;
-    height : 65.33333333px;
-  }
-  #fail_team{
-    width : 50px;
-    height : 65.33333333px;
-  }
+
   .extra_info{
     display: none;
   }
-  .table-condensed, #game_summary, th, tr, tbody, table, td{
+  .table-condensed, #game_summary, th, tr, tbody, table, td, .game_table > tbody > tr > th, .game_table > tbody > tr > td
+  {
     padding: 0; !important;
     margin: 0; !important;
+    border-spacing: 0px;
+  }
+  #vote, #submit_mission, #pass_mission_div, #fail_mission_div{
+    margin-top: 5px;
+  }
+  #voting_row,#success_voting_div,#reject_voting_div{
+    margin-top: 0px;
   }
   .players-to-select{
     font-size: 10pt;
@@ -37,6 +38,18 @@
   .selected_icon{
     height: 10px;
     width: 10px;
+  }
+  .success_cell{
+    background-color: limegreen;
+    font-weight: bold;
+    border: solid black 1px;
+    text-align: center;
+  }
+  .fail_cell{
+    background-color: red;
+    font-weight: bold;
+    border: solid black 1px;
+    text-align: center;
   }
   .success_mission_img, .fail_mission_img{
     width : 50px;
@@ -58,6 +71,15 @@
 @media all and (max-width: 470px) {
   .modal-vertical-centered {
     padding-top: 50%;
+  }
+}
+@media all and (min-width: 470px){
+  .vote_selected{
+    outline: 5px solid green;
+  }
+
+  .submit_mission_selected{
+    outline: 5px solid purple;
   }
 }
 @media all and (min-width: 470px) and (max-width: 768px) {
@@ -83,7 +105,9 @@
 #player_name_bar,#game_id_bar{
   background-color: lightgray;
 }
-
+.failed_mission{
+  background-color: darkred;
+}
 .mission_cell,.vote_cell,#game_summary {
   text-align: center;
 }
@@ -101,13 +125,7 @@
 
   filter: alpha(opacity=10);
 }
-.vote_selected{
-  outline: 5px solid green;
-}
 
-.submit_mission_selected{
-  outline: 5px solid purple;
-}
 
 .approved_vote{
   background-color: lightgreen;

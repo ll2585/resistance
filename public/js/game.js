@@ -3,7 +3,7 @@ var leader_icon_html = '<img src = "images/leader.png" height = "20" width = "20
 var selected_icon_html = '<img src = "images/selected.png" height = "20" width = "20">';
 var assassination_icon_html = '<span id = "assassination_icon"><img src = "images/dagger.png" height = "20" width = "20"></span>';
 var role_wait_time = 1;
-var vote_wait_time = 4;
+var vote_wait_time = 1;
 var mission_wait_time = 3;
 var message_elem;
 function is_phone_screen (){
@@ -171,7 +171,7 @@ function show_mission_cards(is_spy, selected_player_names, leader){
     clear_messages();
     console.log("WHERE TEH FUCKING CARDS?");
     var proposed_team = selected_player_names;
-    var team_html = '<div class = "row"><div class = "col-xs-4">' + leader + " has proposed";
+    var team_html = '<div class = "row"><div class = "col-xs-12">' + leader + " has proposed";
     if(!is_phone_screen()){
         team_html += ' a team consisting of';
     }
@@ -181,10 +181,32 @@ function show_mission_cards(is_spy, selected_player_names, leader){
     }
     team_html += '</ul>';
 
-    team_html += '</div><div class = "col-xs-4"><img class = "success_mission_img" src = "images/success_mission.png", id = "success_mission", width = 75, height = 98, class = "not_selected"></div>' +
-    '<div class = "col-xs-4"><img class = "fail_mission_img" src = "images/fail_mission.png" id = "fail_mission", width = 75, height = 98, class = "not_selected"></div></div><br>';
+    team_html += '</div><div class = "row-fluid" id = "mission_row" ><div class = "col-xs-6" id = "pass_mission_div"></div><div class = "col-xs-6" id = "fail_mission_div"></div></div><br>';
     $("#game_messages").append(team_html);
-    console.log(team_html);
+    var mission_div_location = $("#pass_mission_div").offset();
+    var bottom_padding = 30;
+    var remaining_height = $(window).height() - mission_div_location.top - bottom_padding;
+    var height_to_width_ratio = 98/75;
+    var remaining_width = $(window).width() / 2; //for 2 cards
+    var new_width = 0;
+    var new_height = 0;
+    if(remaining_width * height_to_width_ratio > remaining_height){
+        new_height = remaining_height;
+        console.log(new_height);
+    } else{
+        new_height = remaining_width * height_to_width_ratio;
+        console.log(new_height);
+    }
+    new_width = (new_height / height_to_width_ratio);
+    var pass_image_html = '<img src = "images/approve_team.png", id = "success_mission", width =  ' + new_width + ', height =  ' + new_height + ', class = "success_mission_img not_selected">';
+    var fail_image_html = '<img src = "images/reject_team.png" id = "fail_mission", width = ' + new_width + ', height =  ' + new_height + ', class = "fail_mission_img not_selected">';
+    if(is_phone_screen()){
+        pass_image_html = '<button type="button" id = "success_mission" class="not_selected btn btn-success btn-block ' + get_button_size() + '" data-toggle="button" aria-pressed="false">Pass</button>';
+        fail_image_html = '<button type="button" id = "fail_mission" class="not_selected btn btn-danger btn-block ' + get_button_size() + '" data-toggle="button" aria-pressed="false">Fail</button>';
+    }
+    $("#pass_mission_div").append(pass_image_html);
+    $("#fail_mission_div").append(fail_image_html);
+
     $('#success_mission').click(function(){
         if(!$('#success_mission').hasClass('submit_mission_selected')){
             remove_mission_button();
@@ -217,7 +239,7 @@ function show_mission_cards(is_spy, selected_player_names, leader){
     });
 
     function show_mission_button(submission){
-        var button = '<div id = "submit_mission", class = "row"><button type="button" id = "submit_mission_button">Submit ' + submission + '</button></div>';
+        var button = '<div id = "submit_mission", class = "row"><button type="button" id = "submit_mission_button" class = "btn btn-block btn-default ' + get_button_size() + '">Submit ' + submission + '</button></div>';
         $("#game_messages").append(button);
         $('#submit_mission_button').click(function(){
             socket.emit("submitted_mission", {game_id: get_game_id(), player_id: get_player_id(), submission: submission});
@@ -259,7 +281,7 @@ function show_waiting_for_players_to_check_roles_message(){
 function show_proposed_team(leader, proposed_team){
     clear_messages();
     console.log("PROPOSED TEAM SHOWN");
-    var proposal_html = '<div class = "row"><div class = "col-xs-8">' + leader + ' has proposed';
+    var proposal_html = '<div class = "row"><div class = "col-xs-12">' + leader + ' has proposed';
     if(!is_phone_screen()){
         proposal_html += " a team consisting of";
     }
@@ -268,10 +290,39 @@ function show_proposed_team(leader, proposed_team){
         proposal_html += '<li>' + proposed_team[i] + '</li>';
     }
     proposal_html += '</ul>';
-    proposal_html += '</div><div class = "col-xs-2"><img src = "images/approve_team.png", id = "approve_team", width = 75, height = 98, class = "not_selected"></div>' +
-    '<div class = "col-xs-2"><img src = "images/reject_team.png" id = "fail_team", width = 75, height = 98, class = "not_selected"></div></div>';
 
+    proposal_html += '</div><div class = "row-fluid" id = "voting_row" ><div class = "col-xs-6" id = "success_voting_div"></div><div class = "col-xs-6" id = "reject_voting_div"></div></div><br>';
     $("#game_messages").append(proposal_html);
+    var voting_div_location = $("#success_voting_div").offset();
+    console.log(voting_div_location);
+    var bottom_padding = 30;
+    var remaining_height = $(window).height() - voting_div_location.top - bottom_padding;
+    var height_to_width_ratio = 98/75;
+    var remaining_width = $(window).width() / 2; //for 2 cards
+    var new_width = 0;
+    var new_height = 0;
+    if(remaining_width * height_to_width_ratio > remaining_height){
+        new_height = remaining_height;
+        console.log('new_height');
+        console.log(new_height);
+    } else{
+        new_height = remaining_width * height_to_width_ratio;
+        console.log('new_height2');
+        console.log(new_height);
+    }
+    new_width = (new_height / height_to_width_ratio);
+    console.log('offset');
+    console.log(new_width);
+    var success_image_html = '<img src = "images/approve_team.png", id = "approve_team", width =  ' + new_width + ', height =  ' + new_height + ', class = "not_selected">';
+    var reject_image_html = '<img src = "images/reject_team.png" id = "fail_team", width = ' + new_width + ', height =  ' + new_height + ', class = "not_selected">';
+    if(is_phone_screen()){
+        success_image_html = '<button type="button" id = "approve_team" class="not_selected btn btn-success btn-block ' + get_button_size() + '" data-toggle="button" aria-pressed="false">Approve</button>';
+        reject_image_html = '<button type="button" id = "fail_team" class="not_selected btn btn-danger btn-block ' + get_button_size() + '" data-toggle="button" aria-pressed="false">Reject</button>';
+    }
+    $("#success_voting_div").append(success_image_html);
+    $("#reject_voting_div").append(reject_image_html);
+
+
     $('#approve_team').click(function(){
         if(!$('#approve_team').hasClass('vote_selected')){
             remove_vote_button();
@@ -301,9 +352,17 @@ function show_proposed_team(leader, proposed_team){
         }
     });
 
-    function show_vote_button(vote){
-        var button = '<div id = "vote", class = "row"><button type="button" id = "vote_button" class="btn btn-info ' + get_button_size() + '">Vote ' + vote + '</button></div>';
+    function show_vote_button(vote) {
+        var button = '<div id = "vote", class = "row"><button type="button" id = "vote_button" class="btn btn-block btn-info ' + get_button_size() + '">Confirm ' + vote + '</button></div>';
         $("#game_messages").append(button);
+        if (is_phone_screen()) {
+            $("#vote_button").removeClass('btn-info');
+            if (vote == 'Approve') {
+                $("#vote_button").addClass('btn-success');
+            } else {
+                $("#vote_button").addClass('btn-danger');
+            }
+        }
         $('#vote_button').click(function(){
             socket.emit("voted", {game_id: get_game_id(), player_id: get_player_id(), vote: vote});
             remove_vote_button();
@@ -369,7 +428,7 @@ function show_vote_result(proposal_approved, vote_results, players, proposed_tea
     if(reshow){
         html += 'Click anywhere to close';
     }
-    var player_table_html = '<table class="table table-bordered table-hover table-condensed scoreboard-table"><caption class = "extra_info">VOTING RESULTS</caption><thead></thead><tr><th class = "extra_info">Player</th><th class = "extra_info"></th><th class = "extra_info">VOTE</th></tr><tbody class="players-to-select">';
+    var player_table_html = '<table class="table table-bordered table-condensed scoreboard-table"><caption class = "extra_info">VOTING RESULTS</caption><thead></thead><tr><th class = "extra_info">Player</th><th class = "extra_info"></th><th class = "extra_info">VOTE</th></tr><tbody class="players-to-select">';
     for(var i = 0; i < players.length; i++){
         var player_id = players[i]['id'];
         var player_name = players[i]['name'];
@@ -421,6 +480,7 @@ function show_vote_result(proposal_approved, vote_results, players, proposed_tea
 }
 
 function done_with_mission_results(){
+    $('body').removeClass("failed_mission");
     socket.emit("done_with_mission_results", {game_id: get_game_id(), player_id: get_player_id()});
 }
 
@@ -464,17 +524,20 @@ function show_mission_result(leader, team_members, mission_success, mission_resu
         html += "SUCCEEDED!";
     } else{
         html += "FAILED!";
+        $('body').addClass("failed_mission");
     }
     if(reshow){
         html += ' Click anywhere to close';
     }
-    html += "<br>";
+    html += "<br><div class = 'row-fluid mission_result_row'></div>";
     set_mission_result(game_round, mission_success);
+    var mission_result_html = '';
+    var col_width = 'col-xs-' + (12/mission_result.length);
     for(var i = 0; i < mission_result.length; i++){
         if(mission_result[i] == "Success"){
-            html += '<img class="success_mission_img" src="images/success_mission.png" height="98" width="75">';
+            mission_result_html += '<div class = "success_mission_slot ' + col_width + '"></div>';
         }else{
-            html += '<img class="fail_mission_img" src="images/fail_mission.png" height="98" width="75">';
+            mission_result_html += '<div class = "fail_mission_slot ' + col_width + '"></div>';
         }
     }
     var team_html = '<br>' + leader + " proposed a team consisting of: <ul>";
@@ -483,17 +546,38 @@ function show_mission_result(leader, team_members, mission_success, mission_resu
     }
     team_html += '</ul>';
     $('#game_messages_modal').append(html + team_html);
+    $('.mission_result_row').append(mission_result_html);
+    var success_mission_img = '<img class="success_mission_img" src="images/success_mission.png" height="98" width="75">';
+    var fail_mission_img = '<img class="fail_mission_img" src="images/fail_mission.png" height="98" width="75">';
+    if(is_phone_screen()){
+        $('.success_mission_slot').addClass('success_cell');
+        $('.fail_mission_slot').addClass('fail_cell');
+        success_mission_img = 'PASS';
+        fail_mission_img = 'FAIL';
+    }
+    $('.success_mission_slot').append(success_mission_img);
+    $('.fail_mission_slot').append(fail_mission_img);
 
     if(reshow){
         enable_modal_close();
+        enable_remove_red_from_bg_if_fail();
     }
     console.log(reshow);
     show_unclosable_modal(reshow);
     if(!reshow){
         show_countdown(mission_wait_time, done_with_mission_results);
     }
-}
 
+}
+function enable_remove_red_from_bg_if_fail(){
+    $('#myModal').on('hidden.bs.modal', function (e) {
+
+        if($('body').hasClass("failed_mission")){
+            $('body').removeClass("failed_mission");
+        }
+        $('#myModal').off('hidden.bs.modal');
+    });
+}
 function done_with_role_info(){
     socket.emit("done_with_role_info", {game_id: get_game_id(), player_id: get_player_id()});
 }
