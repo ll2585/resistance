@@ -505,8 +505,16 @@ function set_mission_result(mission, status){
     $('#mission_' + mission).removeClass('current_mission');
 
 }
-function update_mission_and_vote_counters(mission, vote){
+function add_leader_names(leaders){
+    for(var i = 0 ; i < leaders.length; i++){
+        $('#vote_leader_' + (i+1)).html(leaders[i]);
+    }
+}
+function update_mission_and_vote_counters(mission, vote, leaders){
     clear_vote_track();
+    if(vote==1){
+        add_leader_names(leaders);
+    }
     set_vote_track(vote);
     set_mission_in_progress(mission);
 }
@@ -934,7 +942,8 @@ $(document).ready(function() {
     socket.on("game_round_vote_count", function(data){
         var mission = data['mission'];
         var vote = data['vote'];
-        update_mission_and_vote_counters(mission, vote);
+        var leaders = data['leaders'];
+        update_mission_and_vote_counters(mission, vote, leaders);
     });
 
     socket.on("you_are_leader", function(data){

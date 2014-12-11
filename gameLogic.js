@@ -65,7 +65,13 @@ exports.get_open_games = function(){
     }
     return result;
 };
-
+exports.get_next_five_leaders = function(game_id){
+    //returns names
+    var game = active_games[game_id];
+    var result = [];
+    result.push("LUKE");
+    return result;
+};
 exports.add_new_player_to_game = function(game_id, options){
     var game = active_games[game_id];
     var player;

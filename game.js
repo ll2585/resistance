@@ -498,7 +498,24 @@ Game.prototype.end_game = function() {
   //SO THIS IS SUPPSOED TO RESTART THE GAME BUT WHATEVER LOL
   //this.started = false;
 };
-
+Game.prototype.get_next_player_name_count = function(amt) {
+  //FIX THIS
+  var result = [];
+  var total = 0;
+  var player_id = this.player_order[total];
+  for (var i = 0; i < this.player_order.length - 1; i++) { //-1 because if it's the last guy, the leader is the first guy which is already set
+    if (this.player_order[i] == this.leader) {
+      player_id = i;
+      while(total < amt) {
+        result.push(this.players_id[player_id]['name']);
+        amt += 1;
+      }
+      next_leader = this.player_order[i + 1];
+      break;
+    }
+  }
+  return this.players_id[next_leader]['name'];
+};
 Game.prototype.get_next_player_name = function() {
   var next_leader = this.player_order[0];
   for(var i = 0; i < this.player_order.length -1; i++){ //-1 because if it's the last guy, the leader is the first guy which is already set

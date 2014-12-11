@@ -464,7 +464,8 @@ io.of('/avalon').on('connection', function(socket){
             console.log(role_information);
             socket.emit('are_you_ready_for_role');
         }else {
-            socket.emit('game_round_vote_count', {mission: game_data['round'], vote: game_data['vote']});
+            var upcoming_leaders = game_logic.get_next_five_leaders(game_id);
+            socket.emit('game_round_vote_count', {mission: game_data['round'], vote: game_data['vote'], leaders: upcoming_leaders});
             io.of('/avalon').to(leader_room(game_id)).emit('you_are_leader', game_data);
         }
     });
@@ -508,7 +509,8 @@ io.of('/avalon').on('connection', function(socket){
             io.of('/avalon').to(game_id).emit('game_started'); //game start - enable buttons
             io.of('/avalon').to(game_id).emit('new_leader', {leader_id: game.get_leader(), leader_name: game.get_leader_name()}); //this here is io.emit since it fires only once
             var game_data = game.get_current_round();
-            io.of('/avalon').to(game_id).emit('game_round_vote_count', {mission: game_data['round'], vote: game_data['vote']});
+            var upcoming_leaders = game_logic.get_next_five_leaders(game_id);
+            io.of('/avalon').to(game_id).emit('game_round_vote_count', {mission: game_data['round'], vote: game_data['vote'], leaders: upcoming_leaders});
             io.of('/avalon').to(leader_room(game_id)).emit('you_are_leader', game_data);
             game_logic.clear_players_waiting_for(game_id, 'start');
         } else{
@@ -932,7 +934,8 @@ io.of('/avalon').on('connection', function(socket){
                 } else {
                     io.of('/avalon').to(game_id).emit('new_leader', {leader_id: game.get_leader(), leader_name: game.get_leader_name()});
                     var game_data = game.get_current_round();
-                    io.of('/avalon').to(game_id).emit('game_round_vote_count', {mission: game_data['round'], vote: game_data['vote']});
+                    var upcoming_leaders = game_logic.get_next_five_leaders(game_id);
+                    io.of('/avalon').to(game_id).emit('game_round_vote_count', {mission: game_data['round'], vote: game_data['vote'], leaders: upcoming_leaders});
                     io.of('/avalon').to(leader_room(game_id)).emit('you_are_leader', game_data);
 
                     //for bots

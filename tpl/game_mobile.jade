@@ -114,6 +114,7 @@ html
 									- for (var i = 1; i < 6; i++)
 										td(id='vote_' + i, class = 'vote_cell')
 											= i
+											div(id='vote_leader_' + i)
 									td(id='game_summary')
 										|#{game.num_players} Players
 										br
