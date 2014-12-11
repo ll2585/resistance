@@ -239,7 +239,7 @@ function show_mission_cards(is_spy, selected_player_names, leader){
     });
 
     function show_mission_button(submission){
-        var button = '<div id = "submit_mission", class = "row"><button type="button" id = "submit_mission_button" class = "btn btn-block btn-default ' + get_button_size() + '">Submit ' + submission + '</button></div>';
+        var button = '<div id = "submit_mission", class = "row"><button type="button" id = "submit_mission_button" class = "btn btn-block btn-warning ' + get_button_size() + '">Submit ' + submission + '</button></div>';
         $("#game_messages").append(button);
         $('#submit_mission_button').click(function(){
             socket.emit("submitted_mission", {game_id: get_game_id(), player_id: get_player_id(), submission: submission});
@@ -316,8 +316,8 @@ function show_proposed_team(leader, proposed_team){
     var success_image_html = '<img src = "images/approve_team.png", id = "approve_team", width =  ' + new_width + ', height =  ' + new_height + ', class = "not_selected">';
     var reject_image_html = '<img src = "images/reject_team.png" id = "fail_team", width = ' + new_width + ', height =  ' + new_height + ', class = "not_selected">';
     if(is_phone_screen()){
-        success_image_html = '<button type="button" id = "approve_team" class="not_selected btn btn-success btn-block ' + get_button_size() + '" data-toggle="button" aria-pressed="false">Approve</button>';
-        reject_image_html = '<button type="button" id = "fail_team" class="not_selected btn btn-danger btn-block ' + get_button_size() + '" data-toggle="button" aria-pressed="false">Reject</button>';
+        success_image_html = '<button type="button" id = "approve_team" class="not_selected btn btn-default btn-block ' + get_button_size() + '" data-toggle="button" aria-pressed="false">Approve</button>';
+        reject_image_html = '<button type="button" id = "fail_team" class="not_selected btn btn-reject btn-block ' + get_button_size() + '" data-toggle="button" aria-pressed="false">Reject</button>';
     }
     $("#success_voting_div").append(success_image_html);
     $("#reject_voting_div").append(reject_image_html);
@@ -358,9 +358,9 @@ function show_proposed_team(leader, proposed_team){
         if (is_phone_screen()) {
             $("#vote_button").removeClass('btn-info');
             if (vote == 'Approve') {
-                $("#vote_button").addClass('btn-success');
+                $("#vote_button").addClass('btn-default');
             } else {
-                $("#vote_button").addClass('btn-danger');
+                $("#vote_button").addClass('btn-reject');
             }
         }
         $('#vote_button').click(function(){

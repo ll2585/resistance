@@ -61,10 +61,12 @@
     font-style: italic;
   }
   .approved_vote_selected{
-    background-color: lawngreen !important;
+    color: #333;
+    background-color: thistle !important;
   }
   .rejected_vote_selected{
-    background-color: orangered !important;
+    color: #ffffff;
+    background-color: #301934 !important;
   }
 
 }
@@ -114,6 +116,7 @@
 
 .selected{
   font-style: italic;
+  background-color: #E0B0FF;
 }
 .relevant_player{
   background-color: indianred;
@@ -125,14 +128,25 @@
 
   filter: alpha(opacity=10);
 }
-
+.btn-reject{
+  color: #ffffff;
+  background-color: #6B6B6B;
+  border-color: #130269;
+}
+.btn-reject:hover, .btn-reject:focus, .btn-reject.focus, .btn-reject:active, .btn-reject.active, .open>.dropdown-toggle.btn-reject{
+  color: #ffffff;
+  background-color: black;
+  border-color: #130269;
+}
 
 .approved_vote{
-  background-color: lightgreen;
+  color: #333;
+  background-color: #fff;
 }
 
 .rejected_vote{
-  background-color: lightsalmon;
+  color: #ffffff;
+  background-color: #6B6B6B;
 }
 
 .current_vote_1{
@@ -171,19 +185,20 @@ canvas {
 }
 
 #game_summary{
-  border: solid #000000;
+  /* border: solid #000000; */
   background-color: lavenderblush;
+  margin-top: 10px;
 }
 
 #luke_circle{
-  border: solid #000000;
+  /* border: solid #000000; */
   background-color: azure;
 }
 
 .row-bottom-margin {
   margin-bottom:20px;
   background-color: bisque;
-  border: solid black thin;
+  /*  border: solid black thin;  */
 }
 [class*="col-"] {
   padding: 0px;
