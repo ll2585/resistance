@@ -909,7 +909,7 @@ io.of('/avalon').on('connection', function(socket){
                                     console.log(selected_player + ' ASSASSINATED BY BOT');
                                     io.of('/avalon').to(game_id).emit('selected_player_to_assassinate', selected_player);
                                     game_logic.set_bot_assassin_to_assassinate(game_id);
-                                    var assassination_delay = 500;
+                                    var assassination_delay = 1000;
                                     setTimeout(function () {
                                         console.log('now we show assassination result');
                                         var selected_player_is_merlin = game.player_is(selected_player, game_logic.get_constants()['merlin']);

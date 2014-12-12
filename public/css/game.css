@@ -71,6 +71,15 @@
     border: solid darkviolet;
     font-style: italic;
   }
+
+  .selected_to_be_assassinated{
+    border: solid darkred;
+    font-style: italic;
+  }
+
+  .assassinated{
+    background-color: darkred;
+  }
   /*
   removed for now - remove this later if we no longer decide we want this
   this shows a diff color fo those who vote yes and are on the team than those who vote yes and are not on the team
