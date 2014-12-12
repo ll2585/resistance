@@ -823,7 +823,6 @@ function show_assassination_panel (players, is_assassin){
         selected_player = null;
         if(data_exists(assassination_key)){
             selected_player = saved_data[assassination_key]['selected_player'];
-            console.log(selected_players);
         }
     }else{
         html = "WAITING FOR ASSASSIN";
@@ -834,7 +833,7 @@ function show_assassination_panel (players, is_assassin){
     console.log(players);
 
     for(var i = 0; i < players.length; i++){
-        player_table_html += '<tr id="player_id_' + players[i]['id'] + '_to_assassinate"><td>' + players[i]['name'] + '</td><td id = "player_id_' + players[i]['id'] + '_role"></td></tr>';
+        player_table_html += '<tr id="player_id_' + players[i]['id'] + '_to_assassinate"><td><div class="player_name_' + players[i]['name'] + '_color"></div>' + players[i]['name'] + '</td><td id = "player_id_' + players[i]['id'] + '_role"></td></tr>';
     }
     modal_html_header += '<div id = "close_assassination" style="float: right"><button type="button" id = "close_assassination_button" class = "btn btn-default ' + get_button_size() + '">Close</button></div>';
     player_table_html += '</tbody></table>';
