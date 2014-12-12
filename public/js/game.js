@@ -2,10 +2,11 @@ var socket = io('/avalon');
 var leader_icon_html = '<img src = "images/leader.png" height = "20" width = "20">';
 var selected_icon_html = '<img src = "images/selected.png" height = "20" width = "20">';
 var assassination_icon_html = '<span id = "assassination_icon"><img src = "images/dagger.png" height = "20" width = "20"></span>';
-var role_wait_time = 1;
-var vote_wait_time = 1;
-var mission_wait_time = 3;
+var role_wait_time = 7;
+var vote_wait_time = 7;
+var mission_wait_time = 7;
 var message_elem;
+var saved_data = {};
 function is_phone_screen (){
     return $(window).width() < 470;
 }
@@ -79,22 +80,60 @@ function reset_selected_players(){
     $('.player_class').removeClass('selected_for_team');
 
 }
-
+function save_data(key, data){
+    if(!(key in data)){
+        saved_data[key] = data;
+    }
+}
+function clear_data(key){
+    delete saved_data[key];
+}
+function data_exists(key){
+    return (key in saved_data);
+}
 function propose_team_prompt (team_size, players){
+    var proposed_team_data = {};
+    var proposed_team_key = 'propose_team';
+    var selected_players = [];
+    if(data_exists(proposed_team_key)){
+        selected_players = saved_data[proposed_team_key]['selected_players'];
+        console.log(selected_players);
+    }
     var html = "propose a team of size " + team_size;
+    html += '<div id = "close_propose" style="float: right"><button type="button" id = "close_propose_button" class = "btn btn-default ' + get_button_size() + '">Close</button></div>';
+
     if(!is_small_screen()){
         html += " by clicking on their names below ";
     }
     html += "<br />";
     var player_table_html = '<table class="table table-bordered table-hover table-condensed scoreboard-table"><caption class = "extra_info">SCOREBOARD</caption><thead></thead><tr><th class = "extra_info">Player</th><th class = "extra_info">Selected?</th></tr><tbody class="players-to-select">';
     var players = players;
-    var selected_players = [];
+
     for(var i = 0; i < players.length; i++){
         player_table_html += '<tr id="player_id_' + players[i]['id'] + '_to_select"><td><div class="player_name_' + players[i]['name'] + '_color"></div>' + players[i]['name'] + '</td><td id="' + players[i]['id'] + '_selected_status">Not Selected</td></tr>';
     }
     player_table_html += '</tbody></table>';
 
     message_elem.html(html + player_table_html);
+
+    $('#close_propose_button').click(function(){
+        close_button();
+    });
+    for(var i = 0; i < players.length; i++){
+        var player_id = players[i]['id'];
+        if(selected_players.indexOf(player_id) > -1){
+            $('#player_id_' + player_id + '_to_select').addClass("selected");
+            $('#' + player_id + '_selected_status').html("Selected");
+            if(is_phone_screen()){
+                $('#player_id_' + player_id).addClass('selected_for_team');
+            }else{
+                $('#mission_player_id_' + player_id).append(selected_icon_html);
+            }
+        }
+    }
+    if(total_selected_players() == team_size){
+        show_propose_button();
+    }
     if(is_phone_screen()){
         if(players.length  == 10){
             $('.players-to-select').css('font-size', '7pt');
@@ -154,7 +193,14 @@ function propose_team_prompt (team_size, players){
     function is_selected(player_id){
         return $('#' + player_id + '_selected_status').html() == "Selected";
     }
-
+    function close_button(){
+        proposed_team_data['team_size'] = team_size;
+        proposed_team_data['players'] = players;
+        proposed_team_data['selected_players'] = selected_players;
+        save_data(proposed_team_key, proposed_team_data);
+        $('#myModal').modal('hide');
+        show_propose_team_button(team_size, players);
+    }
     function show_propose_button(){
         var button = '<div id = "propose"><button type="button" id = "propose_button" class = "btn btn-danger ' + get_button_size() + '">Propose Team</button></div>';
         message_elem.append(button);
@@ -163,6 +209,7 @@ function propose_team_prompt (team_size, players){
             if(is_small_screen()){
                 $('#myModal').modal('hide');
             }
+            clear_data(proposed_team_key);
             socket.emit("team_proposed", {game_id: get_game_id(), player_id: get_player_id(), selected_players: selected_players});
         });
     }
@@ -872,7 +919,6 @@ function show_propose_team_button(team_size, players){
         console.log('propose a team');
         $("#ready_to_propose_team").remove();
         propose_team_prompt(team_size, players);
-        socket.emit("reveal_my_role_to_all", {game_id: get_game_id(), player_id: get_player_id()});
     });
 }
 function reveal_assassinated_player_role(success, selected_player, role){
