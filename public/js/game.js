@@ -32,6 +32,17 @@ function get_player_name(){
     return $('.playerID').html();
 }
 
+function add_player_colors_to_header(player_colors){
+    for(p in player_colors[0]){ //id
+        $('html > head').append($('<style>.player_id_'+p+'_color { background: ' + player_colors[0][p] + '; height: 10px; width: 10px; display: inline-block;}</style>'));
+        console.log(p);
+    }
+    for(p in player_colors[1]){ //name
+        $('html > head').append($('<style>.player_name_'+p+'_color { background: ' + player_colors[1][p] + '; height: 10px; width: 10px; display: inline-block;}</style>'));
+        console.log(p);
+    }
+}
+
 function make_leader (leader_id, leader_name){
     clear_old_leaders();
     reset_selected_players();
@@ -44,7 +55,7 @@ function make_leader (leader_id, leader_name){
 
 function show_waiting_for_leader_message(leader_name){
     clear_messages();
-    var proposal_html = 'Waiting for ' + leader_name + ' to make a team...';
+    var proposal_html = 'Waiting for <div class="player_name_' + leader_name + '_color"></div>' + leader_name + ' to make a team...';
     $("#game_messages").append(proposal_html);
 }
 
@@ -79,7 +90,7 @@ function propose_team_prompt (team_size, players){
     var players = players;
     var selected_players = [];
     for(var i = 0; i < players.length; i++){
-        player_table_html += '<tr id="player_id_' + players[i]['id'] + '_to_select"><td>' + players[i]['name'] + '</td><td id="' + players[i]['id'] + '_selected_status">Not Selected</td></tr>';
+        player_table_html += '<tr id="player_id_' + players[i]['id'] + '_to_select"><td><div class="player_name_' + players[i]['name'] + '_color"></div>' + players[i]['name'] + '</td><td id="' + players[i]['id'] + '_selected_status">Not Selected</td></tr>';
     }
     player_table_html += '</tbody></table>';
 
@@ -171,15 +182,16 @@ function show_mission_cards(is_spy, selected_player_names, leader){
     clear_messages();
     console.log("WHERE TEH FUCKING CARDS?");
     var proposed_team = selected_player_names;
-    var team_html = '<div class = "row"><div class = "col-xs-12">' + leader + " has proposed";
+    var team_html = '<div class = "row"><div class = "col-xs-12"><div class="player_name_' + leader + '_color"></div>' + leader + " has proposed";
     if(!is_phone_screen()){
         team_html += ' a team consisting of';
     }
-    team_html += ": <ul>";
+    team_html += ' ';
+    var to_join_html = [];
     for(var i = 0; i < proposed_team.length; i++){
-        team_html += '<li>' + proposed_team[i] + '</li>';
+        to_join_html.push('<div class="player_name_' + proposed_team[i] + '_color"></div>'+ proposed_team[i]);
     }
-    team_html += '</ul>';
+    team_html += to_join_html.join(', ');
 
     team_html += '</div><div class = "row-fluid" id = "mission_row" ><div class = "col-xs-6" id = "pass_mission_div"></div><div class = "col-xs-6" id = "fail_mission_div"></div></div><br>';
     $("#game_messages").append(team_html);
@@ -259,7 +271,7 @@ function show_mission_cards(is_spy, selected_player_names, leader){
 
 function show_waiting_for_team_message(leader, proposed_team){
     clear_messages();
-    var proposal_html = leader + " has proposed"
+    var proposal_html = '<div class="player_name_' + leader + '_color"></div>' + leader + ' has proposed';
     if(!is_phone_screen()){
         proposal_html += " a team consisting of";
     }
@@ -281,15 +293,16 @@ function show_waiting_for_players_to_check_roles_message(){
 function show_proposed_team(leader, proposed_team){
     clear_messages();
     console.log("PROPOSED TEAM SHOWN");
-    var proposal_html = '<div class = "row"><div class = "col-xs-12">' + leader + ' has proposed';
+    var proposal_html = '<div class = "row"><div class = "col-xs-12"><div class="player_name_' + leader + '_color"></div>' + leader + ' has proposed';
     if(!is_phone_screen()){
         proposal_html += " a team consisting of";
     }
-    proposal_html += ': <ul>';
+    proposal_html += ' ';
+    var to_join_html = [];
     for(var i = 0; i < proposed_team.length; i++){
-        proposal_html += '<li>' + proposed_team[i] + '</li>';
+        to_join_html.push('<div class="player_name_' + proposed_team[i] + '_color"></div>'+ proposed_team[i]);
     }
-    proposal_html += '</ul>';
+    proposal_html += to_join_html.join(', ');
 
     proposal_html += '</div><div class = "row-fluid" id = "voting_row" ><div class = "col-xs-6" id = "success_voting_div"></div><div class = "col-xs-6" id = "reject_voting_div"></div></div><br>';
     $("#game_messages").append(proposal_html);
@@ -418,16 +431,17 @@ function show_vote_result(proposal_approved, vote_results, players, proposed_tea
     console.log("SHGOWING RESULT");
 
 
-    var html = "THE PROPOSAL BY <b>" + leader_name + "</b> ";
+    var html = 'THE PROPOSAL BY <b><div class="player_name_' + leader_name + '_color"></div>' + leader_name + '</b> ';
     if(proposal_approved){
-        html += "PASSED";
+        html += "PASSED (<span id = 'voting_breakdown'></span>)";
     } else{
-        html += "FAILED. <br>LEADERSHIP WILL PASS TO " + next_player_name;
+        html += 'FAILED (<span id = "voting_breakdown"></span>). LEADERSHIP WILL PASS TO <div class="player_name_' + next_player_name + '_color"></div>' + next_player_name;
     }
     html += "<br>";
     if(reshow){
         html += 'Click anywhere to close';
     }
+    var votes_for = 0;
     var player_table_html = '<table class="table table-bordered table-condensed scoreboard-table"><caption class = "extra_info">VOTING RESULTS</caption><thead></thead><tr><th class = "extra_info">Player</th><th class = "extra_info"></th><th class = "extra_info">VOTE</th></tr><tbody class="players-to-select">';
     for(var i = 0; i < players.length; i++){
         var player_id = players[i]['id'];
@@ -439,27 +453,39 @@ function show_vote_result(proposal_approved, vote_results, players, proposed_tea
         var voting_class;
         if(player_voted_yes){
             voting_class = 'approved_vote';
+            votes_for += 1;
         } else{
             voting_class = 'rejected_vote';
         }
-        player_table_html += '<tr id="player_id_' + player_id + '_vote_result", class = "' + voting_class;
+        player_table_html += '<tr id="player_id_' + player_id + '_vote_result", class = "row-fluid';
+        if(in_team){
+            player_table_html += ' selected_for_team';
+        }
+        player_table_html += '"><td class = "cs-xs-1 ';
         if(is_phone_screen()){
-            if(in_team){
-                player_table_html += ' selected_for_team ' + voting_class + '_selected';
+            if(player_name == leader_name && in_team){
+                player_table_html += ' leader-cell-selected';
+            }else if(player_name == leader_name){
+                player_table_html += ' leader-cell';
+            }else if(in_team){
+                player_table_html += ' selected-cell';
             }
         }
-        player_table_html += '"><td>' + player_name + '</td>';
-        if(!is_phone_screen()){
-            player_table_html += '<td id="' + player_id + '_selected_status">';
-            if(in_team){
+        player_table_html += '"></td><td class = "cs-xs-6  '+ voting_class  + '"><div class="player_name_' + player_name + '_color"></div>' + player_name + '</td>';
+        if(in_team){
+            if(!is_phone_screen()) {
                 player_table_html += '<img class = "selected_icon" src="images/selected.png" height="20" width="20">';
             }
-            player_table_html += '</td>';
         }
-        player_table_html += '<td>' + vote_results[player_name] + '</td></tr>';
+        player_table_html += '</td>';
+        player_table_html += '<td class = "cs-xs-5 '+ voting_class  + '">' + vote_results[player_name] + '</td></tr>';
+
+
     }
     player_table_html += '</tbody></table>';
     $('#game_messages_modal').append(html + player_table_html);
+    var voting_breakdown_html = votes_for + " - " + (players.length-votes_for);
+    $('#voting_breakdown').append(voting_breakdown_html);
     if(is_phone_screen()){
         if(players.length  == 10){
             $('.players-to-select').css('font-size', '7pt');
@@ -507,7 +533,7 @@ function set_mission_result(mission, status){
 }
 function add_leader_names(leaders){
     for(var i = 0 ; i < leaders.length; i++){
-        $('#vote_leader_' + (i+1)).html(leaders[i]);
+        $('#vote_leader_' + (i+1)).html('<div class="player_name_' + leaders[i] + '_color"></div>' + leaders[i]);
     }
 }
 function update_mission_and_vote_counters(mission, vote, leaders){
@@ -548,11 +574,12 @@ function show_mission_result(leader, team_members, mission_success, mission_resu
             mission_result_html += '<div class = "fail_mission_slot ' + col_width + '"></div>';
         }
     }
-    var team_html = '<br>' + leader + " proposed a team consisting of: <ul>";
+    var team_html = '<br><div class="player_name_' + leader + '_color"></div>' + leader + " proposed a team consisting of: <br> ";
+    var members_to_join = [];
     for(var i = 0; i < team_members.length; i++){
-        team_html += '<li>' + team_members[i] + '</li>';
+        members_to_join.push('<div class="player_name_' + team_members[i] + '_color"></div>' + team_members[i]);
     }
-    team_html += '</ul>';
+    team_html += members_to_join.join(', ');
     $('#game_messages_modal').append(html + team_html);
     $('.mission_result_row').append(mission_result_html);
     var success_mission_img = '<img class="success_mission_img" src="images/success_mission.png" height="98" width="75">';
@@ -906,7 +933,11 @@ $(document).ready(function() {
     var player_id = $('.playerID').attr('id');
     var player_name = $('.playerID').html();
     socket.emit("game_started", {game_id: get_game_id(), player: {id: player_id, name: player_name}});
-
+    socket.on("set_player_colors", function(data){
+        var game_id = data['game_id'];
+        var player_colors = data['player_colors'];
+        add_player_colors_to_header(player_colors);
+    });
 
 
     socket.on("new_leader", function(data){

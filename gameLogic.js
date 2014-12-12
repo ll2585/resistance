@@ -65,11 +65,14 @@ exports.get_open_games = function(){
     }
     return result;
 };
+
 exports.get_next_five_leaders = function(game_id){
     //returns names
     var game = active_games[game_id];
     var result = [];
-    result.push("LUKE");
+    result = game.get_next_player_name_count(5);
+    console.log("GETTING VIEES");
+    console.log(result);
     return result;
 };
 exports.add_new_player_to_game = function(game_id, options){
@@ -159,7 +162,45 @@ exports.set_game_setting = function(game_id, setting, value){
     var game_setting_by_game_id = this.game_settings[game_id];
     game_setting_by_game_id[setting] = value;
 };
-
+exports.get_game_setting = function(game_id, setting){
+    if(!(game_id in this.game_settings)){
+        this.game_settings[game_id] = {};
+    }
+    var game_setting_by_game_id = this.game_settings[game_id];
+    return game_setting_by_game_id[setting];
+};
+function get_random_color(){
+    var color_universe = ['#1CE6B9', '#53007F', '#FFFC02', '#FE8A0E', '#1BA201', '#E55BB0', '#959697', '#7EBFF1', '#106246', '#4E2A04'];
+    return color_universe[Math.floor(Math.random()*color_universe.length)];
+}
+exports.assign_player_colors = function(game_id){
+    var game_players = this.get_players_from_game(game_id); //returns array of players
+    var num_players = game_players.length;
+    var colors_to_use = [];
+    while(colors_to_use.length < num_players){
+        var random_color = get_random_color();
+        while(colors_to_use.indexOf(random_color) != -1){
+            random_color = get_random_color();
+        }
+        colors_to_use.push(random_color);
+    }
+    var player_color_id_dict = {};
+    var player_color_name_dict = {};
+    for(var i = 0; i < game_players.length; i++){
+        var player_id = game_players[i].id;
+        var player_name = game_players[i].name;
+        player_color_id_dict[player_id] = colors_to_use[i];
+        player_color_name_dict[player_name] = colors_to_use[i];
+    }
+    this.set_game_setting(game_id, 'player_colors_by_id', player_color_id_dict);
+    this.set_game_setting(game_id, 'player_colors_by_name', player_color_name_dict);
+};
+exports.get_player_colors = function(game_id){
+    var id_dict = this.get_game_setting(game_id, 'player_colors_by_id');
+    var name_dict = this.get_game_setting(game_id, 'player_colors_by_name');
+    console.log(id_dict);
+    return [id_dict, name_dict];
+};
 /* special setting
  */
 exports.make_player_waiting_for = function(game_id, player_id, setting){

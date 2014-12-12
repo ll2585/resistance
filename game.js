@@ -236,7 +236,7 @@ Game.prototype.get_role_information = function(role) {
     var mordred_exists = false;
     for(var player_id in this.players_id){
       if(this.is_spy(player_id) && !(this.assigned_roles[player_id] == constants['mordred'])){
-        result += '<li>' + this.players_id[player_id]['name'] + '</li>';
+        result += '<li><div class="player_name_' + this.players_id[player_id]['name'] + '_color"></div>' + this.players_id[player_id]['name'] + '</li>';
         relevant_players.push(this.players_id[player_id]);
       }
       if(this.assigned_roles[player_id] == constants['mordred']){
@@ -274,7 +274,7 @@ Game.prototype.get_role_information = function(role) {
 
       result += ':<b><ul>';
     for(var i = 0; i < possible_merlins.length; i++){
-      result += '<li>' + possible_merlins[i] + '</li>';
+      result += '<li><div class="player_name_' + possible_merlins[i] + '_color"></div>' + possible_merlins[i] + '</li>';
     }
     result += '</b></ul>';
   }else if(role == constants['oberon']){
@@ -287,14 +287,14 @@ Game.prototype.get_role_information = function(role) {
     var oberon_exists = false;
     for(var player_id in this.players_id){
       if(this.is_spy(player_id) && !(this.assigned_roles[player_id] == constants['oberon']) && !(this.assigned_roles[player_id] == constants['bad_lancelot'])){
-        result += '<li>' + this.players_id[player_id]['name'] + '</li>';
+        result += '<li><div class="player_name_' + this.players_id[player_id]['name'] + '_color"></div>' + this.players_id[player_id]['name'] + '</li>';
         relevant_players.push(this.players_id[player_id]);
       }
       if(this.assigned_roles[player_id] == constants['oberon']){
         oberon_exists = true;
       }
       if(this.assigned_roles[player_id] == constants['bad_lancelot']){
-        result += '<li>LANCELOT: ' + this.players_id[player_id]['name'] + '</li>';
+        result += '<li>LANCELOT: <div class="player_name_' + this.players_id[player_id]['name'] + '_color"></div>' + this.players_id[player_id]['name'] + '</li>';
         relevant_players.push(this.players_id[player_id]);
       }
     }
@@ -506,15 +506,20 @@ Game.prototype.get_next_player_name_count = function(amt) {
   for (var i = 0; i < this.player_order.length - 1; i++) { //-1 because if it's the last guy, the leader is the first guy which is already set
     if (this.player_order[i] == this.leader) {
       player_id = i;
-      while(total < amt) {
-        result.push(this.players_id[player_id]['name']);
-        amt += 1;
+      while(result.length < amt) {
+        var temp_player = this.player_order[player_id];
+        console.log(temp_player);
+        result.push(this.players_id[temp_player]['name']);
+        player_id += 1;
+        if(player_id == this.player_order.length - 1){
+          player_id = 0;
+        }
       }
-      next_leader = this.player_order[i + 1];
-      break;
+
+      console.log("^$%#%^$%$#%");
+      return result;
     }
   }
-  return this.players_id[next_leader]['name'];
 };
 Game.prototype.get_next_player_name = function() {
   var next_leader = this.player_order[0];

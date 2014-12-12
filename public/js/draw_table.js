@@ -127,7 +127,7 @@ $(function(){
         var label_circle_y = get_new_y(count, angle, centerY, radius);
         var label_position_x = 0;
         var label_position_y = 0;
-        var element_width = $(elem).width(); //40 for the two icons
+        var element_width = $(elem).width() + 10; //40 for the two icons
         var element_height = Math.max($(elem).height()); //20 for the two icons
         if(label_circle_x == centerX){
             label_position_x += centerX - element_width/2;

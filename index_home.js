@@ -249,6 +249,9 @@ function show_play_page_mobile_bots(req,res){
     game.add_role('Mordred'); //add merlin
     game.add_role('Percival'); //add merlin
     game.start();
+    game_logic.assign_player_colors(game_id);
+    console.log('CAAAAAAAAAAAAALORES');
+    console.log(game_logic.get_player_colors(game_id));
     game.add_to_buffer(player_id); //so it doesn't say you disconnected
     var players = game_logic.get_public_players_from_game(game_id);
     console.log(game.assigned_roles);
@@ -414,6 +417,9 @@ io.of('/avalon').on('connection', function(socket){
         io.of('/avalon').to(game_id).emit('game_started', game_id);
         var game = game_logic.game(game_id);
         game.start();
+        game_logic.assign_player_colors(game_id);
+        console.log('CAAAAAAAAAAAAALORES');
+        console.log(game_logic.get_player_colors(game_id));
     });
 
     socket.on('selected_player', function(data){
@@ -452,6 +458,8 @@ io.of('/avalon').on('connection', function(socket){
         console.log('teh gameid is ' + game_id);
         var game = game_logic.game(game_id);
         console.log('leader is ' + game.get_leader());
+        var player_colors = game_logic.get_player_colors(game_id);
+        socket.emit('set_player_colors', {game_id: game_id, player_colors: player_colors});
         socket.emit('new_leader', {leader_id: game.get_leader(), leader_name: game.get_leader_name()}); //NOT io.emit because people are getting rerouted and the rerouting fires this event
         //so if it were io.emit, it would fire multiple times for the first guy to load (his fires, and everyone who loads after him fires)
         var game_data = game.get_current_round();

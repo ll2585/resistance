@@ -81,6 +81,7 @@ html
 												-j = 0
 											div(id= 'player_id_' +  players[j]['id'], class = "player_class")
 												span.extra_info.leader_col(id= 'leader_player_id_' +  players[j]['id'])
+												div(class = 'player_id_' + players[j]['id'] + '_color')
 												span.player_name(id= 'player_id_' +  players[j]['id'] + '_name')
 													if i == 0 && players_added == 0
 														b
@@ -108,17 +109,17 @@ html
 						table.table.table-bordered.table-condensed.game_table
 							thead
 							tr
-								th(colspan=5) Vote Track
-							tbody.game_round
-								tr(id= 'vote_track_row')
-									- for (var i = 1; i < 6; i++)
-										td(id='vote_' + i, class = 'vote_cell')
-											= i
-											div(id='vote_leader_' + i)
-									td(id='game_summary')
-										|#{game.num_players} Players
-										br
-										|#{game.evil_players} Minions of Mordred
+								td(colspan=5) Vote Track
+								td(rowspan = 2, id='game_summary')
+									|#{game.num_players} Players
+									br
+									|#{game.evil_players} Minions of Mordred
+							tr.game_round(id= 'vote_track_row')
+								- for (var i = 1; i < 6; i++)
+									td(id='vote_' + i, class = 'vote_cell')
+										= i
+										div(id='vote_leader_' + i)
+
 				//45%
 				div.row-fluid#player_actions
 					div.col-xs-12

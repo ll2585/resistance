@@ -2,6 +2,7 @@
   background-color: yellow;
 }
 
+
 .not_selected {
   opacity: 0.4;
   filter: alpha(opacity=40); /* msie */
@@ -13,6 +14,16 @@
   text-align:center;
 }
 @media all and (max-width: 470px) {
+  .leader-cell-selected{
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(50%,yellow), color-stop(50%,#E0B0FF));
+  }
+  .leader-cell{
+    background-color: yellow;
+  }
+  .selected-cell{
+    background-color: #E0B0FF;
+  }
+
   #game_messages, #game_summary, #game_messages_modal{
     font-size: 8pt;
   }
@@ -60,6 +71,9 @@
     border: solid darkviolet;
     font-style: italic;
   }
+  /*
+  removed for now - remove this later if we no longer decide we want this
+  this shows a diff color fo those who vote yes and are on the team than those who vote yes and are not on the team
   .approved_vote_selected{
     color: #333;
     background-color: thistle !important;
@@ -68,7 +82,7 @@
     color: #ffffff;
     background-color: #301934 !important;
   }
-
+  */
 }
 @media all and (max-width: 470px) {
   .modal-vertical-centered {
