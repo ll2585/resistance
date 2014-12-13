@@ -2,9 +2,9 @@ var socket = io('/avalon');
 var leader_icon_html = '<img src = "images/leader.png" height = "20" width = "20">';
 var selected_icon_html = '<img src = "images/selected.png" height = "20" width = "20">';
 var assassination_icon_html = '<span id = "assassination_icon"><img src = "images/dagger.png" height = "20" width = "20"></span>';
-var role_wait_time = .5;
-var vote_wait_time = .5;
-var mission_wait_time = .5;
+var role_wait_time = 5;
+var vote_wait_time = 5;
+var mission_wait_time = 5;
 var message_elem;
 var saved_data = {};
 var assassination_over = false;
@@ -323,11 +323,12 @@ function show_waiting_for_team_message(leader, proposed_team){
     if(!is_phone_screen()){
         proposal_html += " a team consisting of";
     }
-    proposal_html += ":<ul>";
+    proposal_html += ' ';
+    var to_join_html = [];
     for(var i = 0; i < proposed_team.length; i++){
-        proposal_html += '<li>' + proposed_team[i] + '</li>';
+        to_join_html.push('<div class="player_name_' + proposed_team[i] + '_color"></div>'+ proposed_team[i]);
     }
-    proposal_html += '</ul>';
+    proposal_html += to_join_html.join(', ');
     proposal_html += '<br>Waiting for the mission results...';
     $("#game_messages").append(proposal_html);
 }

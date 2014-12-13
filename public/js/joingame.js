@@ -59,7 +59,7 @@ $(document).ready(function() {
     });
 
     socket.on("game_started", function(game_id){
-        var redirect_form = $('<form action="/play" method="post">' +
+        var redirect_form = $('<form action="/mplay" method="post">' +
         '<input type="hidden" name="game_id" value="' + game_id + '" />' +
         '<input type="hidden" name="player_name" value="' + player_name + '" />' +
         '<input type="hidden" name="player_id" value="' + player_id + '" />' +

@@ -216,7 +216,7 @@ $(document).ready(function() {
     });
 
     socket.on("game_started", function(game_id){
-        var redirect_form = $('<form action="/play" method="post">' +
+        var redirect_form = $('<form action="/mplay" method="post">' +
         '<input type="hidden" name="game_id" value="' + game_id + '" />' +
         '<input type="hidden" name="player_id" value="' + player_id + '" />' +
         '<input type="hidden" name="player_name" value="' + player_name + '" />' +
@@ -236,6 +236,11 @@ $(document).ready(function() {
         toggle_ready(player_id);
 
         socket.emit("toggle_ready", {game_id: game_id, player_id: player_id});
+    });
+
+    var add_bot_button = $('#add_bot');
+    add_bot_button.click(function(){
+        socket.emit("add_bot", {game_id: game_id, player_id: player_id});
     });
 
     var start_button = $('#start');

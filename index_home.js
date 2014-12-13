@@ -58,7 +58,6 @@ app.post('/red', function(req, res){
     res.redirect("/");
 });
 app.get('/', function(req, res){
-    console.log(req.session);
     if (!req.session.name) {
         res.redirect("/login");
     }else {
@@ -83,22 +82,18 @@ function show_create_page_mobile(req, res){
         var player_name = req.session.name;
         var game_id = game_logic.random_game_id();
         game_logic.start_game(game_id);
-        console.log("STARTING GAME " + game_id);
         game_logic.add_new_player_to_game(game_id, {id: player_id, name: player_name});
 
         //add 4 dummy players cus fuck it
-        var bots_to_add = 3;
+        var bots_to_add = 0;
         //bots_to_add = Math.floor((Math.random() * 10) + 1); //randomb etween 4 and 9
         var game = game_logic.game(game_id);
         for (var i = 0; i < bots_to_add; i++) {
             var bot = game_logic.random_bot();
             var bot_name = bot.get_name();
-            console.log("THE BOT IS " + bot_name);
-            console.log(game.player_name_exists(bot_name));
             while (game.player_name_exists(bot_name)) {
                 bot = game_logic.random_bot();
                 bot_name = bot.get_name();
-                console.log(bot_name);
             }
             bot.toggle_ready();
             game_logic.add_new_player_to_game(game_id, {player: bot});
@@ -117,7 +112,6 @@ function show_create_page(req, res){
         var player_name = req.session.name;
         var game_id = game_logic.random_game_id();
         game_logic.start_game(game_id);
-        console.log("STARTING GAME " + game_id);
         game_logic.add_new_player_to_game(game_id, {id: player_id, name: player_name});
 
         //add 4 dummy players cus fuck it
@@ -126,12 +120,9 @@ function show_create_page(req, res){
         for (var i = 0; i < bots_to_add; i++) {
             var bot = game_logic.random_bot();
             var bot_name = bot.get_name();
-            console.log("THE BOT IS " + bot_name);
-            console.log(game.player_name_exists(bot_name));
             while (game.player_name_exists(bot_name)) {
                 bot = game_logic.random_bot();
                 bot_name = bot.get_name();
-                console.log(bot_name);
             }
             bot.toggle_ready();
             game_logic.add_new_player_to_game(game_id, {player: bot});
@@ -150,7 +141,6 @@ app.post('/play', function(req, res){
         var player_id = req.body.player_id;
         var player_name = req.body.player_name;
         var game_id = req.body.game_id;
-        console.log(player_id + ' and ' + player_name + ' and ' + game_id);
         var game = game_logic.game(game_id);
         game.add_to_buffer(player_id); //so it doesn't say you disconnected
         var players = game_logic.get_public_players_from_game(game_id);
@@ -187,17 +177,12 @@ app.get('/play', function(req, res){
     for(var i = 0; i < bots_to_add; i++){
         var bot = game_logic.random_bot();
         var bot_name = bot.get_name();
-        console.log("THE BOT IS " + bot_name);
-        console.log(game.player_name_exists(bot_name));
         while(game.player_name_exists(bot_name)){
             bot = game_logic.random_bot();
             bot_name = bot.get_name();
-            console.log(bot_name);
         }
         game_logic.add_new_player_to_game( game_id, {player: bot});
     }
-
-    console.log(player_id + ' and ' + player_name + ' and ' + game_id);
 
     game.add_role('Merlin'); //add merlin
     game.add_role('Morgana'); //add merlin
@@ -220,6 +205,40 @@ app.get('/play', function(req, res){
 app.get('/mplay', function(req, res){
     show_play_page_mobile_bots(req,res);
 });
+app.post('/mplay', function(req, res){
+    if (!req.session.name) {
+        res.redirect("/login");
+    }else {
+        show_play_page_mobile(req,res);
+    }
+});
+function show_play_page_mobile(req,res){
+    var player_id = req.body.player_id;
+    var player_name = req.body.player_name;
+    var game_id = req.body.game_id;
+    var game = game_logic.game(game_id);
+    game.add_to_buffer(player_id); //so it doesn't say you disconnected
+    var players = game_logic.get_public_players_from_game(game_id);
+    console.log(game.assigned_roles);
+    var role = game.assigned_roles[player_id];
+    var roles = game.assigned_roles;
+    var num_players = game.get_number_of_players();
+    var mission_player_count = game_logic.get_mission_player_count(num_players);
+    var two_fails_needed = game_logic.needs_two_fails(num_players);
+    var evil_players = game_logic.get_evil_players(num_players);
+
+
+    res.render("game_mobile", {
+        player: {name: player_name, id: player_id},
+        game_id: game_id, players: players, role: role, roles: roles,
+        game: {
+            mission_player_count: mission_player_count,
+            two_fails_needed: two_fails_needed,
+            num_players: num_players,
+            evil_players: evil_players
+        }
+    });
+}
 function show_play_page_mobile_bots(req,res){
     var player_id = 'luke_id';
     var player_name = 'Luke';
@@ -234,17 +253,12 @@ function show_play_page_mobile_bots(req,res){
     for(var i = 0; i < bots_to_add; i++){
         var bot = game_logic.random_bot();
         var bot_name = bot.get_name();
-        console.log("THE BOT IS " + bot_name);
-        console.log(game.player_name_exists(bot_name));
         while(game.player_name_exists(bot_name)){
             bot = game_logic.random_bot();
             bot_name = bot.get_name();
-            console.log(bot_name);
         }
         game_logic.add_new_player_to_game( game_id, {player: bot});
     }
-
-    console.log(player_id + ' and ' + player_name + ' and ' + game_id);
 
     game.add_role('Merlin'); //add merlin
     //game.add_role('Morgana'); //add merlin
@@ -262,8 +276,6 @@ function show_play_page_mobile_bots(req,res){
     //game.add_role('Percival'); //add merlin
     game.start();
     game_logic.assign_player_colors(game_id);
-    console.log('CAAAAAAAAAAAAALORES');
-    console.log(game_logic.get_player_colors(game_id));
     game.add_to_buffer(player_id); //so it doesn't say you disconnected
     var players = game_logic.get_public_players_from_game(game_id);
     console.log(game.assigned_roles);
@@ -294,7 +306,6 @@ function show_join_page(req, res){
             game_logic.add_new_player_to_game(game_id, {id: player_id, name: player_name});
         }
         var players = game_logic.get_public_players_from_game(game_id);
-        console.log('LOL');
         res.render("joingame", {
             player: {name: player_name, id: player_id},
             game_id: game_id,
@@ -320,7 +331,6 @@ function show_join_page_mobile(req, res){
             game_logic.add_new_player_to_game(game_id, {id: player_id, name: player_name});
         }
         var players = game_logic.get_public_players_from_game(game_id);
-        console.log('LOL');
         res.render("joingame_mobile", {
             player: {name: player_name, id: player_id},
             game_id: game_id,
@@ -423,6 +433,24 @@ io.of('/avalon').on('connection', function(socket){
         var game = game_logic.game(game_id);
         game.toggle_ready(player_id);
         socket.broadcast.to(game_id).emit('player_toggled_ready', player_id);
+    });
+
+    socket.on('add_bot', function(data){
+        var game_id = data['game_id'];
+        player_id = data['player_id'];
+        var game = game_logic.game(game_id);
+        var bot = game_logic.random_bot();
+        var bot_name = bot.get_name();
+        while (game.player_name_exists(bot_name)) {
+            bot = game_logic.random_bot();
+            bot_name = bot.get_name();
+        }
+        bot.toggle_ready();
+
+        var join_data = {game_id: game_id, player: {id: bot.id, name: bot_name}}
+        game_logic.add_new_player_to_game(game_id, {player: bot});
+        io.of('/avalon').to(game_id).emit('player_joined', join_data);
+        io.of('/avalon').to(game_id).emit('player_toggled_ready', bot.id);
     });
 
     socket.on('start_game', function(game_id){
@@ -798,17 +826,13 @@ io.of('/avalon').on('connection', function(socket){
         var game_id = data['game_id'];
         var player_id = data['player_id'];
         var selected_player = data['selected_player'];
-        console.log(player_id + ' ASSASSINATES');
         var game = game_logic.game(game_id);
 
         if(game.missions_over()){ //server side validation that you can only assassinate if game is over, there is merlin and you are assassin
             var blue_wins = game.did_blue_win(); //true if blue wins
             var players = game.get_public_players();
-            console.log('next1');
             if(game.has_merlin() && blue_wins){
-                console.log('next2');
                 if(game.player_is(player_id, game_logic.get_constants()['assassin'])){
-                    console.log('next3');
                     var selected_player_is_merlin = game.player_is(selected_player, game_logic.get_constants()['merlin']);
                     var selected_player_role = game.get_player_role(selected_player);
                     //fires to each socket
@@ -840,17 +864,13 @@ io.of('/avalon').on('connection', function(socket){
         var game_id = data['game_id'];
         var player_id = data['player_id'];
         var selected_player = data['selected_id'];
-        console.log(player_id + ' ASSASSINATES');
         var game = game_logic.game(game_id);
 
         if(game.missions_over()){ //server side validation that you can only assassinate if game is over, there is merlin and you are assassin
             var blue_wins = game.did_blue_win(); //true if blue wins
             var players = game.get_public_players();
-            console.log('next1');
             if(game.has_merlin() && blue_wins){
-                console.log('next2');
                 if(game.player_is(player_id, game_logic.get_constants()['assassin'])){
-                    console.log('selected a nooblet ' + selected_player);
                     game_logic.set_game_setting(game_id, 'player_selected_to_be_assassinated', selected_player);
                     socket.broadcast.to(game_id).emit('selected_player_to_assassinate', selected_player);
                 } else if(player_id == 'luke_id'){
@@ -864,15 +884,12 @@ io.of('/avalon').on('connection', function(socket){
         var game_id = data['game_id'];
         var player_id = data['player_id'];
         var selected_player = data['selected_id'];
-        console.log(player_id + ' ASSASSINATES');
         var game = game_logic.game(game_id);
 
         if(game.missions_over()){ //server side validation that you can only assassinate if game is over, there is merlin and you are assassin
             var blue_wins = game.did_blue_win(); //true if blue wins
             var players = game.get_public_players();
-            console.log('next1');
             if(game.has_merlin() && blue_wins){
-                console.log('next2');
                 if(game.player_is(player_id, game_logic.get_constants()['assassin'])){
                     game_logic.clear_game_setting(game_id, 'player_selected_to_be_assassinated');
                     socket.broadcast.to(game_id).emit('deselected_player_to_assassinate', selected_player);
@@ -883,28 +900,24 @@ io.of('/avalon').on('connection', function(socket){
     socket.on('show_last_vote', function(data){
         var game_id = data['game_id'];
         var player_id = data['player_id'];
-        console.log(player_id + ' wants last vote');
         var last_vote = game_logic.get_last_vote(game_id);
         socket.emit('showing_last_vote', last_vote);
     });
     socket.on('i_wanna_see_assassination_results', function(data){
         var game_id = data['game_id'];
         var player_id = data['player_id'];
-        console.log(player_id + ' wants last vote');
         var assassinate_results = game_logic.get_assassination_results(game_id);
         socket.emit('showing_assassination_results', assassinate_results);
     });
     socket.on('show_last_mission', function(data){
         var game_id = data['game_id'];
         var player_id = data['player_id'];
-        console.log(player_id + ' wants last mission');
         var last_mission = game_logic.get_last_mission(game_id);
         socket.emit('showing_last_mission', last_mission);
     });
     socket.on('reveal_my_role_to_all', function(data){
         var game_id = data['game_id'];
         var player_id = data['player_id'];
-        console.log(player_id + ' shows role');
         var game = game_logic.game(game_id);
 
         if(game.missions_over()) { //i guess you can make this fire many times ??
@@ -925,8 +938,6 @@ io.of('/avalon').on('connection', function(socket){
             var selected_player = game_logic.get_game_setting(game_id, 'player_selected_to_be_assassinated');
             var game = game_logic.game(game_id);
             var players = game.get_public_players();
-            console.log(player_id + ' WANTS ASSASS');
-            console.log(game_logic.player_id_is_role(game_id, player_id, 'assassin'));
             socket.emit('show_assassination_panel', {
                 game_id: game_id,
                 player_id: player_id,
@@ -1024,7 +1035,6 @@ io.of('/avalon').on('connection', function(socket){
 
                     console.log("GAME OVER");
                 } else {
-                    console.log("E!?!?!");
                     io.of('/avalon').to(game_id).emit('new_leader', {leader_id: game.get_leader(), leader_name: game.get_leader_name()});
                     var game_data = game.get_current_round();
                     var upcoming_leaders = game_logic.get_next_five_leaders(game_id);
@@ -1091,7 +1101,6 @@ io.of('/avalon').on('connection', function(socket){
     function random_bot_leader(game, game_id){
             var bot_leader = game.get_player_from_id(game.get_leader());
             if(game_logic.player_is_random(bot_leader)){
-                console.log("DID WE GET HERE AT LEAST");
                 var players_chosen_by_bot = game_logic.choose_players(game_id, game.get_leader());
                 for(var i = 0; i < players_chosen_by_bot.length; i++){
                     var selected_id = players_chosen_by_bot[i];

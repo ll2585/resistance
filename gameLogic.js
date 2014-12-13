@@ -255,23 +255,24 @@ exports.get_revealed_roles = function(game_id){
 };
 
 exports.make_player_waiting_for = function(game_id, player_id, setting){
-    console.log("WAIT");
+    console.log(this.game_settings[game_id]);
+    console.log("WAIT" + player_id);
     if(!(game_id in this.game_settings)){
         this.game_settings[game_id] = {};
     }
-    console.log("WAIT");
+    console.log("WAIT" + player_id);
     var game_setting_by_game_id = this.game_settings[game_id];
-    console.log("WAIT");
+    console.log("WAIT" + player_id);
     if(!(setting in game_setting_by_game_id)){
         game_setting_by_game_id[setting] = [];
     }
-    console.log("WAIT");
+    console.log("WAIT" + player_id);
     var game_setting = game_setting_by_game_id[setting];
-    console.log("WAIT");
+    console.log("WAIT" + player_id);
     if(game_setting.indexOf(player_id) == -1){
         game_setting.push(player_id);
     }
-    console.log("WAIT");
+    console.log("WAIT" + player_id);
 };
 
 exports.all_players_waiting_for = function(game_id, setting){
@@ -295,6 +296,8 @@ exports.clear_players_waiting_for = function(game_id, setting){
     if(setting in game_setting_by_game_id){
         delete game_setting_by_game_id[setting];
     }
+    console.log('no longer waiting');
+    console.log(this.game_settings);
 };
 /* end special setting
  */
