@@ -255,17 +255,23 @@ exports.get_revealed_roles = function(game_id){
 };
 
 exports.make_player_waiting_for = function(game_id, player_id, setting){
+    console.log("WAIT");
     if(!(game_id in this.game_settings)){
         this.game_settings[game_id] = {};
     }
+    console.log("WAIT");
     var game_setting_by_game_id = this.game_settings[game_id];
+    console.log("WAIT");
     if(!(setting in game_setting_by_game_id)){
         game_setting_by_game_id[setting] = [];
     }
+    console.log("WAIT");
     var game_setting = game_setting_by_game_id[setting];
+    console.log("WAIT");
     if(game_setting.indexOf(player_id) == -1){
         game_setting.push(player_id);
     }
+    console.log("WAIT");
 };
 
 exports.all_players_waiting_for = function(game_id, setting){
@@ -327,6 +333,163 @@ exports.random_bot = function(){
 
 exports.get_players_from_game = function(game_id){
     return active_games[game_id].get_players();
+};
+exports.player_id_is_spy = function(game_id, player_id){
+    var game = exports.game(game_id);
+    return game.is_spy(player_id);
+};
+exports.selected_players_has_spy_to_red = function(game_id){
+    var game = exports.game(game_id);
+    var selected_players = game.get_selected_players_ids();
+    for(var i = 0; i < selected_players.length; i++){
+        if(game.is_spy(selected_players[i])){
+            console.log(selected_players[i]  + " IS A FUICKING SPY");
+            return true;
+        }
+    }
+    return false;
+};
+exports.choose_players = function(game_id, player_id){
+    var game = exports.game(game_id);
+    var game_players = game.get_player_ids();
+    var team_size = game.get_current_round()['team_size'];
+    var selected_players = [];
+    selected_players.push(player_id); //choose yourself
+    console.log("ADDED ME :D ");
+    console.log(selected_players);
+    var need_two_spies = true;
+    var new_player_id = null;
+    while(selected_players.length < team_size){
+        new_player_id = game_players[Math.floor(Math.random()*game_players.length)];
+        console.log("OK LETS TRY " + new_player_id);
+        if(selected_players.indexOf(new_player_id) == -1){
+            console.log("OK LETS TRY " + new_player_id);
+            while(new_player_id != player_id && game.is_spy(player_id) && game.need_two_fails() && game.get_current_round()['round'] == 4 && need_two_spies && !game.is_spy(new_player_id)){ //put in 2 spies for round 4
+                new_player_id = game_players[Math.floor(Math.random()*game_players.length)];
+            }
+            if(game.is_spy(player_id) && game.is_spy(new_player_id) && game.need_two_fails() && game.get_current_round()['round'] == 4 && need_two_spies){ //put in 2 spies for round 4
+                selected_players.push(new_player_id);
+                need_two_spies = false;
+                console.log("SPIEXNEED2");
+            }else if(game.is_spy(player_id) && !game.is_spy(new_player_id)){
+                selected_players.push(new_player_id);
+                console.log("SPIEXNO");
+            }else if(game.is_spy(player_id) && game.is_spy(new_player_id)){
+                //reroll
+                console.log('NEW PLAYER NEEDED');
+            }
+            else if(exports.player_id_is_role(game_id, player_id, 'merlin')){
+                console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!111I AM MERLIN');
+                if(!game.is_spy(new_player_id) || exports.player_id_is_role(game_id, new_player_id, 'mordred')){
+                    if(!exports.selected_players_were_in_a_failed_mission(game_id, exports.duplicate_and_push(selected_players, new_player_id))){
+                        console.log("I WAS MERL");
+                        selected_players.push(new_player_id);
+                    }
+                }
+            }else if(!exports.selected_players_were_in_a_failed_mission(game_id, exports.duplicate_and_push(selected_players, new_player_id))){ //blues left
+                console.log("DDI I EVER GETHERE?!");
+                selected_players.push(new_player_id);
+            }else{
+                console.log("DEFAULT?!");
+                console.log(exports.duplicate_and_push(selected_players,new_player_id));
+                //selected_players.push(new_player_id);
+            }
+            console.log("ADDED SOMEONE? " + new_player_id);
+            console.log(selected_players);
+        }
+    }
+    return selected_players;
+};
+exports.duplicate_and_push = function(arr, elem_to_push){
+    var temp = [];
+    for(var i = 0; i < arr.length; i++){
+        temp.push(arr[i]);
+    }
+    temp.push(elem_to_push);
+    return temp;
+};
+exports.selected_players_were_in_a_failed_mission = function(game_id, selected_players){
+    var game = exports.game(game_id);
+    var past_missions = game.past_mission_data;
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!111');
+    console.log(past_missions);
+    var select_players_arr = selected_players;
+    console.log(select_players_arr);
+    if(past_missions) {
+        var result = true;
+        for (var mission in past_missions) {
+            console.log("WTF?!?! ");
+            console.log(mission);
+            if (!past_missions[mission]['succeeded']) {
+                var players_on_failed_mission = past_missions[mission]['proposed_team'];
+                var this_mission_ok = false;
+                console.log(players_on_failed_mission);
+                for (var i = 0; i < players_on_failed_mission.length; i++) {
+                    if (select_players_arr.indexOf(players_on_failed_mission[i] == -1)) {
+                        this_mission_ok = true;
+                    }
+                    break;
+                }
+                console.log(this_mission_ok);
+                result = (result && this_mission_ok);
+                if (!result) {
+                    console.log("HOLY FUCK ");
+                    console.log(selected_players);
+                    console.log("SUCH BAD KIDS");
+                    console.log(mission['proposed_team']);
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+};
+exports.determine_mission = function(game_id, player_id){
+    var game = exports.game(game_id);
+    if(!game.is_spy(player_id)){
+        return "Success";
+    }
+    //if only red on mission 4 and need 2 votes succeed it
+    var game_data = game.get_current_round();
+    if(exports.num_of_actual_reds_on_mission(game_id) == 1){
+        if(game_data['round'] == 4 && game.need_two_fails()){
+            return "Success";
+        }
+        //fail if after round 3 and only red
+        if(game_data['round'] >= 3){
+            return "Fail";
+        }
+    }
+    //fail if mission 4 and need 2 reds
+    if(exports.num_of_actual_reds_on_mission(game_id) == 2){
+        if(game_data['round'] == 4 && game.need_two_fails()){
+            return "Fail";
+        }
+    }
+    //otherwise..random
+    return exports.random_mission();
+};
+exports.num_of_actual_reds_on_mission = function(game_id){
+    var game = exports.game(game_id);
+    var selected_players = game.get_selected_players_ids();
+    var result = 0;
+    for(var i = 0; i < selected_players.length; i++){
+        if(game.is_spy(selected_players[i])){
+            result += 1;
+        }
+    }
+    return result;
+};
+exports.selected_players_has_spy_to_merlin = function(game_id){
+    var game = exports.game(game_id);
+    var selected_players = game.get_selected_players_ids();
+    for(var i = 0; i < selected_players.length; i++){
+        if(game.is_spy(selected_players[i]) && !(exports.player_id_is_role(game_id, selected_players[i], 'mordred'))){
+            console.log(selected_players[i]  + " IS A FUICKING SPY");
+            return true;
+        }
+    }
+    return false;
 };
 exports.random_game_id = function(){
     var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";

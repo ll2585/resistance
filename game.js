@@ -52,6 +52,7 @@ function Game() {
   this.red_points;
   this.state;
   this.historic_votes = {};
+  this.past_mission_data = {};
 }
 
 
@@ -390,6 +391,8 @@ Game.prototype.is_mission_success = function() {
       fails += 1;
     }
   }
+  var mission_key = 'mission_' + this.current_mission;
+  this.past_mission_data[mission_key]['succeeded'] = fails < fails_required;
   return fails < fails_required;
 };
 Game.prototype.mission_passed = function() {
@@ -586,6 +589,12 @@ Game.prototype.on_proposal_state = function() {
 
 Game.prototype.on_mission = function() {
   this.state = constants['mission_state'];
+  var mission_key = 'mission_' + this.current_mission;
+  if(!(mission_key in this.past_mission_data )){
+    console.log("ON THE FUCKIGN MISSION");
+    this.past_mission_data[mission_key] = {proposed_team: [], succeeded: true};
+  }
+  this.past_mission_data[mission_key]['proposed_team'] = this.proposed_team;
 };
 
 Game.prototype.is_mission_state = function() {

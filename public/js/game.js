@@ -2,12 +2,12 @@ var socket = io('/avalon');
 var leader_icon_html = '<img src = "images/leader.png" height = "20" width = "20">';
 var selected_icon_html = '<img src = "images/selected.png" height = "20" width = "20">';
 var assassination_icon_html = '<span id = "assassination_icon"><img src = "images/dagger.png" height = "20" width = "20"></span>';
-var role_wait_time = 5;
-var vote_wait_time = 5;
-var mission_wait_time = 5;
+var role_wait_time = .5;
+var vote_wait_time = .5;
+var mission_wait_time = .5;
 var message_elem;
 var saved_data = {};
-var assassassination_over = false;
+var assassination_over = false;
 function is_phone_screen (){
     return $(window).width() < 470;
 }
@@ -857,9 +857,9 @@ function show_assassination_panel (players, selected_player, is_assassin){
 
     function close_button(){
         console.log("CLOSED ASSASS BUT");
-        console.log(assassassination_over);
+        console.log(assassination_over);
         $('#myModal').modal('hide');
-        if(is_assassin && !assassassination_over) {
+        if(is_assassin && !assassination_over) {
             show_choose_assassination_button(players);
         }
     }
@@ -981,7 +981,7 @@ function player_deselected_to_be_assassinated(player_id){
 }
 
 function show_end_game_player_panel (players, did_blue_win){
-    assassassination_over = true;
+    assassination_over = true;
     var html = "";
     var player_table_html = '<table class="table table-bordered table-hover table-condensed scoreboard-table"><thead></thead><tr><th>Player</th><th>Role</th></tr><tbody class="end_game_players_list">';
     var players = players;
@@ -1021,7 +1021,7 @@ function show_propose_team_button(team_size, players){
 }
 
 function reveal_assassinated_player_role(success, selected_player, role){
-    assassassination_over = true;
+    assassination_over = true;
     if(is_phone_screen()){
         var assassinated_player_name = $('#player_id_' + selected_player + '_name').text();
         function StrikeThrough(index) {
