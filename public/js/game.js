@@ -700,9 +700,7 @@ function show_role_info(role, info, reshow){
         show_countdown(role_wait_time, done_with_role_info);
     }
     var html = 'You are <b> ' + role + '</b><br>' + info['html'];
-    if(role != "Assassin"){
-        location.reload();
-    }
+
     if(reshow){
         html += '<br>Click anywhere to close';
     }
@@ -783,54 +781,42 @@ function show_show_role_button(reshow){
 
     });
 }
-function show_choose_assassination_button(players){
+function show_choose_assassination_button(players, selected_player){
     if($("#ready_to_assassinate").length == 0) {
         var button = '<div id = "ready_to_assassinate"><button type="button" id = "ready_to_assassinate_button" class = "btn btn-danger ' + get_button_size() + '">Assassinate!</button></div>';
         $('#game_messages').append(button);
-        $('#ready_to_assassinate_button').click(function () {
-            console.log('propose a team');
-            show_unclosable_modal(false);
-            $("#ready_to_assassinate").remove();
-            show_assassination_panel(players, true);
-        });
     }
+    $('#ready_to_assassinate_button').off("click");
+    $('#ready_to_assassinate_button').click(function () {
+        console.log('propose a team');
+        $("#ready_to_assassinate").remove();
+        socket.emit("i_wanna_assassinate", {game_id: get_game_id(), player_id: get_player_id()});
+    });
 }
-function show_show_assassination_button(players){
+function show_show_assassination_button(){
     if($("#see_assassination").length == 0) {
         var button = '<div id = "see_assassination"><button type="button" id = "see_assassination_button" class = "btn btn-primary ' + get_button_size() + '">See Assination Results</button></div>';
         $('#game_buttons').append(button);
         $('#see_assassination_button').click(function(){
-            show_assassination_panel(players, false);
+            socket.emit("i_wanna_see_assassination_results", {game_id: get_game_id(), player_id: get_player_id()});
         });
     }
 }
-function show_assassination_panel (players, is_assassin){
-    if(assassassination_over){
-        show_unclosable_modal(false);
-        return;
-    }
+function show_assassination_panel (players, selected_player, is_assassin){
     var html = "";
     var modal_html_header = '';
-    var selected_player = null;
-    var assassination_data = {};
+    var selected_player = selected_player;
     if(is_assassin) {
         modal_html_header = "SELECT WHO YOU THINK IS MERLIN";
         if(!is_phone_screen()){
             modal_html_header = " BY CLICKING ON THEIR NAMES";
         }
-        show_choose_assassination_button(players)
-        var assassination_key = 'assassination';
-        selected_player = null;
-        if(data_exists(assassination_key)){
-            selected_player = saved_data[assassination_key]['selected_player'];
-        }
     }else{
         html = "WAITING FOR ASSASSIN";
-        modal_html_header = 'ASSASSINATION';
+        modal_html_header = 'ASSASSINATION RESULTS'; //if you are not assassin, only shows after assassination
     }
     var player_table_html = '<table class="table table-bordered table-hover table-condensed scoreboard-table"><thead></thead><tr><th>Player</th><th>Role</th></tr><tbody class="players-to-assassinate">';
     var players = players;
-    console.log(players);
 
     for(var i = 0; i < players.length; i++){
         player_table_html += '<tr id="player_id_' + players[i]['id'] + '_to_assassinate"><td><div class="player_name_' + players[i]['name'] + '_color"></div>' + players[i]['name'] + '</td><td id = "player_id_' + players[i]['id'] + '_role"></td></tr>';
@@ -842,22 +828,13 @@ function show_assassination_panel (players, is_assassin){
     }
     $('#game_messages_modal').html(modal_html_header + player_table_html);
 
+
     $('#close_assassination_button').click(function(){
         close_button();
     });
-    function close_button(){
-        console.log("CLOSED ASSASS BUT");
-        console.log(assassassination_over);
-        assassination_data['players'] = players;
-        assassination_data['selected_player'] = selected_player;
-        save_data(assassination_key, assassination_data);
-        $('#myModal').modal('hide');
-        if(is_assassin && !assassassination_over) {
-            show_choose_assassination_button(players);
-        }
-        if(assassassination_over){
-            show_show_assassination_button(players);
-        }
+    if(selected_player && is_assassin){
+        player_selected_to_be_assassinated(selected_player);
+
     }
     if(is_assassin) {
         for (var i = 0; i < players.length; i++) {
@@ -870,8 +847,23 @@ function show_assassination_panel (players, is_assassin){
                 );
                 console.log('added clicker to ' + player_id);
             }
+
+            if($('#player_id_' + player_id + '_to_assassinate').hasClass('selected')){
+                show_assassinate_button(players[i]['name']);
+            }
+        }
+        show_unclosable_modal(false);
+    }
+
+    function close_button(){
+        console.log("CLOSED ASSASS BUT");
+        console.log(assassassination_over);
+        $('#myModal').modal('hide');
+        if(is_assassin && !assassassination_over) {
+            show_choose_assassination_button(players);
         }
     }
+
 
     function select_player_to_assassinate(event){
         var player_id = event.data.player_id;
@@ -911,7 +903,6 @@ function show_assassination_panel (players, is_assassin){
         $("#game_messages_modal").append(button);
         $('#assassinate').click(function(){
             console.log('assassinated!!!');
-            clear_data(assassination_key);
             unbind_clicks();
             remove_assassinate_button();
             socket.emit("assassinate", {game_id: get_game_id(), player_id: get_player_id(), selected_player: selected_player});
@@ -935,6 +926,42 @@ function show_assassination_panel (players, is_assassin){
 
 }
 
+function show_assassination_panel_result (players, selected_player, player_roles){
+    var selected_player = selected_player;
+    var modal_html_header = 'ASSASSINATION RESULTS';
+    var player_table_html = '<table class="table table-bordered table-hover table-condensed scoreboard-table"><thead></thead><tr><th>Player</th><th>Role</th></tr><tbody class="players-to-assassinate">';
+    var players = players;
+
+    for(var i = 0; i < players.length; i++){
+        player_table_html += '<tr id="player_id_' + players[i]['id'] + '_to_assassinate"><td><div class="player_name_' + players[i]['name'] + '_color"></div>' + players[i]['name'] + '</td><td id = "player_id_' + players[i]['id'] + '_role"></td></tr>';
+    }
+    modal_html_header += '<div id = "close_assassination" style="float: right"><button type="button" id = "close_assassination_button" class = "btn btn-default ' + get_button_size() + '">Close</button></div>';
+    player_table_html += '</tbody></table>';
+
+    $('#game_messages_modal').html(modal_html_header + player_table_html);
+
+    $('#close_assassination_button').click(function(){
+        close_button();
+    });
+
+    if(selected_player){
+        player_selected_to_be_assassinated(selected_player);
+    }
+    for(var player_id in player_roles){
+        show_player_role(player_id, player_roles[player_id]);
+    }
+    if(!(get_player_id() in player_roles)){
+        show_reveal_role_to_all_button();
+    }
+
+    show_unclosable_modal(false);
+    show_restart_button();
+    function close_button(){
+        $('#myModal').modal('hide');
+    }
+    console.log(player_roles);
+
+}
 function player_selected_to_be_assassinated(player_id){
     console.log('THIS GUY IS CHOSEN TO DIE');
     console.log(player_id);
@@ -996,8 +1023,6 @@ function show_propose_team_button(team_size, players){
 function reveal_assassinated_player_role(success, selected_player, role){
     assassassination_over = true;
     if(is_phone_screen()){
-        var animating_strikeout = true;
-
         var assassinated_player_name = $('#player_id_' + selected_player + '_name').text();
         function StrikeThrough(index) {
             if (index >= assassinated_player_name.length){
@@ -1013,6 +1038,8 @@ function reveal_assassinated_player_role(success, selected_player, role){
                     blue_wins();
                 }
                 show_player_role(selected_player, role);
+                show_show_assassination_button();
+                show_restart_button();
                 return false;
             }
 
@@ -1034,7 +1061,11 @@ function reveal_assassinated_player_role(success, selected_player, role){
             blue_wins();
         }
         show_player_role(selected_player, role);
+        show_show_assassination_button();
+        show_restart_button();
     }
+
+
 }
 
 function show_player_role(player_id, role){
@@ -1044,14 +1075,12 @@ function red_wins(){
     var winning_team = "RED";
     $('#game_messages').html(winning_team + " WINS!");
     $(body).css("background-color","#FF6961");
-    show_restart_button();
 }
 
 function blue_wins(){
     var winning_team = "BLUE";
     $('#game_messages').html(winning_team + " WINS!");
     $(body).css("background-color","#B3DDEB");
-    show_restart_button();
 }
 function show_restart_button(){
     /* figure out this logic later basically only restart if everyone clicked restart, until then i cop out
@@ -1073,8 +1102,14 @@ function show_restart_button(){
     });
     */
     var button = '<div id = "to_lobby"><button type="button" id = "to_lobby_button" class = "to_lobby_button btn btn-primary ' + get_button_size() + '">Back to Lobby</button></div>';
-    $('#game_messages_modal').append(button);
-    $('#game_buttons').append(button);
+    if($("#game_messages_modal > #to_lobby").length == 0) {
+        console.log('adding restart to modal');
+        $('#game_messages_modal').append(button);
+    }
+    if($("#game_buttons > #to_lobby").length == 0) {
+        console.log('adding restart to game_buttons');
+        $('#game_buttons').append(button);
+    }
     $('.to_lobby_button').click(function(){
         window.location.href = "../";
     });
@@ -1261,7 +1296,25 @@ $(document).ready(function() {
         reset_selected_players();
         var players = data['players'];
         console.log("BLUE WINS TIME TO ASSASSINATE");
-        show_assassination_panel(players, true);
+        show_choose_assassination_button(players, null);
+    });
+    socket.on("showing_assassination_results", function(data){
+        var players = data['players'];
+        var selected_player = data['selected_player'];
+        var player_roles = data['player_roles'];
+        show_assassination_panel_result(players, selected_player, player_roles);
+    });
+    socket.on("show_assassination_panel", function(data){
+        var players = data['players'];
+        var selected_player = data['selected_player'];
+        show_assassination_panel(players, selected_player, true);
+    });
+
+    socket.on("assassin_wants_to_assassinate", function(data){
+        var players = data['players'];
+        var selected_player = data['selected_player'];
+        console.log("BLUE WINS TIME TO ASSASSINATE");
+        show_assassination_panel(players, selected_player, true);
     });
 
     socket.on("game_over_avalon", function(data){
@@ -1269,7 +1322,7 @@ $(document).ready(function() {
         reset_selected_players();
         var players = data['players'];
         console.log("BLUE WINS TIME TO ASSASSINATE BUT WE NOT ASSASSIN");
-        show_assassination_panel(players, false);
+        show_assassination_panel(players, null, false);
     });
 
     socket.on("game_over", function(data){

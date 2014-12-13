@@ -99,9 +99,21 @@ exports.set_last_mission = function(game_id, data){
     }
     game_data[game_id]['last_mission'] = data;
 };
+exports.set_assassination_results = function(game_id, data){
+    if(!(game_id in game_data)){
+        game_data[game_id] = {};
+    }
+    if(!('assassination_results' in game_data[game_id])){
+        game_data[game_id]['assassination_results'] = {};
+    }
+    game_data[game_id]['assassination_results'] = data;
+};
 
 exports.get_last_mission = function(game_id){
     return game_data[game_id]['last_mission'];
+};
+exports.get_assassination_results = function(game_id){
+    return game_data[game_id]['assassination_results'];
 };
 exports.set_last_vote = function(game_id, data){
     console.log('!!!!!!!!!!!!!!!!!!!!!!1');
@@ -162,12 +174,25 @@ exports.set_game_setting = function(game_id, setting, value){
     var game_setting_by_game_id = this.game_settings[game_id];
     game_setting_by_game_id[setting] = value;
 };
+exports.clear_game_setting = function(game_id, setting){
+    if(!(game_id in this.game_settings)){
+        this.game_settings[game_id] = {};
+    }
+    var game_setting_by_game_id = this.game_settings[game_id];
+    if(setting in game_setting_by_game_id) {
+        delete game_setting_by_game_id[setting];
+    }
+};
 exports.get_game_setting = function(game_id, setting){
     if(!(game_id in this.game_settings)){
         this.game_settings[game_id] = {};
     }
     var game_setting_by_game_id = this.game_settings[game_id];
-    return game_setting_by_game_id[setting];
+    if(setting in game_setting_by_game_id) {
+        return game_setting_by_game_id[setting];
+    }else{
+        return null;
+    }
 };
 function get_random_color(){
     var color_universe = ['#1CE6B9', '#53007F', '#FFFC02', '#FE8A0E', '#1BA201', '#E55BB0', '#959697', '#7EBFF1', '#106246', '#4E2A04'];
@@ -203,6 +228,32 @@ exports.get_player_colors = function(game_id){
 };
 /* special setting
  */
+exports.player_reveals_role = function(game_id, player_id){
+    if(!(game_id in this.game_settings)){
+        this.game_settings[game_id] = {};
+    }
+    var game_setting_by_game_id = this.game_settings[game_id];
+    if(!('player_roles' in game_setting_by_game_id)){
+        game_setting_by_game_id['player_roles'] = {};
+    }
+    var game_setting = game_setting_by_game_id['player_roles'];
+    var game = exports.game(game_id);
+    if(!(player_id in game_setting)){
+        game_setting[player_id] = game.get_player_role(player_id);
+    }
+};
+exports.get_revealed_roles = function(game_id){
+    if(!(game_id in this.game_settings)){
+        this.game_settings[game_id] = {};
+    }
+    var game_setting_by_game_id = this.game_settings[game_id];
+    if(!('player_roles' in game_setting_by_game_id)){
+        game_setting_by_game_id['player_roles'] = {};
+    }
+    var game_setting = game_setting_by_game_id['player_roles'];
+    return game_setting;
+};
+
 exports.make_player_waiting_for = function(game_id, player_id, setting){
     if(!(game_id in this.game_settings)){
         this.game_settings[game_id] = {};
@@ -256,8 +307,8 @@ exports.select_random_players = function(game){
 };
 
 exports.random_vote = function(player){
-    //return 'Approve';
-    return (Math.floor(Math.random() * 2) == 0) ? 'Approve' : 'Reject';
+    return 'Approve';
+    //return (Math.floor(Math.random() * 2) == 0) ? 'Approve' : 'Reject';
 };
 exports.random_mission = function(player){
     //return 'Success';
@@ -303,6 +354,15 @@ exports.get_player_id_from_role = function(game_id, role){
         }
     }
     return null;
+};
+exports.get_assassin = function(game_id){
+    var game = exports.game(game_id);
+    var game_player_ids = game.get_player_ids();
+    for(var i = 0; i < game_player_ids.length; i++){
+        if(game.get_player_role(game_player_ids[i]) == game_constants['assassin']){
+            return game_player_ids[i];
+        }
+    }
 };
 exports.player_id_is_role = function(game_id, player_id, role){
     var game = exports.game(game_id);

@@ -227,7 +227,7 @@ function show_play_page_mobile_bots(req,res){
     game_logic.add_new_player_to_game(game_id, {id: player_id, name: player_name});
 
     //add 6 dummy players cus fuck it
-    var bots_to_add = 9;
+    var bots_to_add = 4;
     var game = game_logic.game(game_id);
     for(var i = 0; i < bots_to_add; i++){
         var bot = game_logic.random_bot();
@@ -245,9 +245,9 @@ function show_play_page_mobile_bots(req,res){
     console.log(player_id + ' and ' + player_name + ' and ' + game_id);
 
     game.add_role('Merlin'); //add merlin
-    game.add_role('Morgana'); //add merlin
-    game.add_role('Mordred'); //add merlin
-    game.add_role('Percival'); //add merlin
+    //game.add_role('Morgana'); //add merlin
+    //game.add_role('Mordred'); //add merlin
+    //game.add_role('Percival'); //add merlin
     game.start();
     game_logic.assign_player_colors(game_id);
     console.log('CAAAAAAAAAAAAALORES');
@@ -784,11 +784,23 @@ io.of('/avalon').on('connection', function(socket){
                     //fires to each socket
                     io.of('/avalon').to(game_id).emit('assassination_result', {success: selected_player_is_merlin, selected_player: selected_player, role: selected_player_role});
                     var game_players = game.get_player_ids();
+                    var assassin_id = game_logic.get_assassin(game_id);
                     for (var i = 0; i < game_players.length; i++) { //tells not selected players to reveal roles
-                        if (game_players[i] != selected_player) {
+                        if (game_players[i] != selected_player && game_players[i] != assassin_id) {
                             io.of('/avalon').to(game_player_room(game_id, game_players[i])).emit('show_reveal_role_to_all_button');
                         }
                     }
+                    var assassin_role = game.get_player_role(game_logic.get_assassin(game_id));
+                    //fires to each socket
+                    io.of('/avalon').to(game_id).emit('player_reveals_role', {
+                        player_id: assassin_id,
+                        role: assassin_role
+                    });
+                    game_logic.player_reveals_role(game_id, selected_player);
+                    game_logic.player_reveals_role(game_id, assassin_id);
+                    var player_roles = game_logic.get_revealed_roles(game_id);
+                    var data = {players: players, player_roles: player_roles, selected_player: selected_player};
+                    game_logic.set_assassination_results(game_id, data)
                 }
             }
         }
@@ -809,6 +821,7 @@ io.of('/avalon').on('connection', function(socket){
                 console.log('next2');
                 if(game.player_is(player_id, game_logic.get_constants()['assassin'])){
                     console.log('selected a nooblet ' + selected_player);
+                    game_logic.set_game_setting(game_id, 'player_selected_to_be_assassinated', selected_player);
                     socket.broadcast.to(game_id).emit('selected_player_to_assassinate', selected_player);
                 } else if(player_id == 'luke_id'){
 
@@ -831,6 +844,7 @@ io.of('/avalon').on('connection', function(socket){
             if(game.has_merlin() && blue_wins){
                 console.log('next2');
                 if(game.player_is(player_id, game_logic.get_constants()['assassin'])){
+                    game_logic.clear_game_setting(game_id, 'player_selected_to_be_assassinated');
                     socket.broadcast.to(game_id).emit('deselected_player_to_assassinate', selected_player);
                 }
             }
@@ -842,6 +856,13 @@ io.of('/avalon').on('connection', function(socket){
         console.log(player_id + ' wants last vote');
         var last_vote = game_logic.get_last_vote(game_id);
         socket.emit('showing_last_vote', last_vote);
+    });
+    socket.on('i_wanna_see_assassination_results', function(data){
+        var game_id = data['game_id'];
+        var player_id = data['player_id'];
+        console.log(player_id + ' wants last vote');
+        var assassinate_results = game_logic.get_assassination_results(game_id);
+        socket.emit('showing_assassination_results', assassinate_results);
     });
     socket.on('show_last_mission', function(data){
         var game_id = data['game_id'];
@@ -862,6 +883,25 @@ io.of('/avalon').on('connection', function(socket){
             io.of('/avalon').to(game_id).emit('player_reveals_role', {
                 player_id: player_id,
                 role: role
+            });
+            game_logic.player_reveals_role(game_id, player_id);
+        }
+    });
+    socket.on('i_wanna_assassinate', function(data){
+        var game_id = data['game_id'];
+        var player_id = data['player_id'];
+
+        if(game_logic.player_id_is_role(game_id, player_id, 'assassin')){
+            var selected_player = game_logic.get_game_setting(game_id, 'player_selected_to_be_assassinated');
+            var game = game_logic.game(game_id);
+            var players = game.get_public_players();
+            console.log(player_id + ' WANTS ASSASS');
+            console.log(game_logic.player_id_is_role(game_id, player_id, 'assassin'));
+            socket.emit('show_assassination_panel', {
+                game_id: game_id,
+                player_id: player_id,
+                players: players,
+                selected_player: selected_player
             });
         }
     });
@@ -921,11 +961,25 @@ io.of('/avalon').on('connection', function(socket){
                                             role: selected_player_role
                                         });
                                         var game_players = game.get_player_ids();
+                                        var assassin_id = game_logic.get_assassin(game_id);
                                         for (var i = 0; i < game_players.length; i++) { //tells not selected players to reveal roles
-                                            if (game_players[i] != selected_player) {
+                                            if (game_players[i] != selected_player && game_players[i] != assassin_id) {
                                                 io.of('/avalon').to(game_player_room(game_id, game_players[i])).emit('show_reveal_role_to_all_button');
                                             }
                                         }
+                                        var assassin_role = game.get_player_role(game_logic.get_assassin(game_id));
+                                        //fires to each socket
+                                        io.of('/avalon').to(game_id).emit('player_reveals_role', {
+                                            player_id: assassin_id,
+                                            role: assassin_role
+                                        });
+
+                                        game_logic.player_reveals_role(game_id, selected_player);
+                                        game_logic.player_reveals_role(game_id, assassin_id);
+                                        var player_roles = game_logic.get_revealed_roles(game_id);
+                                        var data = {players: players, player_roles: player_roles, selected_player: selected_player};
+                                        game_logic.set_assassination_results(game_id, data)
+
                                         game_logic.clear_players_waiting_for(game_id, 'assassination');
                                         game_logic.clear_bot_assassin_flag(game_id);
                                     }, assassination_delay);
