@@ -307,15 +307,15 @@ exports.select_random_players = function(game){
 };
 
 exports.random_vote = function(player){
-    return 'Approve';
-    //return (Math.floor(Math.random() * 2) == 0) ? 'Approve' : 'Reject';
+    //return 'Approve';
+    return (Math.floor(Math.random() * 2) == 0) ? 'Approve' : 'Reject';
 };
 exports.random_mission = function(player){
     //return 'Success';
     return (Math.floor(Math.random() * 2) == 0) ? 'Success' : 'Fail';
 };
 exports.random_bot = function(){
-    var names_array = ['Merlin', 'Berlin', 'Gerlin', 'Herlin', 'Zerlin', 'Lerlin', 'Perlin', 'Serlin', 'Cerlin', 'Derlin', 'Erlin', 'Aerlin', 'Ferlin', 'Ierlin'];
+    var names_array = ['Joel_N', 'Deanna', 'Lil_Lee_N', 'Al_Lane', 'Kay_Win', 'Ping_Lee', 'Alexa', 'Brianna', 'Steefanie', 'Janeis'];
     var name = names_array[Math.floor(Math.random()*names_array.length)];
     var id = Math.floor(Math.random() * (1 - 1000 + 1)) + 1;
     var player_id = name + '_' + id.toString();

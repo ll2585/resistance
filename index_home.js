@@ -88,6 +88,7 @@ function show_create_page_mobile(req, res){
 
         //add 4 dummy players cus fuck it
         var bots_to_add = 3;
+        //bots_to_add = Math.floor((Math.random() * 10) + 1); //randomb etween 4 and 9
         var game = game_logic.game(game_id);
         for (var i = 0; i < bots_to_add; i++) {
             var bot = game_logic.random_bot();
@@ -228,6 +229,7 @@ function show_play_page_mobile_bots(req,res){
 
     //add 6 dummy players cus fuck it
     var bots_to_add = 4;
+    bots_to_add = Math.floor(Math.random()*(9-4+1)+4); //random between 4 and 9
     var game = game_logic.game(game_id);
     for(var i = 0; i < bots_to_add; i++){
         var bot = game_logic.random_bot();
@@ -246,7 +248,17 @@ function show_play_page_mobile_bots(req,res){
 
     game.add_role('Merlin'); //add merlin
     //game.add_role('Morgana'); //add merlin
-    //game.add_role('Mordred'); //add merlin
+    if(Math.random() < .8){
+        game.add_role('Mordred');
+    }//game.add_role('Mordred'); //add mordred 80% chance
+    if(bots_to_add < 6 && Math.random() < .2){
+        game.add_role('Percival');
+    }else if(bots_to_add >= 6 && Math.random() < .4){
+        game.add_role('Percival');
+    }else if(bots_to_add >= 6 && Math.random() < .7){
+        game.add_role('Percival');
+        game.add_role('Morgana');
+    }//game.add_role('Mordred'); //add percival 20% chance if < 7 players, 40% if > 7 players
     //game.add_role('Percival'); //add merlin
     game.start();
     game_logic.assign_player_colors(game_id);
@@ -710,8 +722,8 @@ io.of('/avalon').on('connection', function(socket){
                     var bot_id = bots[i];
                     if(game.player_is_on_mission(bot_id)){
                         if(game.is_spy(bot_id)){
-                            game.player_submits_mission(bot_id, "Success");
                             //game.player_submits_mission(bot_id, "Success");
+                            game.player_submits_mission(bot_id, game_logic.random_mission());
                         }else{
                             game.player_submits_mission(bot_id, "Success");
                         }
@@ -1022,7 +1034,7 @@ io.of('/avalon').on('connection', function(socket){
             console.log("THAT WAS IF HE WAS ON MISSION AND THIS IS IF HE DIDNT SUBMIT");
             console.log(!game.player_submitted(player_id));
             if(game.player_is_on_mission(player_id) && !game.player_submitted(player_id)){
-                var submission = "Success";  //bots fail
+                var submission = game_logic.random_mission();  //bots fail
                 //var submission = "Success";  //bots fail
                 if(!game.is_spy(player_id)){
                     submission = "Success"; //no fucking around, makes you pass if you're not a spy
