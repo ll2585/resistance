@@ -401,11 +401,11 @@ exports.choose_players = function(game_id, player_id){
     return selected_players;
 };
 exports.duplicate_and_push = function(arr, elem_to_push){
-    var temp = [];
+    var temp = {};
     for(var i = 0; i < arr.length; i++){
-        temp.push(arr[i]);
+        temp[arr[i]] = 1;
     }
-    temp.push(elem_to_push);
+    temp[elem_to_push] = 1;
     return temp;
 };
 exports.selected_players_were_in_a_failed_mission = function(game_id, selected_players){
@@ -425,7 +425,9 @@ exports.selected_players_were_in_a_failed_mission = function(game_id, selected_p
                 var this_mission_ok = false;
                 console.log(players_on_failed_mission);
                 for (var i = 0; i < players_on_failed_mission.length; i++) {
-                    if (select_players_arr.indexOf(players_on_failed_mission[i] == -1)) {
+                    if (!(players_on_failed_mission[i] in select_players_arr)) {
+                        console.log(players_on_failed_mission[i] + ' not in ');
+                        console.log(select_players_arr);
                         this_mission_ok = true;
                     }
                     break;
@@ -436,7 +438,7 @@ exports.selected_players_were_in_a_failed_mission = function(game_id, selected_p
                     console.log("HOLY FUCK ");
                     console.log(selected_players);
                     console.log("SUCH BAD KIDS");
-                    console.log(mission['proposed_team']);
+                    console.log(past_missions[mission]['proposed_team']);
                     return true;
                 }
             }
